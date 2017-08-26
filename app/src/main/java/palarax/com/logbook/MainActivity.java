@@ -16,19 +16,28 @@
 
 package palarax.com.logbook;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
+import dmax.dialog.SpotsDialog;
 
 
 /**
@@ -39,6 +48,9 @@ import android.view.MenuItem;
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
+    private AlertDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +76,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: summary of driver screen
+                Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_LONG).show();
+            }
+        });
     }
+
+    //https://www.androidhive.info/2013/11/android-sliding-menu-using-navigation-drawer/
+
+
 
     @Override
     public void onBackPressed() {
@@ -73,13 +98,15 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            logout();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO: not sure if I should have Option Settings
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -104,22 +131,102 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_home) {
+            //TODO: Create Home screen
+        } else if (id == R.id.nav_history) {
+            //TODO: Create History screen
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_goals) {
+            //TODO: Create Goals screen
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_profile) {
+            //TODO: Create Profile screen
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /**
+     * Logout from the app and destroy activity
+     */
+    private void logout() {
+        mProgressDialog = new SpotsDialog(this, R.style.Custom);
+        mProgressDialog.show();
+
+        Backendless.initApp(this,
+                BackEndlessDefaults.APPLICATION_ID,
+                BackEndlessDefaults.API_KEY);
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                mProgressDialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+    }
+
+    /**
+     * Called when activity becomes visible to the user
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    /**
+     * Called when activity has been stopped and is restarting again
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+    }
+
+    /**
+     * Called when activity starts interacting with user
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
+    /**
+     * Called when current activity is being paused and the previous activity is being resumed
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    /**
+     * Called when activity is no longer visible to user
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    /**
+     * Called before the activity is destroyed by the system (either manually or by the system to conserve memory)
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 }

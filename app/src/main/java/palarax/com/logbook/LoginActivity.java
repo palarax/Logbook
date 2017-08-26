@@ -18,15 +18,14 @@ package palarax.com.logbook;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -40,7 +39,6 @@ import com.dd.morphingbutton.impl.IndeterminateProgressButton;
 
 import java.util.ArrayList;
 
-import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.NFC.NFCManager;
 import palarax.com.logbook.NFC.NdefTag;
 
@@ -54,9 +52,9 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
 
     private static final String TAG = LoginActivity.class.getSimpleName(); //used for debugging
 
-    public NFCManager mCardReader;
+    private NFCManager mCardReader;
 
-    IndeterminateProgressButton mBtnMorph;
+    private IndeterminateProgressButton mBtnMorph;
 
 
     // Recommend NfcAdapter flags for reading from other Android devices. Indicates that this
@@ -69,7 +67,6 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: implement transition animations
         setContentView(R.layout.activity_login);
 
         //Initialise cloud api
@@ -82,12 +79,10 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_noNfc), Toast.LENGTH_LONG).show();
             finish();
         } else if (!mNfcAdapter.isEnabled()) {
-            Toast.makeText(this, "NFC disabled", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "NFC enabled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_nfcDisabled), Toast.LENGTH_LONG).show();
         }
 
         //register NFC callback
@@ -95,6 +90,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         enableReaderMode();
 
         mBtnMorph = findViewById(R.id.btnMorph);
+        morphToFailure(mBtnMorph);
         mBtnMorph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,10 +108,10 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      */
     @Override
     public void onAccountReceived(Tag tag) throws Exception {
-        Log.e(TAG, "onAccountRecieved");
+        Log.d(TAG, "onAccountRecieved");
         String[] techList = tag.getTechList(); //list of all Tag techs
         String ID = bytesToHexString(tag.getId());
-        ArrayList msgRecords = null;
+        ArrayList msgRecords;
         //Look through tech
         for (String singleTech : techList) {
             //selected only Ndef and NdefFormatable techs
@@ -124,9 +120,9 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
                 msgRecords = ndef.read(tag);
                 //if it's NdefFormatable, then don't try to read the message (there is none)
                 if (msgRecords != null) {
-                    Log.e(TAG, "ID: " + ID);
-                    Log.e(TAG, "msgrecords: " + msgRecords.toString());
-                    LoginIn(ID, (String) msgRecords.get(0));
+                    Log.d(TAG, "ID: " + ID);
+                    Log.d(TAG, "msgrecords: " + msgRecords.toString());
+                    loginBackEndless(ID, (String) msgRecords.get(0));
                     return;
                 }
             }
@@ -134,7 +130,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         runOnUiThread(new Runnable() {
             public void run()
             {
-                Toast.makeText(LoginActivity.this, "Tag Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.error_badTag), Toast.LENGTH_LONG).show();
                 morphToFailure(mBtnMorph);
             }
         });
@@ -146,7 +142,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      * @param username username of user (Using ID of NFC)
      * @param password password of user (Stored in NFC as message)
      */
-    private void LoginIn(String username, String password) {
+    private void loginBackEndless(String username, String password) {
         runOnUiThread(new Runnable() {
             public void run()
             {
@@ -158,9 +154,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
 
             @Override
             public void handleResponse(BackendlessUser backendlessUser) {
-                //mProgressDialog.dismiss();
                 morphToSuccess(mBtnMorph);
-                //nextActivity();
             }
 
             @Override
@@ -181,11 +175,12 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
                 .cornerRadius( (int) getResources().getDimension(R.dimen.morph_button))
                 .width((int) getResources().getDimension(R.dimen.morph_button))
                 .height((int) getResources().getDimension(R.dimen.morph_button))
-                .color(getResources().getColor(R.color.mb_green))
-                .colorPressed(getResources().getColor(R.color.mb_green_dark))
+                .color(ContextCompat.getColor(this, R.color.mb_green))
+                .colorPressed(ContextCompat.getColor(this, R.color.mb_green_dark))
                 .icon(R.drawable.ic_done);
         btnMorph.morph(circle);
         mBtnMorph.unblockTouch();
+
     }
 
     /**
@@ -198,8 +193,8 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
                 .cornerRadius( (int) getResources().getDimension(R.dimen.morph_button))
                 .width((int) getResources().getDimension(R.dimen.morph_button))
                 .height((int) getResources().getDimension(R.dimen.morph_button))
-                .color(getResources().getColor(R.color.mb_red))
-                .colorPressed(getResources().getColor(R.color.mb_red_dark))
+                .color(ContextCompat.getColor(this, R.color.mb_red))
+                .colorPressed(ContextCompat.getColor(this, R.color.mb_red_dark))
                 .icon(R.drawable.ic_lock);
         btnMorph.morph(circle);
         mBtnMorph.blockTouch();
@@ -210,11 +205,11 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      * @param button button to morph
      */
     private void morphToProgress(@NonNull final IndeterminateProgressButton button) {
-        int progressColor1 = getResources().getColor(R.color.holo_blue_bright);
-        int progressColor2 = getResources().getColor(R.color.holo_green_light);
-        int progressColor3 = getResources().getColor(R.color.holo_orange_light);
-        int progressColor4 = getResources().getColor(R.color.holo_red_light);
-        int color =  getResources().getColor(R.color.holo_green_light);
+        int progressColor1 = ContextCompat.getColor(this, R.color.holo_blue_bright);
+        int progressColor2 = ContextCompat.getColor(this, R.color.holo_green_light);
+        int progressColor3 = ContextCompat.getColor(this, R.color.holo_orange_light);
+        int progressColor4 = ContextCompat.getColor(this, R.color.holo_red_light);
+        int color = ContextCompat.getColor(this, R.color.holo_green_light);
         int progressCornerRadius = 4;
         int width = 800;
         int height = 32;
@@ -247,7 +242,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      * Enables the devices to scan the tag
      */
     private void enableReaderMode() {
-        Log.i(TAG, "Enabling reader mode");
+        Log.d(TAG, "Enabling reader mode");
         NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
         if (nfc != null) {
             nfc.enableReaderMode(this, mCardReader, READER_FLAGS, null);
@@ -258,7 +253,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      * Disables the devices to scan the tag
      */
     private void disableReaderMode() {
-        Log.i(TAG, "Disabling reader mode");
+        Log.d(TAG, "Disabling reader mode");
         NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
         if (nfc != null) {
             nfc.disableReaderMode(this);
@@ -327,6 +322,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         super.onStop();
         Log.d(TAG, "onStop");
         disableReaderMode();
+        morphToFailure(mBtnMorph);
     }
 
     /**

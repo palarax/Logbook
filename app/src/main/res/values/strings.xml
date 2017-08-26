@@ -1,9 +1,24 @@
 <resources>
-    <string name="app_name">Logbook</string>
+    <string name="app_name">LogBook</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
 
+    <!-- Navigation Drawer menu labels -->
+    <string name="menu_user_settings">User Settings</string>
+    <string name="nav_history">Lesson History</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_goals">Learning Goals</string>
+    <string name="nav_logout">Logout</string>
+    <string name="nav_profile_settings">Profile Settings</string>
+
+
+    <string name="dialog_logout">Login out of the app …</string>
+
+    <!-- ERROR Messages -->
+    <string name="error_noNfc">This device doesn\'t support NFC.</string>
+    <string name="error_nfcDisabled">NFC disabled</string>
+    <string name="error_badTag">ERROR: Bad NFC tag</string>
 </resources>

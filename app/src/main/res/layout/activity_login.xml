@@ -2,18 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:background="@drawable/login_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="56sp"
+        android:textStyle="italic|bold"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="casual"
+        android:layout_alignTop="@+id/layout_morph"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="88dp" />
 
     <FrameLayout
+        android:id="@+id/layout_morph"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
         <com.dd.morphingbutton.impl.IndeterminateProgressButton
             android:id="@+id/btnMorph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:text="Scan your log book Tag"
             android:textColor="@color/mb_white"
             android:layout_gravity="center"/>
     </FrameLayout>
