@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package palarax.com.logbook;
+package palarax.com.logbook.activity;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -38,6 +38,8 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 import dmax.dialog.SpotsDialog;
+import palarax.com.logbook.R;
+import palarax.com.logbook.model.BackEndlessDefaults;
 
 
 /**

@@ -1,10 +1,11 @@
-package palarax.com.logbook.NFC;
+package palarax.com.logbook.model;
 
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -56,11 +57,11 @@ public class NdefTag {
      */
     private String readText(NdefRecord record) throws UnsupportedEncodingException {
         byte[] payload = record.getPayload();
-        String UTF8 = "UTF-8";
-        String UTF16 = "UTF-16";
+        String Utf8 = "UTF-8";
+        String Utf16 = "UTF-16";
         // Get the Text Encoding
         try {
-            String textEncoding = ((payload[0] & 128) == 0) ? UTF8 : UTF16;
+            String textEncoding = ((payload[0] & 128) == 0) ? Utf8 : Utf16;
 
             // Get the Language Code
             int languageCodeLength = payload[0] & 51;

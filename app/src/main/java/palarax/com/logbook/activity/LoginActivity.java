@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package palarax.com.logbook;
+package palarax.com.logbook.activity;
 
 
 import android.app.Activity;
@@ -39,8 +39,10 @@ import com.dd.morphingbutton.impl.IndeterminateProgressButton;
 
 import java.util.ArrayList;
 
-import palarax.com.logbook.NFC.NFCManager;
-import palarax.com.logbook.NFC.NdefTag;
+import palarax.com.logbook.R;
+import palarax.com.logbook.adapters.NFCManager;
+import palarax.com.logbook.model.BackEndlessDefaults;
+import palarax.com.logbook.model.NdefTag;
 
 /**
  * Initial activity that requires the user to login using NFC

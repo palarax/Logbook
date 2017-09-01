@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.NFC;
+package palarax.com.logbook.adapters;
 
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
