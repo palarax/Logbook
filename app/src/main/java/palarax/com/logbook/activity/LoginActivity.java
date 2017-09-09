@@ -41,8 +41,8 @@ import java.util.ArrayList;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.adapters.NFCManager;
-import palarax.com.logbook.model.BackEndlessDefaults;
 import palarax.com.logbook.model.NdefTag;
+import palarax.com.logbook.model.Utils;
 
 /**
  * Initial activity that requires the user to login using NFC
@@ -70,12 +70,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        //Initialise cloud api
-        Backendless.setUrl(BackEndlessDefaults.SERVER_URL);
-        Backendless.initApp(this,
-                BackEndlessDefaults.APPLICATION_ID,
-                BackEndlessDefaults.API_KEY);
+        initialiseBackEndless();
 
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -122,8 +117,6 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
                 msgRecords = ndef.read(tag);
                 //if it's NdefFormatable, then don't try to read the message (there is none)
                 if (msgRecords != null) {
-                    Log.d(TAG, "ID: " + ID);
-                    Log.d(TAG, "msgrecords: " + msgRecords.toString());
                     loginBackEndless(ID, (String) msgRecords.get(0));
                     return;
                 }
@@ -252,6 +245,16 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
     }
 
     /**
+     * Initializes Backendless Service
+     */
+    private void initialiseBackEndless() {
+        Backendless.setUrl(Utils.BACKENDLESS_SERVER_URL);
+        Backendless.initApp(this,
+                Utils.BACKENDLESS_APPLICATION_ID,
+                Utils.BACKENDLESS_API_KEY);
+    }
+
+    /**
      * Disables the devices to scan the tag
      */
     private void disableReaderMode() {
@@ -279,10 +282,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        Backendless.setUrl(BackEndlessDefaults.SERVER_URL);
-        Backendless.initApp(this,
-                BackEndlessDefaults.APPLICATION_ID,
-                BackEndlessDefaults.API_KEY);
+        initialiseBackEndless();
         enableReaderMode();
     }
 

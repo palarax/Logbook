@@ -59,7 +59,7 @@ public class NFCManager implements NfcAdapter.ReaderCallback{
      */
     @Override
     public void onTagDiscovered(Tag tag) {
-        Log.e(TAG, "New tag discovered");
+        Log.i(TAG, "New tag discovered");
         try {
             mAccountCallback.get().onAccountReceived(tag);
         } catch (Exception e) {

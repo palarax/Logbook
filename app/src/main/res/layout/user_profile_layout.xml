@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/license_border">
+
+    <ImageView
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:background="@drawable/curved_subshape"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/txt_learner_lbl"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/profile_learner_lbl"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textColor="@color/mb_white"
+        android:textSize="20sp" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:layout_below="@+id/layout_header">
+
+        <TextView
+            android:id="@+id/txt_lbl_name"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/profile_name_lbl"
+            android:textStyle="bold"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+
+
+        <TextView
+            android:id="@+id/txt_lbl_license"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/profile_license_lbl"
+            android:textStyle="bold"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+
+        <TextView
+            android:id="@+id/txt_lbl_dob"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/profile_dob_lbl"
+            android:textStyle="bold"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/layout_labels"
+        android:layout_below="@+id/layout_header">
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+
+        <TextView
+            android:id="@+id/txt_license"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+
+        <TextView
+            android:id="@+id/txt_dob"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/profile_values"
+            android:layout_margin="@dimen/high_dif_text" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_completed"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Hours COMPLETED"
+        android:textStyle="bold"
+        android:textSize="@dimen/profile_values"
+        android:layout_below="@+id/layout_values"
+        android:layout_marginTop="@dimen/high_dif_text"
+        android:layout_toStartOf="@+id/img_profile"
+        android:layout_marginEnd="24dp"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/img_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="8dp"
+        android:src="@drawable/img_profile"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/layout_header" />
+
+</RelativeLayout>
