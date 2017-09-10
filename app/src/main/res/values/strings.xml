@@ -24,9 +24,10 @@
     <string name="profile_license_lbl">License #:</string>
     <string name="profile_distance_lbl">Distance travelled:</string>
     <string name="profile_dob_lbl">Date of birth:</string>
+    <string name="profile_state_lbl">State:</string>
     <string name="profile_name_lbl">Name:</string>
-    <string name="profile_completed">COMPLETED</string>
-    <string name="profile_in_progress">IN PROGRESS</string>
+    <string name="profile_completed">HOURS COMPLETED</string>
+    <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
     <!--User drive detals -->
     <string name="drive_number">NUMBER OF LESSONS</string>
@@ -37,4 +38,5 @@
     <string name="error_nfcDisabled">NFC disabled</string>
     <string name="error_badTag">ERROR: Bad NFC tag</string>
     <string name="error_profile">ERROR: Profile data could not be retrieved</string>
+    <string name="error_logout">ERROR: with logging out, try again</string>
 </resources>

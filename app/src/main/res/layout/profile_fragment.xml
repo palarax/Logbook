@@ -7,6 +7,5 @@
 
     <include layout="@layout/user_profile_layout" />
 
-    <include layout="@layout/user_drive_detail" />
 
 </LinearLayout>

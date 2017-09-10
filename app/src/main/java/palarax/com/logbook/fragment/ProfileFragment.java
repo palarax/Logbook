@@ -16,14 +16,13 @@ import palarax.com.logbook.R;
 import palarax.com.logbook.model.Utils;
 
 /**
- * Home fragment that initiates a lesson
+ * Profile fragment that allows user to update their information
  *
- * @author Ilya Thai (11972078)
+ * @author Ilya Thai (11972078 )
  * @version 1.0
- * @date 09-Sep-17
+ * @date 10-Sep-17
  */
-
-public class HomeFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     private TextView nameText;
     private TextView licenseText;
@@ -35,7 +34,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.home_fragment, container, false);
+        return inflater.inflate(R.layout.profile_fragment, container, false);
 
     }
 
@@ -64,6 +63,4 @@ public class HomeFragment extends Fragment {
         progressText.setText(getString(R.string.profile_in_progress));
         progressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
     }
-
-
 }

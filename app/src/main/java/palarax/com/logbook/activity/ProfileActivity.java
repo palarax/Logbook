@@ -3,6 +3,7 @@ package palarax.com.logbook.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
         final TextView nameText = (TextView) findViewById(R.id.txt_name);
         final TextView licenseText = (TextView) findViewById(R.id.txt_license);
         final TextView dobText = (TextView) findViewById(R.id.txt_dob);
+        final TextView stateText = (TextView) findViewById(R.id.txt_state);
+        final TextView progressText = (TextView) findViewById(R.id.txt_completed);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -50,7 +53,10 @@ public class ProfileActivity extends AppCompatActivity {
             nameText.setText(extras.getString(Utils.BACKENDLESS_NAME));
             licenseText.setText(String.format("%d", extras.getInt(Utils.BACKENDLESS_LICENSE)));
             dobText.setText(extras.getString(Utils.BACKENDLESS_DOB));
+            stateText.setText(extras.getString(Utils.BACKENDLESS_STATE));
 
+            progressText.setText(getString(R.string.profile_in_progress));
+            progressText.setTextColor(ContextCompat.getColor(this, R.color.in_progress));
         }
         createDataSeries1();
     }

@@ -53,18 +53,14 @@ import palarax.com.logbook.model.Utils;
 public class LoginActivity extends Activity implements NFCManager.AccountCallback {
 
     private static final String TAG = LoginActivity.class.getSimpleName(); //used for debugging
-
-    private NFCManager mCardReader;
-
-    private IndeterminateProgressButton mBtnMorph;
-
-
     // Recommend NfcAdapter flags for reading from other Android devices. Indicates that this
     // activity is interested in NFC-A devices (including other Android devices), and that the
     // system should not check for the presence of NDEF-formatted data (e.g. Android Beam).
     //| NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
     public static int READER_FLAGS =
             NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B | NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V;
+    private NFCManager mCardReader;
+    private IndeterminateProgressButton mBtnMorph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,10 +197,10 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      */
     private void morphToProgress(@NonNull final IndeterminateProgressButton button) {
         int progressColor1 = ContextCompat.getColor(this, R.color.holo_blue_bright);
-        int progressColor2 = ContextCompat.getColor(this, R.color.holo_green_light);
+        int progressColor2 = ContextCompat.getColor(this, R.color.mb_green);
         int progressColor3 = ContextCompat.getColor(this, R.color.holo_orange_light);
         int progressColor4 = ContextCompat.getColor(this, R.color.holo_red_light);
-        int color = ContextCompat.getColor(this, R.color.holo_green_light);
+        int color = ContextCompat.getColor(this, R.color.mb_green);
         int progressCornerRadius = 4;
         int width = 800;
         int height = 32;

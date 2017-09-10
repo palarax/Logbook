@@ -18,6 +18,7 @@ public class Utils {
     public static final String BACKENDLESS_SURNAME = "surname";
     public static final String BACKENDLESS_LICENSE = "licence_id";
     public static final String BACKENDLESS_DOB = "DOB";
+    public static final String BACKENDLESS_STATE = "state";
 
 
 

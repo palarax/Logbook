@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -40,7 +41,10 @@ import com.backendless.exceptions.BackendlessFault;
 
 import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.R;
+import palarax.com.logbook.fragment.GoalsFragment;
+import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
+import palarax.com.logbook.fragment.ProfileFragment;
 import palarax.com.logbook.model.Utils;
 
 
@@ -56,7 +60,11 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
     private AlertDialog mProgressDialog;
 
+
     private HomeFragment mHomeFragment = new HomeFragment();
+    private HistoryFragment mHistoryFragment = new HistoryFragment();
+    private GoalsFragment mGoalsFragment = new GoalsFragment();
+    private ProfileFragment mProfileFragment = new ProfileFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +87,14 @@ public class MainActivity extends AppCompatActivity
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: need to be accessed from Local DB, DB is updated everytime user logs in
+                //TODO: need to be accessed from Local DB, DB is updated every time user logs in
                 BackendlessUser user = Backendless.UserService.CurrentUser();
 
                 Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
                 intent.putExtra(Utils.BACKENDLESS_NAME, user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME));
                 intent.putExtra(Utils.BACKENDLESS_LICENSE, (Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
                 intent.putExtra(Utils.BACKENDLESS_DOB, (String) user.getProperty(Utils.BACKENDLESS_DOB));
+                intent.putExtra(Utils.BACKENDLESS_STATE, (String) user.getProperty(Utils.BACKENDLESS_STATE));
                 startActivity(intent);
             }
         });
@@ -114,19 +123,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            logout();
-        }
-    }
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -137,25 +133,23 @@ public class MainActivity extends AppCompatActivity
                 fragment = mHomeFragment;
                 break;
             case R.id.nav_history:
-                //TODO: Create History screen
+                fragment = mHistoryFragment;
                 break;
             case R.id.nav_goals:
-                //TODO: Create Goals screen
+                fragment = mGoalsFragment;
                 break;
             case R.id.nav_profile:
-                //TODO: Create Profile screen
+                fragment = mProfileFragment;
                 break;
             case R.id.nav_logout:
+                fragment = mHomeFragment; //make sure not to get null object error
                 logout();
                 break;
         }
 
-
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -168,22 +162,34 @@ public class MainActivity extends AppCompatActivity
     private void logout() {
         mProgressDialog = new SpotsDialog(this, R.style.Custom);
         mProgressDialog.show();
-
         Backendless.initApp(this,
                 Utils.BACKENDLESS_APPLICATION_ID,
                 Utils.BACKENDLESS_API_KEY);
         Backendless.UserService.logout(new AsyncCallback<Void>() {
             @Override
             public void handleResponse(Void response) {
-                mProgressDialog.dismiss();
-                finish();
+                finish(); //done with this activity
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-
+                Log.e(TAG, "Logout error: " + fault.getCode());
+                mProgressDialog.dismiss();
+                Toast.makeText(getBaseContext(), getString(R.string.error_logout), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            logout();
+        }
     }
 
     /**
@@ -238,6 +244,6 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        logout();
+        mProgressDialog.dismiss();
     }
 }

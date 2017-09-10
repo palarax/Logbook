@@ -8,108 +8,124 @@
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:gravity="center"
         android:background="@drawable/curved_subshape"
+        android:gravity="center"
         android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/txt_learner_lbl"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="@string/profile_learner_lbl"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
+        android:text="@string/profile_learner_lbl"
         android:textColor="@color/mb_white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
     <LinearLayout
         android:id="@+id/layout_labels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_below="@+id/layout_header"
         android:gravity="end"
-        android:layout_below="@+id/layout_header">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_lbl_name"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
             android:text="@string/profile_name_lbl"
-            android:textStyle="bold"
             android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:textStyle="bold" />
 
 
         <TextView
             android:id="@+id/txt_lbl_license"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
             android:text="@string/profile_license_lbl"
-            android:textStyle="bold"
             android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txt_lbl_dob"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
             android:text="@string/profile_dob_lbl"
-            android:textStyle="bold"
             android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_lbl_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
+            android:text="@string/profile_state_lbl"
+            android:textSize="@dimen/profile_values"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_below="@+id/layout_header"
         android:layout_toEndOf="@+id/layout_labels"
-        android:layout_below="@+id/layout_header">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_name"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
+            android:textSize="@dimen/profile_values" />
 
         <TextView
             android:id="@+id/txt_license"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
+            android:textSize="@dimen/profile_values" />
 
         <TextView
             android:id="@+id/txt_dob"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textSize="@dimen/profile_values"
-            android:layout_margin="@dimen/high_dif_text" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
+            android:textSize="@dimen/profile_values" />
+
+        <TextView
+            android:id="@+id/txt_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/high_dif_text"
+            android:textSize="@dimen/profile_values" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/txt_completed"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Hours COMPLETED"
-        android:textStyle="bold"
-        android:textSize="@dimen/profile_values"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/layout_values"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="24dp"
         android:layout_marginTop="@dimen/high_dif_text"
         android:layout_toStartOf="@+id/img_profile"
-        android:layout_marginEnd="24dp"
-        android:layout_centerHorizontal="true" />
+        android:textSize="@dimen/profile_values"
+        android:textStyle="bold|italic" />
 
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:padding="8dp"
-        android:src="@drawable/img_profile"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/layout_header" />
+        android:layout_below="@+id/layout_header"
+        android:padding="8dp"
+        android:src="@drawable/img_profile" />
 
 </RelativeLayout>
