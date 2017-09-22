@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package palarax.com.logbook.model;
 
 import java.sql.Time;
@@ -5,7 +20,7 @@ import java.sql.Time;
 /**
  * Lesson data ( used for Lesson History)
  *
- * @author Palarax
+ * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
 public class Lesson {
@@ -17,21 +32,21 @@ public class Lesson {
     /**
      * Lesson object constructor that initializes the object
      *
-     * @param licencePlate      licence plate of the vehicle used
-     * @param lessonId          lesson identification number
-     * @param mDistance         mDistance travelled during the lesson
+     * @param licencePlate licence plate of the vehicle used
+     * @param lessonId lesson identification number
+     * @param distance  distance travelled during the lesson
      * @param supervisorLicence supervisor licence number
-     * @param learnerId         learner identification number
-     * @param startOdometer     odometer start number
-     * @param endOdometer       odometer end number
-     * @param totalTime         total time driving for this lesson
-     * @param startTime         time started the lesson
-     * @param endTime           time ended the lesson
+     * @param learnerId  learner identification number
+     * @param startOdometer odometer start number
+     * @param endOdometer odometer end number
+     * @param totalTime  total time driving for this lesson
+     * @param startTime time started the lesson
+     * @param endTime   time ended the lesson
      */
-    public Lesson(String licencePlate, int lessonId, int mDistance, int supervisorLicence, int learnerId, int startOdometer, int endOdometer, Time totalTime, Time startTime, Time endTime) {
+    public Lesson(String licencePlate, int lessonId, int distance, int supervisorLicence, int learnerId, int startOdometer, int endOdometer, Time totalTime, Time startTime, Time endTime) {
         this.mLicencePlate = licencePlate;
         this.mLessonId = lessonId;
-        this.mDistance = mDistance;
+        this.mDistance = distance;
         this.mSupervisorLicence = supervisorLicence;
         this.mLearnerId = learnerId;
         this.mStartOdometer = startOdometer;
