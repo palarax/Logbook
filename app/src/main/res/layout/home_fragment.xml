@@ -9,4 +9,55 @@
 
     <include layout="@layout/user_drive_detail" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/start_lesson"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="START LESSON"/>
+
+        <LinearLayout
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <EditText
+                android:id="@+id/edit_lpn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/edit_lpn"
+                android:inputType="textCapWords"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/edit_start_odometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/edit_start_odometer"
+                android:inputType="number"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/edit_supervisor_license"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/edit_supervisor"
+                android:inputType="number"
+                android:textAlignment="center"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

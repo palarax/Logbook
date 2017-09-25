@@ -20,6 +20,6 @@ public class Utils {
     public static final String BACKENDLESS_DOB = "DOB";
     public static final String BACKENDLESS_STATE = "state";
 
-
+    public static final String GOOGLE_MAPS_API_KEY = "AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM";
 
 }

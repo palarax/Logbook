@@ -20,12 +20,17 @@ android {
 }
 
 def googleVersion = '26.+'
+def googleGmsVersion = '11.+'   //Not sure why 11.4.0 doesn't work
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile "com.google.android.gms:play-services-maps:$googleGmsVersion"
+    compile 'io.nlopez.smartlocation:library:3.3.1'
+
     compile "com.android.support:appcompat-v7:$googleVersion"
     compile "com.android.support:support-v4:$googleVersion"
     compile "com.android.support:design:$googleVersion"
@@ -37,4 +42,5 @@ dependencies {
     compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56' // morphing button
     compile 'com.txusballesteros:FitChart:1.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
+    //compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.8'   interesting date time picker
 }

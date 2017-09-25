@@ -29,6 +29,12 @@
     <string name="profile_completed">HOURS COMPLETED</string>
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
+    <!-- Lesson details -->
+    <string name="edit_lpn">Licence Plate Number</string>
+    <string name="edit_start_odometer">Start odometer</string>
+    <string name="edit_end_odometer">End odometer</string>
+    <string name="edit_supervisor">Supervisor licence number</string>
+
     <!--User drive detals -->
     <string name="drive_number">NUMBER OF LESSONS</string>
     <string name="drive_hours">HOURS DROVE</string>
@@ -39,4 +45,12 @@
     <string name="error_badTag">ERROR: Bad NFC tag</string>
     <string name="error_profile">ERROR: Profile data could not be retrieved</string>
     <string name="error_logout">ERROR: with logging out, try again</string>
+    <string name="error_lpn_null">Licence Plate Number cannot be empty</string>
+    <string name="error_start_odometer_null">Start odometer cannot be empty</string>
+    <string name="error_end_odometer_null">End odometer cannot be empty</string>
+    <string name="error_supervisor_null">Supervisor licence number cannot be empty</string>
+    
+    <!-- Google maps API key -->
+    <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
+
 </resources>

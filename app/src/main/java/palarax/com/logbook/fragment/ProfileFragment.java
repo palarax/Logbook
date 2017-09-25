@@ -24,11 +24,11 @@ import palarax.com.logbook.model.Utils;
  */
 public class ProfileFragment extends Fragment {
 
-    private TextView nameText;
-    private TextView licenseText;
-    private TextView dobText;
-    private TextView stateText;
-    private TextView progressText;
+    private TextView mNameText;
+    private TextView mLicenseText;
+    private TextView mDobText;
+    private TextView mStateText;
+    private TextView mProgressText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,11 +41,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nameText = view.findViewById(R.id.txt_name);
-        licenseText = view.findViewById(R.id.txt_license);
-        dobText = view.findViewById(R.id.txt_dob);
-        stateText = view.findViewById(R.id.txt_state);
-        progressText = view.findViewById(R.id.txt_completed);
+        super.onViewCreated(view, savedInstanceState);
+        mNameText = view.findViewById(R.id.txt_name);
+        mLicenseText = view.findViewById(R.id.txt_license);
+        mDobText = view.findViewById(R.id.txt_dob);
+        mStateText = view.findViewById(R.id.txt_state);
+        mProgressText = view.findViewById(R.id.txt_completed);
         populateUserData();
     }
 
@@ -56,11 +57,11 @@ public class ProfileFragment extends Fragment {
         //TODO: should be saved in the local DB
         BackendlessUser user = Backendless.UserService.CurrentUser();
         String nameAndSurname = user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME);
-        nameText.setText(nameAndSurname);
-        licenseText.setText(String.format("%d", ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE))));
-        dobText.setText((String) user.getProperty(Utils.BACKENDLESS_DOB));
-        stateText.setText((String) user.getProperty(Utils.BACKENDLESS_STATE));
-        progressText.setText(getString(R.string.profile_in_progress));
-        progressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
+        mNameText.setText(nameAndSurname);
+        mLicenseText.setText(String.format("%d", ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE))));
+        mDobText.setText((String) user.getProperty(Utils.BACKENDLESS_DOB));
+        mStateText.setText((String) user.getProperty(Utils.BACKENDLESS_STATE));
+        mProgressText.setText(getString(R.string.profile_in_progress));
+        mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
     }
 }

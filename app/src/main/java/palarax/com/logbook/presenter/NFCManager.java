@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.adapters;
+package palarax.com.logbook.presenter;
 
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -34,13 +34,6 @@ public class NFCManager implements NfcAdapter.ReaderCallback{
     // Weak reference to prevent retain loop. mAccountCallback is responsible for exiting
     // foreground mode before it becomes invalid (e.g. during onPause() or onStop()).
     private WeakReference<AccountCallback> mAccountCallback;
-
-    /**
-     * AccountCallback interface function
-     */
-    public interface AccountCallback {
-        void onAccountReceived(Tag tag) throws Exception;
-    }
 
     /**
      * NFC initializes WeakReference
@@ -65,6 +58,13 @@ public class NFCManager implements NfcAdapter.ReaderCallback{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * AccountCallback interface function
+     */
+    public interface AccountCallback {
+        void onAccountReceived(Tag tag) throws Exception;
     }
 
 }

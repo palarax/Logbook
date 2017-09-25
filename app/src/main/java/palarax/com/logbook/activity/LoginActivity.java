@@ -40,9 +40,9 @@ import com.dd.morphingbutton.impl.IndeterminateProgressButton;
 import java.util.ArrayList;
 
 import palarax.com.logbook.R;
-import palarax.com.logbook.adapters.NFCManager;
 import palarax.com.logbook.model.NdefTag;
 import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.presenter.NFCManager;
 
 /**
  * Initial activity that requires the user to login using NFC
