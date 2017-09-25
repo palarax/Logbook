@@ -1,13 +1,9 @@
 package palarax.com.logbook.activity;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,10 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,10 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.Locale;
 
 import palarax.com.logbook.R;
 
@@ -41,106 +37,95 @@ import palarax.com.logbook.R;
  * @version 1.0
  */
 
-public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallback {
+public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallback, LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
-
-    //TODO: Location tracker https://github.com/mrmans0n/smart-location-lib
+    public static final int TWO_MINUTES = 1000 * 60 * 2;
 
     //TODO: https://github.com/googlesamples/android-SpeedTracker/blob/master/Application/src/main/java/com/example/android/wearable/speedtracker/PhoneMainActivity.java
     //Looks like a path builder
+    private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
     private static final int LOCATION_PERMISSION_ID = 1001;
-    /**
-     * Represents a geographical location.
-     */
-    protected Location mLastLocation;
-    LocationManager manager;
+    private static final long INTERVAL = 1000 * 30; //Interval location will be found
+    private static final long FASTEST_INTERVAL = 1000 * 15; //Interval if found sooner
     private GoogleMap mMap;
-    private SupportMapFragment mMapFragment;
-    /**
-     * Provides access to the Fused Location Provider API.
-     */
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
+    private TextView mLocationText;
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mCurrentLocation;
 
+    private String mLastUpdateTime; //TODO: figure out if needed
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
         Button btnStart = (Button) findViewById(R.id.btn_start);
+        mLocationText = (TextView) findViewById(R.id.start_location);
+
+        if (!isGooglePlayServicesAvailable()) {
+            finish();
+        }
+        createLocationRequest();
+        //Set up google api client for locaition services
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Location permission not granted
                 if (ContextCompat.checkSelfPermission(DrivingLesson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
-                    finish();
-                }
-                getLastLocation();
+                    ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
+                } else showLocation(mCurrentLocation);
             }
         });
 
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mMapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-        try {
-            manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(myIntent);
-            } else {
-                mMapFragment.getMapAsync(this);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                for (Location location : locationResult.getLocations()) {
-                    updateMap(location.getLatitude(), location.getLongitude());
-                }
-            }
-        };
-    }
-
-    private void updateMap(double currentLatitude, double currentLongitude) {
-        LatLng loc1 = new LatLng(currentLatitude, currentLongitude);
-        mMap.addMarker(new MarkerOptions().position(loc1).title("Your Current Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), 15));
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     /**
-     * Provides a simple way of getting a device's location and is well suited for
-     * applications that do not require a fine-grained location and that do not need location
-     * updates. Gets the best and most recent location currently available, which may be null
-     * in rare cases when a location is not available.
-     * <p>
-     * Note: this method should be called after location permission has been granted.
+     * Initiates location request with specific Intervals
      */
-    @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
-        mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mLastLocation = task.getResult();
-                            String location = String.format(Locale.ENGLISH, "Latitude %f, Longitude %f", mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                            Log.e(TAG, location);
-                            updateMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
-                        } else {
-                            Log.w(TAG, "getLastLocation:exception", task.getException());
-                        }
-                    }
-                });
+
+    /**
+     * Updates Map with new location
+     * @param currentLatitude latitude of current position
+     * @param currentLongitude longitude of current position
+     */
+    private void updateMap(double currentLatitude, double currentLongitude) {
+        Log.d(TAG,"updateMap");
+        LatLng location = new LatLng(currentLatitude, currentLongitude);
+        mMap.addMarker(new MarkerOptions().position(location).title("Your Current Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+    }
+
+    //TODO: remove once done, used for testing
+    private void showLocation(Location newLocation) {
+        if (isBetterLocation(newLocation,mCurrentLocation)) {
+            mCurrentLocation = newLocation;
+            final String text = String.format("Latitude %.6f, Longitude %.6f",
+                    mCurrentLocation.getLatitude(),
+                    mCurrentLocation.getLongitude());
+            mLocationText.setText(text);
+            updateMap(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        } else mLocationText.setText("Null location");
     }
 
 
@@ -187,20 +172,38 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //Show last location
         mMap = googleMap;
     }
 
 
 
-    /*@Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
-    }*/
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
+
+    protected void startLocationUpdates() {
+        if(ContextCompat.checkSelfPermission(DrivingLesson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
+        }else{
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+
+    }
+
+
 
 
     /*@Override
@@ -209,6 +212,71 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     }*/
 
 
+    /**
+     * Called when activity becomes visible to the user
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+        mGoogleApiClient.connect();
+    }
+
+    /**
+     * Called when activity has been stopped and is restarting again
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        if(this.mGoogleApiClient != null) this.mGoogleApiClient.connect();
+    }
+
+    /**
+     * Called when activity starts interacting with user
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        if (mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+        }
+    }
+
+    /**
+     * Called when current activity is being paused and the previous activity is being resumed
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        stopLocationUpdates();
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+
+    /**
+     * Called when activity is no longer visible to user
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        mGoogleApiClient.disconnect();
+    }
+
+    /**
+     * Called before the activity is destroyed by the system (either manually or by the system to conserve memory)
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
 
     /**
      * Handles the result of the request for location permissions.
@@ -216,11 +284,101 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_ID && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getLastLocation();
+            startLocationUpdates();
         } else {
             finish();
         }
     }
 
+    /**
+     * Checks if google play services are available
+     * @return true if GMS is available
+     */
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            Toast.makeText(getBaseContext(),getString(R.string.error_gms_connect),Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        if(mCurrentLocation == null){
+            mCurrentLocation = location;
+            LatLng locl = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(locl).title("Your Current Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locl, 18));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+        }
+
+        showLocation(location);
+    }
+
+    /** Determines whether one Location reading is better than the current Location fix
+     * @param location  The new Location that you want to evaluate
+     * @param currentBestLocation  The current Location fix, to which you want to compare the new one
+     * TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
+     */
+    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            return true;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether two providers are the same
+     * TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
+     */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
 
 }

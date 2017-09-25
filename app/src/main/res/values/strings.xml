@@ -49,6 +49,7 @@
     <string name="error_start_odometer_null">Start odometer cannot be empty</string>
     <string name="error_end_odometer_null">End odometer cannot be empty</string>
     <string name="error_supervisor_null">Supervisor licence number cannot be empty</string>
+    <string name="error_gms_connect">Google Play Services could not be connected</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
