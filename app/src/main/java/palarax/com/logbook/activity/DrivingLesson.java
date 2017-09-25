@@ -1,22 +1,37 @@
 package palarax.com.logbook.activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
-import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider;
+import java.util.Locale;
+
 import palarax.com.logbook.R;
 
 /**
@@ -26,30 +41,110 @@ import palarax.com.logbook.R;
  * @version 1.0
  */
 
-public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallback,OnLocationUpdatedListener {
+public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
+    private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
 
     //TODO: Location tracker https://github.com/mrmans0n/smart-location-lib
 
-    //TODO: https://github.com/rcgroot/open-gpstracker-ng
-
     //TODO: https://github.com/googlesamples/android-SpeedTracker/blob/master/Application/src/main/java/com/example/android/wearable/speedtracker/PhoneMainActivity.java
     //Looks like a path builder
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int LOCATION_PERMISSION_ID = 1001;
+    /**
+     * Represents a geographical location.
+     */
+    protected Location mLastLocation;
+    LocationManager manager;
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
-    private LocationGooglePlayServicesProvider mProvider;
+    /**
+     * Provides access to the Fused Location Provider API.
+     */
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
-        getLocationPermission();
+        Button btnStart = (Button) findViewById(R.id.btn_start);
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Location permission not granted
+                if (ContextCompat.checkSelfPermission(DrivingLesson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_ID);
+                    finish();
+                }
+                getLastLocation();
+            }
+        });
+
+        // Keep the screen always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mMapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mMapFragment.getMapAsync(this);
+
+        try {
+            manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(myIntent);
+            } else {
+                mMapFragment.getMapAsync(this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    updateMap(location.getLatitude(), location.getLongitude());
+                }
+            }
+        };
     }
+
+    private void updateMap(double currentLatitude, double currentLongitude) {
+        LatLng loc1 = new LatLng(currentLatitude, currentLongitude);
+        mMap.addMarker(new MarkerOptions().position(loc1).title("Your Current Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), 15));
+        //mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+    }
+
+    /**
+     * Provides a simple way of getting a device's location and is well suited for
+     * applications that do not require a fine-grained location and that do not need location
+     * updates. Gets the best and most recent location currently available, which may be null
+     * in rare cases when a location is not available.
+     * <p>
+     * Note: this method should be called after location permission has been granted.
+     */
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLastLocation = task.getResult();
+                            String location = String.format(Locale.ENGLISH, "Latitude %f, Longitude %f", mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                            Log.e(TAG, location);
+                            updateMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+
+                        } else {
+                            Log.w(TAG, "getLastLocation:exception", task.getException());
+                        }
+                    }
+                });
+    }
+
+
+
 
     /*private void showTrack() {
         new AsyncTask<Void, Void, Void>() {
@@ -95,9 +190,11 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         mMap = googleMap;
     }
 
+
+
     /*@Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
     }*/
 
     @Override
@@ -112,111 +209,18 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     }*/
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-    }
-
-    /**
-     * Called when activity has been stopped and is restarting again
-     */
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart");
-    }
-
-    /**
-     * Called when activity starts interacting with user
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-    }
-
-    /**
-     * Called when current activity is being paused and the previous activity is being resumed
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
-
-    /**
-     * Called when activity is no longer visible to user
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    /**
-     * Called before the activity is destroyed by the system (either manually or by the system to conserve memory)
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-    }
-
-    /**
-     * Prompts the user for permission to use the device location.
-     */
-    private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-    }
 
     /**
      * Handles the result of the request for location permissions.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startLocation();
-                }
-            }
-            default: finish();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_ID && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLastLocation();
+        } else {
+            finish();
         }
     }
 
 
-    private void startLocation() {
-        mProvider = new LocationGooglePlayServicesProvider();
-        mProvider.setCheckLocationSettings(true);
-        SmartLocation smartLocation = new SmartLocation.Builder(getApplicationContext()).logging(true).build();
-        smartLocation.location(mProvider).start(this);
-    }
-
-
-    @Override
-    public void onLocationUpdated(Location location) {
-        if (location != null) {
-            final String text = String.format("Latitude %.6f, Longitude %.6f",
-                    location.getLatitude(),
-                    location.getLongitude());
-            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-        }
-    }
 }
