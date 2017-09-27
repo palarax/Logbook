@@ -27,10 +27,11 @@ import java.sql.Time;
  */
 public class Lesson extends SugarRecord<Lesson> {
 
-    private String mLicencePlate;
-    private int mLessonId, mDistance, mSupervisorLicence, mLearnerId, mStartOdometer, mEndOdometer;
-    private Time mTotalTime, mStartTime, mEndTime;
+    private String licencePlate;
+    private int distance, supervisorLicence, startOdometer, endOdometer;
+    private Time totalTime, startTime, endTime;
 
+    private Users student;
     /**
      * Default constructor for SugarOrm
      */
@@ -41,107 +42,97 @@ public class Lesson extends SugarRecord<Lesson> {
      * Lesson object constructor that initializes the object
      *
      * @param licencePlate licence plate of the vehicle used
-     * @param lessonId lesson identification number
      * @param distance  distance travelled during the lesson
      * @param supervisorLicence supervisor licence number
-     * @param learnerId  learner identification number
+     * @param student student for this lesson
      * @param startOdometer odometer start number
      * @param endOdometer odometer end number
      * @param totalTime  total time driving for this lesson
      * @param startTime time started the lesson
      * @param endTime   time ended the lesson
      */
-    public Lesson(String licencePlate, int lessonId, int distance, int supervisorLicence, int learnerId, int startOdometer, int endOdometer, Time totalTime, Time startTime, Time endTime) {
-        this.mLicencePlate = licencePlate;
-        this.mLessonId = lessonId;
-        this.mDistance = distance;
-        this.mSupervisorLicence = supervisorLicence;
-        this.mLearnerId = learnerId;
-        this.mStartOdometer = startOdometer;
-        this.mEndOdometer = endOdometer;
-        this.mTotalTime = totalTime;
-        this.mStartTime = startTime;
-        this.mEndTime = endTime;
+    public Lesson(String licencePlate, int distance, int supervisorLicence, Users student, int startOdometer, int endOdometer, Time totalTime, Time startTime, Time endTime) {
+        this.licencePlate = licencePlate;
+        this.distance = distance;
+        this.supervisorLicence = supervisorLicence;
+        this.student = student;
+        this.startOdometer = startOdometer;
+        this.endOdometer = endOdometer;
+        this.totalTime = totalTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 
     public String getLicencePlate() {
-        return mLicencePlate;
+        return licencePlate;
     }
 
     public void setLicencePlate(String LicencePlate) {
-        this.mLicencePlate = LicencePlate;
-    }
-
-    public int getLessonId() {
-        return mLessonId;
-    }
-
-    public void setLessonId(int lessonId) {
-        this.mLessonId = lessonId;
+        this.licencePlate = LicencePlate;
     }
 
     public int getDistance() {
-        return mDistance;
+        return distance;
     }
 
     public void setDistance(int Distance) {
-        this.mDistance = Distance;
+        this.distance = Distance;
     }
 
     public int getSupervisorLicence() {
-        return mSupervisorLicence;
+        return supervisorLicence;
     }
 
     public void setSupervisorLicence(int supervisorLicence) {
-        this.mSupervisorLicence = supervisorLicence;
+        this.supervisorLicence = supervisorLicence;
     }
 
-    public int getLearnerId() {
-        return mLearnerId;
+    public Users getStudent() {
+        return student;
     }
 
-    public void setLearnerId(int learnerId) {
-        this.mLearnerId = learnerId;
+    public void setStudent(Users student) {
+        this.student = student;
     }
 
     public int getStartOdometer() {
-        return mStartOdometer;
+        return startOdometer;
     }
 
     public void setStartOdometer(int startOdometer) {
-        this.mStartOdometer = startOdometer;
+        this.startOdometer = startOdometer;
     }
 
     public int getEndOdometer() {
-        return mEndOdometer;
+        return endOdometer;
     }
 
     public void setEndOdometer(int endOdometer) {
-        this.mEndOdometer = endOdometer;
+        this.endOdometer = endOdometer;
     }
 
     public Time getTotalTime() {
-        return mTotalTime;
+        return totalTime;
     }
 
     public void setTotalTime(Time totalTime) {
-        this.mTotalTime = totalTime;
+        this.totalTime = totalTime;
     }
 
     public Time getStartTime() {
-        return mStartTime;
+        return startTime;
     }
 
     public void setStartTime(Time startTime) {
-        this.mStartTime = startTime;
+        this.startTime = startTime;
     }
 
     public Time getEndTime() {
-        return mEndTime;
+        return endTime;
     }
 
     public void setEndTime(Time endTime) {
-        this.mEndTime = endTime;
+        this.endTime = endTime;
     }
 }

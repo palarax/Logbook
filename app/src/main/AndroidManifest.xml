@@ -24,16 +24,13 @@
 
         <meta-data
             android:name="DATABASE"
-            android:value="test.db" />
+            android:value="lesson_history.db" />
         <meta-data
             android:name="VERSION"
             android:value="1" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="palarax.com.logbook" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

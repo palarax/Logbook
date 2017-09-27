@@ -4,6 +4,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="db_look">Reviewing database,this won\'t take long</string>
+
     <string name="action_settings">Back</string>
 
     <!-- Navigation Drawer menu labels -->
@@ -29,11 +31,15 @@
     <string name="profile_completed">HOURS COMPLETED</string>
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
-    <!-- Lesson details -->
+    <!-- Lesson activity -->
     <string name="edit_lpn">Licence Plate Number</string>
     <string name="edit_start_odometer">Start odometer</string>
     <string name="edit_end_odometer">End odometer</string>
     <string name="edit_supervisor">Supervisor licence number</string>
+    <string name="alert_title">Confirm</string>
+    <string name="backpress_alert">Exiting will result in termination of lesson</string>
+    <string name="alert_exit">Exit lesson</string>
+    <string name="alert_stay">Continue lesson</string>
 
     <!--User drive detals -->
     <string name="drive_number">NUMBER OF LESSONS</string>
@@ -49,7 +55,8 @@
     <string name="error_start_odometer_null">Start odometer cannot be empty</string>
     <string name="error_end_odometer_null">End odometer cannot be empty</string>
     <string name="error_supervisor_null">Supervisor licence number cannot be empty</string>
-    <string name="error_gms_connect">Google Play Services could not be connected</string>
+    <string name="error_gms_connect">ERROR: Google Play Services could not be connected</string>
+    <string name="error_user_not_exist">ERROR: The user does not exist</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>

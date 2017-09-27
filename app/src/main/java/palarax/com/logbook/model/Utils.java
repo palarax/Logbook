@@ -20,5 +20,6 @@ public class Utils {
     public static final String BACKENDLESS_LICENSE = "licence_id";
     public static final String BACKENDLESS_DOB = "DOB";
     public static final String BACKENDLESS_STATE = "state";
+    public static final String BACKENDLESS_HOURS_COMPLETED= "hours_completed";
 
 }

@@ -1,6 +1,8 @@
 package palarax.com.logbook.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -27,7 +29,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -35,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import palarax.com.logbook.R;
-import palarax.com.logbook.model.LocationPoints;
 
 /**
  * Activity that records and displays live lesson data
@@ -54,14 +54,12 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     //Looks like a path builder
     private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
     private static final int LOCATION_PERMISSION_ID = 1001;
-    private static final long INTERVAL = 1000 * 30; //Interval location will be found
-    private static final long FASTEST_INTERVAL = 1000 * 15; //Interval if found sooner
+    private static final long INTERVAL = 1000 * 20; //Interval location will be found
+    private static final long FASTEST_INTERVAL = 1000 * 10; //Interval if found sooner
 
     private static final int BOUNDING_BOX_PADDING_PX = 50;
     List<LatLng> coordinates;
     Polyline mPolyline;
-
-    private LocationPoints mLocationPoints;
 
     private GoogleMap mMap;
     private TextView mLocationText;
@@ -70,6 +68,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     private Location mCurrentLocation;
 
     private String mLastUpdateTime; //TODO: figure out if needed
+
+    private Location mTestLastLocation;
 
 
     @Override
@@ -103,7 +103,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        coordinates = new ArrayList<LatLng>();  //store coordinates
+        coordinates = new ArrayList<>();  //store coordinates
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -139,6 +139,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         }
         //addMarker(); //add Marker in current position
         mPolyline = mMap.addPolyline(options); //add Polyline
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLatitude,currentLongitude)));
     }
 
     //TODO: remove once done, used for testing
@@ -146,10 +147,9 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         if (isBetterLocation(newLocation,mCurrentLocation)) {
             mCurrentLocation = newLocation;
             coordinates.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-
-            final String text = String.format("Latitude %.6f, Longitude %.6f",
-                    mCurrentLocation.getLatitude(),
-                    mCurrentLocation.getLongitude());
+            final String text = String.format("Last accuracy %.3f, New accuracy %.3f",
+                    mTestLastLocation.getAccuracy(),
+                    mCurrentLocation.getAccuracy());
             mLocationText.setText(text);
 
             updateMap(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
@@ -188,17 +188,42 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
             ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
         }else{
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            mMap.setMyLocationEnabled(true);
         }
 
     }
 
 
+    //TODO: put into doc: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
 
-
-    /*@Override
+    /**
+     * Pressing the back button alerts the user that the lesson will end
+     */
+    @Override
     public void onBackPressed() {
-        //Super not called to disable back press
-    }*/
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(getString(R.string.alert_title));
+        builder.setMessage(getString(R.string.backpress_alert));
+
+        builder.setPositiveButton(getString(R.string.alert_stay), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing but close the dialog
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.alert_exit), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 
     /**
@@ -301,10 +326,10 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onLocationChanged(Location location) {
         //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        mTestLastLocation =mCurrentLocation;
         if(mCurrentLocation == null){
             mCurrentLocation = location;
             LatLng locl = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(locl).title("Your Current Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locl, 18));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
         }

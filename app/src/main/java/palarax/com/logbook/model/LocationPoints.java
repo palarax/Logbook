@@ -25,8 +25,8 @@ import com.orm.SugarRecord;
  */
 public class LocationPoints extends SugarRecord<LocationPoints> {
 
-    private int mLocationId, mLessonId;
-    private double mLatitude, mLongitude;
+    private Lesson lesson;
+    private double latitude, longitude;
 
     /**
      * Default constructor for SugarOrm
@@ -37,48 +37,37 @@ public class LocationPoints extends SugarRecord<LocationPoints> {
     /**
      * Location Points object constructor that initializes the object
      *
-     * @param locationId Location identification number
-     * @param lessonId   Lesson identification number
+     * @param lesson   Lesson linked to this location points
      * @param latitude   Latitude recorded during the lesson
      * @param longitude  Longitude recorded during the lesson
      */
-    public LocationPoints(Integer locationId, Integer lessonId, double latitude, double longitude) {
-        this.mLocationId = locationId;
-        this.mLessonId = lessonId;
-        this.mLatitude = latitude;
-        this.mLongitude = longitude;
+    public LocationPoints(Lesson lesson, double latitude, double longitude) {
+        this.lesson = lesson;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public Integer getLocationId() {
-        return mLocationId;
+    public Lesson getLessonId() {
+        return lesson;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.mLocationId = locationId;
-    }
-
-
-    public Integer getLessonId() {
-        return mLessonId;
-    }
-
-    public void setLessonId(Integer lessonId) {
-        this.mLessonId = lessonId;
+    public void setLessonId(Lesson lesson) {
+        this.lesson = lesson;
     }
 
     public double getLatitude() {
-        return mLatitude;
+        return latitude;
     }
 
     public void setLatitude(double latitude) {
-        this.mLatitude = latitude;
+        this.latitude = latitude;
     }
 
     public double getLongitude() {
-        return mLongitude;
+        return longitude;
     }
 
     public void setLongitude(double longitude) {
-        this.mLongitude = longitude;
+        this.longitude = longitude;
     }
 }

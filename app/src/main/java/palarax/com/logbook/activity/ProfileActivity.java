@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -17,16 +18,21 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.txusballesteros.widgets.FitChart;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import palarax.com.logbook.R;
+import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 
 /**
+ * Profile Activity that gives a summary of user progress
  * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
 //TODO: Populate graphs with data from DB
 public class ProfileActivity extends AppCompatActivity {
+
+    private static final String TAG = ProfileActivity.class.getSimpleName(); //used for debugging
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,14 +55,24 @@ public class ProfileActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            //The key argument here must match that used in the other activity
-            nameText.setText(extras.getString(Utils.BACKENDLESS_NAME));
-            licenseText.setText(String.format("%d", extras.getInt(Utils.BACKENDLESS_LICENSE)));
-            dobText.setText(extras.getString(Utils.BACKENDLESS_DOB));
-            stateText.setText(extras.getString(Utils.BACKENDLESS_STATE));
+            int licence = extras.getInt(Utils.BACKENDLESS_LICENSE);
+            List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
 
-            progressText.setText(getString(R.string.profile_in_progress));
-            progressText.setTextColor(ContextCompat.getColor(this, R.color.in_progress));
+            nameText.setText(users.get(0).getUserName()+" "+users.get(0).getUserSurname());
+            licenseText.setText(Integer.toString(licence));
+            dobText.setText(users.get(0).getDob());
+            stateText.setText(users.get(0).getState());
+            if(users.get(0).getHoursCompleted()<120){
+                progressText.setText(getString(R.string.profile_in_progress));
+                progressText.setTextColor(ContextCompat.getColor(this, R.color.in_progress));
+            }else{
+                progressText.setText(getString(R.string.profile_completed));
+                progressText.setTextColor(ContextCompat.getColor(this, R.color.licence_color));
+            }
+
+        }else{
+            Toast.makeText(this,getString(R.string.error_user_not_exist),Toast.LENGTH_LONG).show();
+            finish();
         }
         createDataSeries1();
     }

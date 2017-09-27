@@ -25,8 +25,8 @@ import com.orm.SugarRecord;
  */
 public class Users extends SugarRecord<Users> {
 
-    private int mUserId, mLicenseNumber;
-    private String mUserName, mUserSurname;
+    private int licenseNumber, hoursCompleted;
+    private String userName, userSurname,state,dob;
 
     /**
      * Default constructor for SugarOrm
@@ -38,49 +38,65 @@ public class Users extends SugarRecord<Users> {
     /**
      * Users object constructor that initializes the object
      *
-     * @param userId        User identification number
      * @param licenseNumber License number of the user
      * @param userName      Surname of the user
      * @param userSurname   Surname of the user
      */
-    public Users(Integer userId, Integer licenseNumber, String userName, String userSurname) {
-        this.mUserId = userId;
-        this.mLicenseNumber = licenseNumber;
-        this.mUserName = userName;
-        this.mUserSurname = userSurname;
+    public Users(Integer licenseNumber, String userName, String userSurname,String state,String dob,int hours_completed) {
+        this.licenseNumber = licenseNumber;
+        this.userName = userName;
+        this.userSurname = userSurname;
+        this.state = state;
+        this.dob = dob;
+        this.hoursCompleted = hours_completed;
     }
 
-    public Integer getUserId() {
-        return mUserId;
+    public int getHoursCompleted() {
+        return hoursCompleted;
     }
 
-    public void setUserId(Integer userId) {
-        this.mUserId = userId;
+    public void setHoursCompleted(int hours_completed) {
+        this.hoursCompleted = hours_completed;
     }
 
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public Integer getLicenseNumber() {
-        return mLicenseNumber;
+        return licenseNumber;
     }
 
     public void setLicenseNumber(Integer licenseNumber) {
-        this.mLicenseNumber = licenseNumber;
+        this.licenseNumber = licenseNumber;
     }
 
 
     public String getUserName() {
-        return mUserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        this.mUserName = userName;
+        this.userName = userName;
     }
 
     public String getUserSurname() {
-        return mUserSurname;
+        return userSurname;
     }
 
     public void setUserSurname(String userSurname) {
-        this.mUserSurname = userSurname;
+        this.userSurname = userSurname;
     }
 }

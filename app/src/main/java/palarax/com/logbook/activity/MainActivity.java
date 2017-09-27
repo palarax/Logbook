@@ -39,8 +39,11 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.R;
+import palarax.com.logbook.db.DatabaseHelper;
 import palarax.com.logbook.fragment.GoalsFragment;
 import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
@@ -88,26 +91,18 @@ public class MainActivity extends AppCompatActivity
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: need to be accessed from Local DB, DB is updated every time user logs in
                 BackendlessUser user = Backendless.UserService.CurrentUser();
-
-                //TODO: fix db call, currently testing
-                Users u = Users.findById(Users.class, (long) 1);
-                Log.e(TAG, "USER: " + u.getUserName());
-                //List<Users> bb = Users.findWithQuery(Users.class, "Select * from Users where licenseNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
-                /*Log.e(TAG,bb.toString());
-                Toast.makeText(MainActivity.this, "Adding user", Toast.LENGTH_SHORT).show();
-                if(bb.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Adding user", Toast.LENGTH_SHORT).show();
-                    Users u = new Users(1,(Integer) user.getProperty(Utils.BACKENDLESS_LICENSE),(String)user.getProperty(Utils.BACKENDLESS_NAME),(String)user.getProperty(Utils.BACKENDLESS_SURNAME));
-                    u.save();
-                }*/
+                try {
+                    Log.d(TAG,"SEARCHING FOR USER");
+                    List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
+                    Log.e(TAG, "USER: " + users.get(0).getUserName());
+                }catch (IndexOutOfBoundsException e){
+                    Log.e(TAG,"User did not exist");
+                    DatabaseHelper.saveNewBackendlessUser(user);
+                }
 
                 Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-                intent.putExtra(Utils.BACKENDLESS_NAME, user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME));
                 intent.putExtra(Utils.BACKENDLESS_LICENSE, (Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
-                intent.putExtra(Utils.BACKENDLESS_DOB, (String) user.getProperty(Utils.BACKENDLESS_DOB));
-                intent.putExtra(Utils.BACKENDLESS_STATE, (String) user.getProperty(Utils.BACKENDLESS_STATE));
                 startActivity(intent);
             }
         });
@@ -126,15 +121,26 @@ public class MainActivity extends AppCompatActivity
      * @param user     Backendless user object
      */
     private void populateNavHeader(View headView, BackendlessUser user) {
+        String nameAndSurname="";
         if (user != null) {
-            String nameAndSurname = user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME);
-            ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
-            ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
+            try {
+                Log.d(TAG,"SEARCHING FOR USER");
+                List<Users> learner = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
+                learner.get(0).getUserName();
+                nameAndSurname = learner.get(0).getUserName() + " " + learner.get(0).getUserSurname();
+                ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
+
+            }catch (IndexOutOfBoundsException e){
+                Log.e(TAG,"User did not exist in database");
+                Users learner = DatabaseHelper.saveNewBackendlessUser(user);
+                nameAndSurname = learner.getUserName() + " " + learner.getUserSurname();
+            }finally {
+                ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
+            }
         } else {
-            ((TextView) headView.findViewById(R.id.nav_header_name)).setText(getString(R.string.header_name_default));
+            finish();   //this should NEVER happen
         }
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

@@ -19,9 +19,11 @@ import android.widget.TextView;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 
+import java.util.List;
+
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.DrivingLesson;
-import palarax.com.logbook.activity.MainActivity;
+import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 
 /**
@@ -34,7 +36,7 @@ import palarax.com.logbook.model.Utils;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
+    private static final String TAG = HomeFragment.class.getSimpleName(); //used for debugging
     // distance the button travels down the screen vertically
     private static final int BTN_Y_DISTANCE = 400;
     private TextView mNameText;
@@ -56,7 +58,6 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onAnimationStart(Animation animation) {
-
         }
 
         @Override
@@ -117,15 +118,20 @@ public class HomeFragment extends Fragment {
      * Populates view with user data
      */
     private void populateUserData() {
-        //TODO: should be saved in the local DB
         BackendlessUser user = Backendless.UserService.CurrentUser();
-        String nameAndSurname = user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME);
-        mNameText.setText(nameAndSurname);
-        mLicenseText.setText(String.format("%d", ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE))));
-        mDobText.setText((String) user.getProperty(Utils.BACKENDLESS_DOB));
-        mStateText.setText((String) user.getProperty(Utils.BACKENDLESS_STATE));
-        mProgressText.setText(getString(R.string.profile_in_progress));
-        mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
+        int licence = ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
+        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
+        mNameText.setText(users.get(0).getUserName()+" "+users.get(0).getUserSurname());
+        mLicenseText.setText(Integer.toString(licence));
+        mDobText.setText(users.get(0).getDob());
+        mStateText.setText(users.get(0).getState());
+        if(users.get(0).getHoursCompleted()<120){
+            mProgressText.setText(getString(R.string.profile_in_progress));
+            mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
+        }else{
+            mProgressText.setText(getString(R.string.profile_completed));
+            mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.licence_color));
+        }
     }
 
     /**
@@ -149,5 +155,4 @@ public class HomeFragment extends Fragment {
         }
         return editEmpty;
     }
-
 }

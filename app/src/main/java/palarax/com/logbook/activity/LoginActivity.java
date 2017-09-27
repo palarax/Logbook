@@ -23,6 +23,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.model.NdefTag;
+import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 import palarax.com.logbook.presenter.NFCManager;
 
@@ -67,7 +69,30 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initialiseBackEndless();
+        mBtnMorph = findViewById(R.id.btnMorph);
+        morphToFailure(mBtnMorph);
+        mBtnMorph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nextActivity();
+            }
+        });
+        mBtnMorph.blockTouch();
 
+        //Sneaky way of initializing DB for the first time without effecting UI performance
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Users.findById(Users.class,(long) 1);
+                initialize();
+            }
+        });
+    }
+
+    /**
+     * Initialize NFC
+     */
+    private void initialize(){
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (mNfcAdapter == null) {
@@ -81,18 +106,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         //register NFC callback
         mCardReader = new NFCManager(this);
         enableReaderMode();
-
-        mBtnMorph = findViewById(R.id.btnMorph);
-        morphToFailure(mBtnMorph);
-        mBtnMorph.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                nextActivity();
-            }
-        });
-        mBtnMorph.blockTouch();
     }
-
 
     /**
      * Receives data after nfc card has been found
