@@ -45,6 +45,7 @@ import palarax.com.logbook.fragment.GoalsFragment;
 import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
 import palarax.com.logbook.fragment.ProfileFragment;
+import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 
 
@@ -89,6 +90,18 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //TODO: need to be accessed from Local DB, DB is updated every time user logs in
                 BackendlessUser user = Backendless.UserService.CurrentUser();
+
+                //TODO: fix db call, currently testing
+                Users u = Users.findById(Users.class, (long) 1);
+                Log.e(TAG, "USER: " + u.getUserName());
+                //List<Users> bb = Users.findWithQuery(Users.class, "Select * from Users where licenseNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
+                /*Log.e(TAG,bb.toString());
+                Toast.makeText(MainActivity.this, "Adding user", Toast.LENGTH_SHORT).show();
+                if(bb.isEmpty()){
+                    Toast.makeText(MainActivity.this, "Adding user", Toast.LENGTH_SHORT).show();
+                    Users u = new Users(1,(Integer) user.getProperty(Utils.BACKENDLESS_LICENSE),(String)user.getProperty(Utils.BACKENDLESS_NAME),(String)user.getProperty(Utils.BACKENDLESS_SURNAME));
+                    u.save();
+                }*/
 
                 Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
                 intent.putExtra(Utils.BACKENDLESS_NAME, user.getProperty(Utils.BACKENDLESS_NAME) + " " + user.getProperty(Utils.BACKENDLESS_SURNAME));

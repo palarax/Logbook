@@ -15,16 +15,25 @@
  */
 package palarax.com.logbook.model;
 
+import com.orm.SugarRecord;
+
 /**
  * Users table stores data of the app users
  *
  * @author Ilya Thai (11972078)
  * @date 22-Sep-17
  */
-public class Users {
+public class Users extends SugarRecord<Users> {
 
     private int mUserId, mLicenseNumber;
     private String mUserName, mUserSurname;
+
+    /**
+     * Default constructor for SugarOrm
+     */
+    public Users() {
+    }
+
 
     /**
      * Users object constructor that initializes the object

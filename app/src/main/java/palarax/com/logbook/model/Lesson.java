@@ -15,6 +15,8 @@
  */
 package palarax.com.logbook.model;
 
+import com.orm.SugarRecord;
+
 import java.sql.Time;
 
 /**
@@ -23,11 +25,17 @@ import java.sql.Time;
  * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
-public class Lesson {
+public class Lesson extends SugarRecord<Lesson> {
 
     private String mLicencePlate;
     private int mLessonId, mDistance, mSupervisorLicence, mLearnerId, mStartOdometer, mEndOdometer;
     private Time mTotalTime, mStartTime, mEndTime;
+
+    /**
+     * Default constructor for SugarOrm
+     */
+    public Lesson() {
+    }
 
     /**
      * Lesson object constructor that initializes the object

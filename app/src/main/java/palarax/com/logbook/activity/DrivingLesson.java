@@ -2,6 +2,7 @@ package palarax.com.logbook.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,11 +28,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import palarax.com.logbook.R;
+import palarax.com.logbook.model.LocationPoints;
 
 /**
- * Activity that records lesson data
+ * Activity that records and displays live lesson data
  * @author Ilya Thai (11972078)
  * @date 23-Sep-17
  * @version 1.0
@@ -49,6 +56,13 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     private static final int LOCATION_PERMISSION_ID = 1001;
     private static final long INTERVAL = 1000 * 30; //Interval location will be found
     private static final long FASTEST_INTERVAL = 1000 * 15; //Interval if found sooner
+
+    private static final int BOUNDING_BOX_PADDING_PX = 50;
+    List<LatLng> coordinates;
+    Polyline mPolyline;
+
+    private LocationPoints mLocationPoints;
+
     private GoogleMap mMap;
     private TextView mLocationText;
     private LocationRequest mLocationRequest;
@@ -56,6 +70,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     private Location mCurrentLocation;
 
     private String mLastUpdateTime; //TODO: figure out if needed
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +103,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        coordinates = new ArrayList<LatLng>();  //store coordinates
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -110,65 +127,37 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
      */
     private void updateMap(double currentLatitude, double currentLongitude) {
         Log.d(TAG,"updateMap");
-        LatLng location = new LatLng(currentLatitude, currentLongitude);
+        /*LatLng location = new LatLng(currentLatitude, currentLongitude);
         mMap.addMarker(new MarkerOptions().position(location).title("Your Current Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);*/
+        mMap.clear();  //clears all Markers and Polylines
+        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        for (int i = 0; i < coordinates.size(); i++) {
+            LatLng point = coordinates.get(i);
+            options.add(point);
+        }
+        //addMarker(); //add Marker in current position
+        mPolyline = mMap.addPolyline(options); //add Polyline
     }
 
     //TODO: remove once done, used for testing
     private void showLocation(Location newLocation) {
         if (isBetterLocation(newLocation,mCurrentLocation)) {
             mCurrentLocation = newLocation;
+            coordinates.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+
             final String text = String.format("Latitude %.6f, Longitude %.6f",
                     mCurrentLocation.getLatitude(),
                     mCurrentLocation.getLongitude());
             mLocationText.setText(text);
+
             updateMap(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         } else mLocationText.setText("Null location");
     }
 
 
 
-
-    /*private void showTrack() {
-        new AsyncTask<Void, Void, Void>() {
-
-            private List<LatLng> coordinates;
-            private LatLngBounds bounds;
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                LocationDataManager dataManager = ((PhoneApplication) getApplicationContext()).getDataManager();
-                List<LocationEntry> entries = dataManager.getPoints(params[0]);
-                if (entries != null && !entries.isEmpty()) {
-                    coordinates = new ArrayList<LatLng>();
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    for (LocationEntry entry : entries) {
-                        LatLng latLng = new LatLng(entry.latitude, entry.longitude);
-                        builder.include(latLng);
-                        coordinates.add(latLng);
-                    }
-                    bounds = builder.build();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                mMap.clear();
-                if (coordinates == null || coordinates.isEmpty()) {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "No Entries found for that date");
-                    }
-                } else {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,
-                            BOUNDING_BOX_PADDING_PX));
-                    mMap.addPolyline(new PolylineOptions().geodesic(true).addAll(coordinates));
-                }
-            }
-        }.execute(calendar);
-    }*/
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
