@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment {
             editEmpty = false;
         }
         if(TextUtils.isEmpty(mStartOdometer.getText().toString())) {
-            mStartOdometer.setError(getString(R.string.error_start_odometer_null));
+            mStartOdometer.setError(getString(R.string.error_odometer_null));
             editEmpty = false;
         }
         if(TextUtils.isEmpty(mSupervisorLicence.getText().toString())) {

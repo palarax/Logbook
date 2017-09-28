@@ -149,6 +149,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
      * @param password password of user (Stored in NFC as message)
      */
     private void loginBackEndless(String username, String password) {
+
         runOnUiThread(new Runnable() {
             public void run()
             {

@@ -40,6 +40,8 @@
     <string name="backpress_alert">Exiting will result in termination of lesson</string>
     <string name="alert_exit">Exit lesson</string>
     <string name="alert_stay">Continue lesson</string>
+    <string name="end_odometer_input">Please enter final odometer value</string>
+    <string name="btn_end_lesson">End Lesson</string>
 
     <!--User drive detals -->
     <string name="drive_number">NUMBER OF LESSONS</string>
@@ -52,11 +54,12 @@
     <string name="error_profile">ERROR: Profile data could not be retrieved</string>
     <string name="error_logout">ERROR: with logging out, try again</string>
     <string name="error_lpn_null">Licence Plate Number cannot be empty</string>
-    <string name="error_start_odometer_null">Start odometer cannot be empty</string>
-    <string name="error_end_odometer_null">End odometer cannot be empty</string>
+    <string name="error_odometer_null">Odometer value cannot be empty</string>
+    <string name="error_odometer_small">End odometer value smaller than start value</string>
     <string name="error_supervisor_null">Supervisor licence number cannot be empty</string>
     <string name="error_gms_connect">ERROR: Google Play Services could not be connected</string>
     <string name="error_user_not_exist">ERROR: The user does not exist</string>
+    <string name="bad_lesson">DELETING DATA: lesson or distance travelled too short (min 10 min, 500m)</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>

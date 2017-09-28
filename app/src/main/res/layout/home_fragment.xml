@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/edit_lpn"
-                android:inputType="textCapSentences"
+                android:inputType="textCapCharacters"
                 android:textAlignment="center"/>
 
             <EditText
