@@ -23,36 +23,37 @@ import com.orm.SugarRecord;
  * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
-public class LocationPoints extends SugarRecord<LocationPoints> {
 
-    private Lesson lesson;
-    private double latitude, longitude;
+public class Coordinates extends SugarRecord<Coordinates> {
+
+    private long lessonId;
+    private double longitude, latitude;
 
     /**
      * Default constructor for SugarOrm
      */
-    public LocationPoints() {
+    public Coordinates() {
     }
 
     /**
      * Location Points object constructor that initializes the object
      *
-     * @param lesson   Lesson linked to this location points
-     * @param latitude   Latitude recorded during the lesson
-     * @param longitude  Longitude recorded during the lesson
+     * @param lessonId  Lesson linked to this location points
+     * @param longitude longitude linked to lesson
+     * @param latitude  latitude linked to lesson
      */
-    public LocationPoints(Lesson lesson, double latitude, double longitude) {
-        this.lesson = lesson;
-        this.latitude = latitude;
+    public Coordinates(long lessonId, double longitude, double latitude) {
+        this.lessonId = lessonId;
         this.longitude = longitude;
+        this.latitude = latitude;
     }
 
-    public Lesson getLessonId() {
-        return lesson;
+    public long getLessonId() {
+        return lessonId;
     }
 
-    public void setLessonId(Lesson lesson) {
-        this.lesson = lesson;
+    public void setLessonId(long lesson) {
+        this.lessonId = lesson;
     }
 
     public double getLatitude() {
@@ -71,3 +72,4 @@ public class LocationPoints extends SugarRecord<LocationPoints> {
         this.longitude = longitude;
     }
 }
+

@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,11 +30,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import palarax.com.logbook.R;
+import palarax.com.logbook.model.Coordinates;
+import palarax.com.logbook.model.Lesson;
+import palarax.com.logbook.model.Utils;
 
 /**
  * Activity that records and displays live lesson data
@@ -50,14 +54,12 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
     public static final int TWO_MINUTES = 1000 * 60 * 2;
 
-    //TODO: https://github.com/googlesamples/android-SpeedTracker/blob/master/Application/src/main/java/com/example/android/wearable/speedtracker/PhoneMainActivity.java
     //Looks like a path builder
     private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
     private static final int LOCATION_PERMISSION_ID = 1001;
     private static final long INTERVAL = 1000 * 20; //Interval location will be found
     private static final long FASTEST_INTERVAL = 1000 * 10; //Interval if found sooner
 
-    private static final int BOUNDING_BOX_PADDING_PX = 50;
     List<LatLng> coordinates;
     Polyline mPolyline;
 
@@ -66,8 +68,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
     private Location mCurrentLocation;
-
-    private String mLastUpdateTime; //TODO: figure out if needed
+    private Lesson mLesson;
 
     private Location mTestLastLocation;
 
@@ -83,22 +84,13 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
             finish();
         }
         createLocationRequest();
-        //Set up google api client for locaition services
+        //Set up google api client for locations services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Location permission not granted
-                if (ContextCompat.checkSelfPermission(DrivingLesson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
-                } else showLocation(mCurrentLocation);
-            }
-        });
 
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -107,6 +99,12 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            long lesson_id = extras.getLong(Utils.LESSON_ID);
+            mLesson = Lesson.findById(Lesson.class, lesson_id);
+        }
     }
 
     /**
@@ -119,6 +117,20 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        mTestLastLocation = mCurrentLocation;
+        if (mCurrentLocation == null) {
+            mCurrentLocation = location;
+            LatLng locl = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locl, 18));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+        }
+
+        showLocation(location);
+    }
+
 
     /**
      * Updates Map with new location
@@ -127,26 +139,27 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
      */
     private void updateMap(double currentLatitude, double currentLongitude) {
         Log.d(TAG,"updateMap");
-        /*LatLng location = new LatLng(currentLatitude, currentLongitude);
-        mMap.addMarker(new MarkerOptions().position(location).title("Your Current Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);*/
         mMap.clear();  //clears all Markers and Polylines
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < coordinates.size(); i++) {
             LatLng point = coordinates.get(i);
             options.add(point);
         }
-        //addMarker(); //add Marker in current position
         mPolyline = mMap.addPolyline(options); //add Polyline
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLatitude,currentLongitude)));
     }
 
-    //TODO: remove once done, used for testing
+    //TODO: update to just store location and updateMap
     private void showLocation(Location newLocation) {
         if (isBetterLocation(newLocation,mCurrentLocation)) {
             mCurrentLocation = newLocation;
+            //Update lesson object
             coordinates.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+            //Store coordinates to db
+            Coordinates locationPoints = new Coordinates(mLesson.getId(),
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            locationPoints.save();
+
             final String text = String.format("Last accuracy %.3f, New accuracy %.3f",
                     mTestLastLocation.getAccuracy(),
                     mCurrentLocation.getAccuracy());
@@ -156,41 +169,56 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         } else mLocationText.setText("Null location");
     }
 
-
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //Show last location
-        mMap = googleMap;
-    }
-
-
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
+    /**
+     * Starts location updates, requests permissions if needed
+     */
     protected void startLocationUpdates() {
-        if(ContextCompat.checkSelfPermission(DrivingLesson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(DrivingLesson.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(DrivingLesson.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
+            ActivityCompat.requestPermissions(DrivingLesson.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_ID);
         }else{
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, this);
             mMap.setMyLocationEnabled(true);
         }
 
+    }
+
+    /**
+     * Checks lesson integrity. Lesson has to be longer than 10 minutes and
+     * distance travelled should be more than 500m, start odometer bigger than end odometer
+     */
+    private void checkLessonIntegrity() {
+        double distanceTravelled = SphericalUtil.computeLength(coordinates);//calculate distance travelled
+        long totalTime = 0;
+        try {
+            totalTime = Utils.getTimeDiffernce(mLesson.getStartTime(), mLesson.getEndTime());
+        } catch (ParseException e) {
+            Log.e(TAG, "Error: " + e);
+            //This error should never occur
+        }
+        long totalTimeMinutes = totalTime / 1000 / 60;
+        if (distanceTravelled > 500 && totalTimeMinutes > 10 &&
+                mLesson.getEndOdometer() > mLesson.getStartOdometer()) {
+
+            mLesson.setDistance(distanceTravelled);
+            mLesson.setTotalTime(Long.toString(totalTime));
+            mLesson.setSpeed(distanceTravelled / totalTime);
+            //save lesson
+            mLesson.save();
+        } else {
+            //Lesson is too short or didnt' travall enough
+            //Remove coordinates
+            List<Coordinates> coordinates = Coordinates.findWithQuery(Coordinates.class, "Select * from Coordinates where lesson_id = ?", mLesson.getId().toString());
+            for (Coordinates geoPoints : coordinates) {
+                geoPoints.delete();
+            }
+            //remove lesson
+            mLesson.delete();
+        }
     }
 
 
@@ -201,7 +229,9 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
      */
     @Override
     public void onBackPressed() {
+        //TODO: request end odometer readings
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        stopLocationUpdates();
 
         builder.setTitle(getString(R.string.alert_title));
         builder.setMessage(getString(R.string.backpress_alert));
@@ -209,6 +239,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         builder.setPositiveButton(getString(R.string.alert_stay), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
+                startLocationUpdates();
                 dialog.dismiss();
             }
         });
@@ -217,6 +248,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mLesson.setEndTime(Utils.getTime());
                 finish();
             }
         });
@@ -281,6 +313,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         super.onStop();
         Log.d(TAG, "onStop");
         mGoogleApiClient.disconnect();
+        checkLessonIntegrity();
     }
 
     /**
@@ -323,19 +356,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        mTestLastLocation =mCurrentLocation;
-        if(mCurrentLocation == null){
-            mCurrentLocation = location;
-            LatLng locl = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locl, 18));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
-        }
-
-        showLocation(location);
-    }
 
     /** Determines whether one Location reading is better than the current Location fix
      * @param location  The new Location that you want to evaluate
@@ -393,6 +413,26 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //Show last location
+        mMap = googleMap;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
     }
 
 }

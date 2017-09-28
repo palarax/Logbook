@@ -23,6 +23,7 @@ import java.util.List;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.DrivingLesson;
+import palarax.com.logbook.model.Lesson;
 import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 
@@ -50,6 +51,8 @@ public class HomeFragment extends Fragment {
     private Button mStart;
     private RelativeLayout.LayoutParams mLayoutParams;
     private boolean mBtnAnimated = false;
+
+    private Users student = null;
     /**
      * Handles sliding button animation. Used to transfer the button view, as the original animation
      * only transfers the pixels
@@ -72,6 +75,23 @@ public class HomeFragment extends Fragment {
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        //Fixes the animation not resetting
+        super.onCreate(savedInstanceState);
+        //reset animation
+        mBtnAnimated = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //clear edit
+        mLpn.setText("");
+        mStartOdometer.setText("");
+        mSupervisorLicence.setText("");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -81,6 +101,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //Set student
+        //Intent pase from Login
+        BackendlessUser user = Backendless.UserService.CurrentUser();
+        int licence = ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
+        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
+        student = users.get(0);
+
         mNameText = view.findViewById(R.id.txt_name);
         mLicenseText = view.findViewById(R.id.txt_license);
         mDobText = view.findViewById(R.id.txt_dob);
@@ -106,6 +133,14 @@ public class HomeFragment extends Fragment {
                 }else{
                     if(checkIfAllComplete()) {
                         Intent intent = new Intent(getActivity(), DrivingLesson.class);
+                        //Save lesson to db and send lesson id to lesson activity
+                        Lesson lesson = new Lesson(
+                                mLpn.getText().toString(),
+                                0, Integer.parseInt(mSupervisorLicence.getText().toString()),
+                                student, Integer.parseInt(mStartOdometer.getText().toString()),
+                                0, null, Utils.getTime(), null, 0);
+                        lesson.save();
+                        intent.putExtra(Utils.LESSON_ID, lesson.getId());
                         startActivity(intent);
                     }
                 }
@@ -118,14 +153,11 @@ public class HomeFragment extends Fragment {
      * Populates view with user data
      */
     private void populateUserData() {
-        BackendlessUser user = Backendless.UserService.CurrentUser();
-        int licence = ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
-        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
-        mNameText.setText(users.get(0).getUserName()+" "+users.get(0).getUserSurname());
-        mLicenseText.setText(Integer.toString(licence));
-        mDobText.setText(users.get(0).getDob());
-        mStateText.setText(users.get(0).getState());
-        if(users.get(0).getHoursCompleted()<120){
+        mNameText.setText(student.getUserName() + " " + student.getUserSurname());
+        mLicenseText.setText(student.getLicenseNumber().toString());
+        mDobText.setText(student.getDob());
+        mStateText.setText(student.getState());
+        if (student.getHoursCompleted() < 120) {
             mProgressText.setText(getString(R.string.profile_in_progress));
             mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
         }else{
@@ -155,4 +187,6 @@ public class HomeFragment extends Fragment {
         }
         return editEmpty;
     }
+
+
 }

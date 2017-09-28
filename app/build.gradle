@@ -30,6 +30,7 @@ dependencies {
 
     compile "com.google.android.gms:play-services-maps:$googleGmsVersion"
     compile "com.google.android.gms:play-services-location:$googleGmsVersion"
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
 
     compile "com.android.support:appcompat-v7:$googleVersion"
     compile "com.android.support:support-v4:$googleVersion"

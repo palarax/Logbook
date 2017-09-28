@@ -127,6 +127,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
                 msgRecords = ndef.read(tag);
                 //if it's NdefFormatable, then don't try to read the message (there is none)
                 if (msgRecords != null) {
+                    Log.e(TAG, "ID: " + ID + " pwd: " + msgRecords.get(0));
                     loginBackEndless(ID, (String) msgRecords.get(0));
                     return;
                 }

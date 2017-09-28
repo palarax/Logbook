@@ -17,8 +17,6 @@ package palarax.com.logbook.model;
 
 import com.orm.SugarRecord;
 
-import java.sql.Time;
-
 /**
  * Lesson data ( used for Lesson History)
  *
@@ -27,10 +25,11 @@ import java.sql.Time;
  */
 public class Lesson extends SugarRecord<Lesson> {
 
-    private String licencePlate;
-    private int distance, supervisorLicence, startOdometer, endOdometer;
-    private Time totalTime, startTime, endTime;
 
+    //totalTime in milliseconds, start and end time in date format ( dd/MM/yy HH:mm:ss )
+    private String licencePlate, totalTime, startTime, endTime;
+    private int supervisorLicence, startOdometer, endOdometer;
+    private double distance, speed;
     private Users student;
     /**
      * Default constructor for SugarOrm
@@ -50,8 +49,11 @@ public class Lesson extends SugarRecord<Lesson> {
      * @param totalTime  total time driving for this lesson
      * @param startTime time started the lesson
      * @param endTime   time ended the lesson
+     * @param speed average speed
      */
-    public Lesson(String licencePlate, int distance, int supervisorLicence, Users student, int startOdometer, int endOdometer, Time totalTime, Time startTime, Time endTime) {
+    public Lesson(String licencePlate, double distance, int supervisorLicence, Users student,
+                  int startOdometer, int endOdometer, String totalTime, String startTime,
+                  String endTime, double speed) {
         this.licencePlate = licencePlate;
         this.distance = distance;
         this.supervisorLicence = supervisorLicence;
@@ -61,6 +63,7 @@ public class Lesson extends SugarRecord<Lesson> {
         this.totalTime = totalTime;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.speed = speed;
     }
 
 
@@ -72,11 +75,11 @@ public class Lesson extends SugarRecord<Lesson> {
         this.licencePlate = LicencePlate;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(int Distance) {
+    public void setDistance(double Distance) {
         this.distance = Distance;
     }
 
@@ -112,27 +115,36 @@ public class Lesson extends SugarRecord<Lesson> {
         this.endOdometer = endOdometer;
     }
 
-    public Time getTotalTime() {
+    public String getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(Time totalTime) {
+    public void setTotalTime(String totalTime) {
         this.totalTime = totalTime;
     }
 
-    public Time getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
 }
