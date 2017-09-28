@@ -54,10 +54,10 @@ public class Utils {
 
     /**
      * Converts total time to Hours Minutes Seconds
-     *
      * @param totalTime total time of lesson
+     * @return returns formated string
      */
-    public static void convertDateToHhMmSs(Long totalTime) {
+    public static String convertDateToHhMmSs(Long totalTime) {
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
         long hoursInMilli = minutesInMilli * 60;
@@ -70,7 +70,8 @@ public class Utils {
         totalTime = totalTime % hoursInMilli;
 
         long elapsedMinutes = totalTime / minutesInMilli;
-        totalTime = totalTime % minutesInMilli;
+
+        return String.format("D:%d H:%d M:%d", elapsedDays, elapsedHours, elapsedMinutes);
 
     }
 

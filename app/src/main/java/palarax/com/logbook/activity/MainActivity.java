@@ -70,39 +70,41 @@ public class MainActivity extends AppCompatActivity
     private GoalsFragment mGoalsFragment = new GoalsFragment();
     private ProfileFragment mProfileFragment = new ProfileFragment();
 
+    private Users mStudent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Update local user details
+        //TODO: don't add same student
+        Users.deleteAll(Users.class);
+        mStudent = DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
+
+        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where dob <> ?", "-1");
+        for (Users user : users) {
+            Log.e(TAG, "NAME: " + user.getUserName());
+        }
+
 
         final View headerView = navigationView.getHeaderView(0);
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BackendlessUser user = Backendless.UserService.CurrentUser();
-                try {
-                    Log.d(TAG,"SEARCHING FOR USER");
-                    List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
-                    Log.e(TAG, "USER: " + users.get(0).getUserName());
-                }catch (IndexOutOfBoundsException e){
-                    Log.e(TAG,"User did not exist");
-                    DatabaseHelper.saveNewBackendlessUser(user);
-                }
-
                 Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-                intent.putExtra(Utils.BACKENDLESS_LICENSE, (Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
+                intent.putExtra(Utils.BACKENDLESS_LICENSE, mStudent.getLicenseNumber());
                 startActivity(intent);
             }
         });
@@ -125,15 +127,13 @@ public class MainActivity extends AppCompatActivity
         if (user != null) {
             try {
                 Log.d(TAG,"SEARCHING FOR USER");
-                List<Users> learner = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString());
-                learner.get(0).getUserName();
-                nameAndSurname = learner.get(0).getUserName() + " " + learner.get(0).getUserSurname();
+                nameAndSurname = mStudent.getUserName() + " " + mStudent.getUserSurname();
                 ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
 
-            }catch (IndexOutOfBoundsException e){
-                Log.e(TAG,"User did not exist in database");
-                Users learner = DatabaseHelper.saveNewBackendlessUser(user);
-                nameAndSurname = learner.getUserName() + " " + learner.getUserSurname();
+            } catch (NullPointerException e) {
+                Log.e(TAG, "User does not exist");
+                nameAndSurname = getString(R.string.guest_user);
+                Toast.makeText(this, getString(R.string.user_not_exist), Toast.LENGTH_LONG).show();
             }finally {
                 ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
             }
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

@@ -204,7 +204,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
                 mLesson.getEndOdometer() > mLesson.getStartOdometer())) {
 
             mLesson.setDistance(distanceTravelled);
-            mLesson.setTotalTime(Long.toString(totalTime));
+            mLesson.setTotalTime(totalTime);
             mLesson.setSpeed(distanceTravelled / totalTime);
             //save lesson
             mLesson.save();

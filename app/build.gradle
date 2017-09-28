@@ -20,7 +20,7 @@ android {
     }
 }
 
-def googleVersion = '26.+'
+def googleVersion = '26.1.0'
 def googleGmsVersion = '11.+'   //Not sure why 11.4.0 doesn't work
 
 dependencies {
@@ -32,6 +32,8 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:$googleGmsVersion"
     compile "com.google.android.gms:play-services-location:$googleGmsVersion"
     compile 'com.google.maps.android:android-maps-utils:0.5+'
+    compile "com.android.support:cardview-v7:$googleVersion"
+    compile "com.android.support:recyclerview-v7:$googleVersion"
 
     compile "com.android.support:appcompat-v7:$googleVersion"
     compile "com.android.support:support-v4:$googleVersion"
@@ -46,6 +48,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
 
     compile 'com.backendless:backendless:4.0.+'
+
     //compile "com.google.firebase:firebase-core:$googleGmsVersion"
     //compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.8'   interesting date time picker
 }

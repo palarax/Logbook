@@ -20,7 +20,7 @@ public class DatabaseHelper extends SugarApp{
      * @param user user object
      * @return user object
      */
-    public static Users saveNewBackendlessUser(BackendlessUser user){
+    public static Users updateLocalUserDetails(BackendlessUser user) {
         Users learner = new Users((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE),
                 (String) user.getProperty(Utils.BACKENDLESS_NAME),
                 (String) user.getProperty(Utils.BACKENDLESS_SURNAME),

@@ -16,9 +16,6 @@
     <string name="nav_logout">Logout</string>
     <string name="nav_profile_settings">Profile Settings</string>
 
-    <!-- Backendless values -->
-    <string name="header_name_default">Guest User</string>
-
     <string name="dialog_logout">Login out of the app …</string>
 
     <!-- Profile values -->
@@ -60,8 +57,14 @@
     <string name="error_gms_connect">ERROR: Google Play Services could not be connected</string>
     <string name="error_user_not_exist">ERROR: The user does not exist</string>
     <string name="bad_lesson">DELETING DATA: lesson or distance travelled too short (min 10 min, 500m)</string>
+    <string name="guest_user">ERROR: Guest User</string>
+    <string name="user_not_exist">ERROR: User does not exist</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
+
+    <!-- History Card view -->
+    <string name="txt_distance">%.2f m</string>
+    <string name="txt_speed">%.0f km/h</string>
 
 </resources>

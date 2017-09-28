@@ -38,16 +38,13 @@ import palarax.com.logbook.model.Utils;
 public class HomeFragment extends Fragment {
 
     private static final String TAG = HomeFragment.class.getSimpleName(); //used for debugging
+
     // distance the button travels down the screen vertically
     private static final int BTN_Y_DISTANCE = 400;
-    private TextView mNameText;
-    private TextView mLicenseText;
-    private TextView mDobText;
-    private TextView mStateText;
-    private TextView mProgressText;
-    private EditText mLpn;
-    private EditText mStartOdometer;
-    private EditText mSupervisorLicence;
+    private TextView mNameText, mLicenseText, mDobText, mStateText, mProgressText;
+
+    private EditText mLpn, mStartOdometer, mSupervisorLicence;
+
     private Button mStart;
     private RelativeLayout.LayoutParams mLayoutParams;
     private boolean mBtnAnimated = false;
@@ -102,7 +99,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //Set student
-        //Intent pase from Login
+        //TODO: pass data from login
         BackendlessUser user = Backendless.UserService.CurrentUser();
         int licence = ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
         List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
@@ -138,7 +135,7 @@ public class HomeFragment extends Fragment {
                                 mLpn.getText().toString(),
                                 0, Integer.parseInt(mSupervisorLicence.getText().toString()),
                                 student, Integer.parseInt(mStartOdometer.getText().toString()),
-                                0, null, Utils.getTime(), null, 0);
+                                0, 0, Utils.getTime(), null, 0);
                         lesson.save();
                         intent.putExtra(Utils.LESSON_ID, lesson.getId());
                         startActivity(intent);

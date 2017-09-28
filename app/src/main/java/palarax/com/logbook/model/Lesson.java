@@ -27,10 +27,11 @@ public class Lesson extends SugarRecord<Lesson> {
 
 
     //totalTime in milliseconds, start and end time in date format ( dd/MM/yy HH:mm:ss )
-    private String licencePlate, totalTime, startTime, endTime;
+    private String licencePlate, startTime, endTime;
     private int supervisorLicence, startOdometer, endOdometer;
     private double distance, speed;
     private Users student;
+    private long totalTime;
     /**
      * Default constructor for SugarOrm
      */
@@ -52,7 +53,7 @@ public class Lesson extends SugarRecord<Lesson> {
      * @param speed average speed
      */
     public Lesson(String licencePlate, double distance, int supervisorLicence, Users student,
-                  int startOdometer, int endOdometer, String totalTime, String startTime,
+                  int startOdometer, int endOdometer, long totalTime, String startTime,
                   String endTime, double speed) {
         this.licencePlate = licencePlate;
         this.distance = distance;
@@ -115,11 +116,11 @@ public class Lesson extends SugarRecord<Lesson> {
         this.endOdometer = endOdometer;
     }
 
-    public String getTotalTime() {
+    public long getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(String totalTime) {
+    public void setTotalTime(Long totalTime) {
         this.totalTime = totalTime;
     }
 
