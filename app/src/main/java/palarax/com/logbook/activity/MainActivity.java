@@ -34,10 +34,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 import dmax.dialog.SpotsDialog;
@@ -47,8 +45,8 @@ import palarax.com.logbook.fragment.GoalsFragment;
 import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
 import palarax.com.logbook.fragment.ProfileFragment;
-import palarax.com.logbook.model.Users;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.presenter.BackendlessPresenter;
+import palarax.com.logbook.presenter.UserPresenter;
 
 
 /**
@@ -58,18 +56,18 @@ import palarax.com.logbook.model.Utils;
  *
  */
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BackendlessPresenter.HandleResponse {
 
     private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
-    private AlertDialog mProgressDialog;
 
-
+    private BackendlessPresenter mBackendlessPresenter;
+    private UserPresenter mUserPresenter;
     private HomeFragment mHomeFragment = new HomeFragment();
     private HistoryFragment mHistoryFragment = new HistoryFragment();
     private GoalsFragment mGoalsFragment = new GoalsFragment();
     private ProfileFragment mProfileFragment = new ProfileFragment();
 
-    private Users mStudent;
+    private AlertDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mBackendlessPresenter = new BackendlessPresenter(this);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -88,29 +87,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //Update local user details
-        //TODO: don't add same student
-        try {
-            mStudent = new Select()
-                    .from(Users.class)
-                    .where("licenseNumber = ?", mStudent.getLicenseNumber())
-                    .executeSingle();
-        }catch(NullPointerException e){
-            Log.e(TAG,"user doesn't exist");
-            mStudent = DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
-        }
-
-        /*List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where dob <> ?", "-1");
-        for (Users user : users) {
-            Log.e(TAG, "NAME: " + user.getUserName());
-        }*/
-
+        DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
+        mUserPresenter = new UserPresenter();
 
         final View headerView = navigationView.getHeaderView(0);
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-                intent.putExtra(Utils.BACKENDLESS_LICENSE, mStudent.getLicenseNumber());
                 startActivity(intent);
             }
         });
@@ -133,9 +117,8 @@ public class MainActivity extends AppCompatActivity
         if (user != null) {
             try {
                 Log.d(TAG,"SEARCHING FOR USER");
-                nameAndSurname = mStudent.getUserName() + " " + mStudent.getUserSurname();
-                ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
-
+                nameAndSurname = mUserPresenter.getStudent().getUserName() + " "
+                        + mUserPresenter.getStudent().getUserSurname();
             } catch (NullPointerException e) {
                 Log.e(TAG, "User does not exist");
                 nameAndSurname = getString(R.string.guest_user);
@@ -144,6 +127,7 @@ public class MainActivity extends AppCompatActivity
                 ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
             }
         } else {
+            Toast.makeText(this, getString(R.string.backendless_user_null), Toast.LENGTH_LONG).show();
             finish();   //this should NEVER happen
         }
     }
@@ -185,26 +169,24 @@ public class MainActivity extends AppCompatActivity
      * Logout from the app and destroy activity
      */
     private void logout() {
-        mProgressDialog = new SpotsDialog(this, R.style.Custom);
-        mProgressDialog.show();
-        Backendless.initApp(this,
-                Utils.BACKENDLESS_APPLICATION_ID,
-                Utils.BACKENDLESS_API_KEY);
-        Backendless.UserService.logout(new AsyncCallback<Void>() {
-            @Override
-            public void handleResponse(Void response) {
-                finish(); //done with this activity
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e(TAG, "Logout error: " + fault.getCode());
-                mProgressDialog.dismiss();
-                Toast.makeText(getBaseContext(), getString(R.string.error_logout), Toast.LENGTH_LONG).show();
-            }
-        });
+        mProgress = new SpotsDialog(this, R.style.Custom);
+        mProgress.show();
+        mBackendlessPresenter.logoutBackEndless(this);
     }
 
+    @Override
+    public void onHandleResponse(Object response) {
+        mProgress.dismiss();
+        finish();
+    }
+
+    @Override
+    public void onHandleFault(BackendlessFault fault) {
+        Log.e(TAG, "Backendless error: " + fault.getMessage());
+        mProgress.dismiss();
+        Toast.makeText(this, getString(R.string.error_logout), Toast.LENGTH_LONG).show();
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -269,6 +251,5 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        mProgressDialog.dismiss();
     }
 }

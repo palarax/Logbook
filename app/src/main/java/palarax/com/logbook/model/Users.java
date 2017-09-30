@@ -28,10 +28,13 @@ import com.activeandroid.annotation.Table;
 @Table(name = "Users")
 public class Users extends Model {
 
+    @Column(name = "active")
+    private int activeUser;
+
     @Column(name = "userSurname")
     private String userSurname;
 
-    @Column(name = "licenseNumber")
+    @Column(name = "licenseNumber", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int licenseNumber;
 
     @Column(name = "hoursCompleted")
@@ -48,7 +51,7 @@ public class Users extends Model {
 
 
     /**
-     * Default constructor for SugarOrm
+     * Default constructor
      */
     public Users() {
         super();
@@ -69,6 +72,15 @@ public class Users extends Model {
         this.state = state;
         this.dob = dob;
         this.hoursCompleted = hours_completed;
+        this.activeUser = 0;
+    }
+
+    public int getActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(int activeUser) {
+        this.activeUser = activeUser;
     }
 
     public int getHoursCompleted() {

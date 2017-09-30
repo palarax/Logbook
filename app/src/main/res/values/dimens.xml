@@ -14,6 +14,7 @@
 
     <!-- Text size -->
     <dimen name="profile_values">16sp</dimen>
+    <dimen name="nav_details">10sp</dimen>
 
     <!-- Profile image -->
     <dimen name="drive_image_dim">80dp</dimen>

@@ -15,6 +15,7 @@
     <string name="nav_goals">Learning Goals</string>
     <string name="nav_logout">Logout</string>
     <string name="nav_profile_settings">Profile Settings</string>
+    <string name="header_tip">Click on navigation header to user summary</string>
 
     <string name="dialog_logout">Login out of the app …</string>
 
@@ -59,6 +60,7 @@
     <string name="bad_lesson">DELETING DATA: lesson or distance travelled too short (min 10 min, 500m)</string>
     <string name="guest_user">ERROR: Guest User</string>
     <string name="user_not_exist">ERROR: User does not exist</string>
+    <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>

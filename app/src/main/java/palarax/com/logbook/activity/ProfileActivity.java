@@ -37,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.profile_activity);
         mUserPresenter = new UserPresenter();
 
-        BarChart chart = (BarChart) findViewById(R.id.chart);
+        BarChart chart = findViewById(R.id.chart);
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
         chart.setDescription("My chart");
@@ -45,19 +45,14 @@ public class ProfileActivity extends AppCompatActivity {
         chart.invalidate();
 
 
-        final TextView nameText = (TextView) findViewById(R.id.txt_name);
-        final TextView licenseText = (TextView) findViewById(R.id.txt_license);
-        final TextView dobText = (TextView) findViewById(R.id.txt_dob);
-        final TextView stateText = (TextView) findViewById(R.id.txt_state);
-        final TextView progressText = (TextView) findViewById(R.id.txt_completed);
+        final TextView nameText = findViewById(R.id.txt_name);
+        final TextView licenseText = findViewById(R.id.txt_license);
+        final TextView dobText = findViewById(R.id.txt_dob);
+        final TextView stateText = findViewById(R.id.txt_state);
+        final TextView progressText = findViewById(R.id.txt_completed);
 
         mUserPresenter.populateUserData(nameText,licenseText,dobText,
                 stateText,progressText,getBaseContext());
-
-        //TODO: remvoed bundle
-        //Toast.makeText(this,getString(R.string.error_user_not_exist),Toast.LENGTH_LONG).show();
-        //finish();
-
         createDataSeries1();
     }
 
@@ -122,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
     //test data
     private void createDataSeries1() {
 
-        final FitChart fitChart = (FitChart) findViewById(R.id.fitChart);
+        final FitChart fitChart = findViewById(R.id.fitChart);
         fitChart.setMinValue(0f);
         fitChart.setMaxValue(100f);
         fitChart.setValue(80f);

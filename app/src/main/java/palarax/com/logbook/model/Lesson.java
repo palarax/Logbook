@@ -60,7 +60,7 @@ public class Lesson extends Model {
     private long totalTime;
 
     /**
-     * Default constructor for SugarOrm
+     * Default constructor
      */
     public Lesson() {
         super();

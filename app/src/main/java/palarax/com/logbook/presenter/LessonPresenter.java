@@ -7,7 +7,10 @@ import java.util.List;
 import palarax.com.logbook.model.Lesson;
 
 /**
- * Created by Ithai on 29/09/2017.
+ * Presents and manages lesson data
+ * @author Ilya Thai (11972078)
+ * @date 29-Sep-17
+ * @version 1.0
  */
 
 public class LessonPresenter {
@@ -30,12 +33,11 @@ public class LessonPresenter {
         mLessonList.clear();
         //add lessons
         //TODO: check if you need to cycle through array
-        this.mLessonList = new Select().all().from(Lesson.class).execute();
-        adapter.notifyDataSetChanged();
-
-        /*List<Lesson> lessons = Lesson.listAll(Lesson.class);
+        mLessonList = new Select().all().from(Lesson.class).execute();
+        /*List<Lesson> lessons = new Select().all().from(Lesson.class).execute();
         for (Lesson lesson : lessons) {
             mLessonList.add(lesson);
         }*/
+        adapter.notifyDataSetChanged();
     }
 }

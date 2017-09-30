@@ -23,7 +23,9 @@
         tools:replace="icon">
 
         <meta-data android:name="AA_DB_NAME" android:value="lessons" />
-        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="2" />
         <meta-data
             android:name="AA_MODELS"
             android:value="palarax.com.logbook.model.Users, palarax.com.logbook.model.Lesson,palarax.com.logbook.model.Coordinates" />

@@ -110,7 +110,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         if (extras != null) {
             long lesson_id = extras.getLong(Utils.LESSON_ID);
             mLesson = Lesson.load(Lesson.class,lesson_id);
-            Log.e(TAG,"Lesson: "+mLesson.getLicencePlate());
         }
     }
 

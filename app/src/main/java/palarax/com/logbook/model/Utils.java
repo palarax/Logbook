@@ -12,14 +12,13 @@ import java.util.Date;
  * @version 1.0
  */
 public class Utils {
-    public static final String BACKENDLESS_APPLICATION_ID = "F1D55E01-2495-D20A-FF0E-58AE50CB9700";
-    public static final String BACKENDLESS_API_KEY = "5DB4EEBE-A054-CE7D-FFCD-F6F74B4FC500";
-    public static final String BACKENDLESS_SERVER_URL = "http://api.backendless.com";
     public static final String UTF8 = "UTF-8";
     public static final String UTF16 = "UTF-16";
     public static final String LESSON_ID = "LESSON_ID";
 
     //BACKENDLESS
+    public static final String BACKENDLESS_RESPONSE = "SUCCESS";
+
     public static final String BACKENDLESS_NAME = "name";
     public static final String BACKENDLESS_SURNAME = "surname";
     public static final String BACKENDLESS_LICENSE = "licence_id";
@@ -75,4 +74,21 @@ public class Utils {
 
     }
 
+    /**
+     * Converts bytes to hex string
+     *
+     * @param bytes bytes to be converted
+     * @return a string of hex values
+     */
+    public static String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i <= bytes.length - 1; i++) {
+            int b = bytes[i] & 0xff; //1111 1111
+            if (b < 0x10)
+                sb.append('0');
+
+            sb.append(Integer.toHexString(b));
+        }
+        return sb.toString().toUpperCase();
+    }
 }

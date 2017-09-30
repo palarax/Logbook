@@ -6,14 +6,16 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
-import com.backendless.Backendless;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.model.Users;
-import palarax.com.logbook.model.Utils;
+
 
 /**
- * Created by Ithai on 29/09/2017.
+ * Presents and manages user data
+ * @author Ilya Thai (11972078)
+ * @date 29-Sep-17
+ * @version 1.0
  */
 
 public class UserPresenter {
@@ -21,8 +23,7 @@ public class UserPresenter {
     private Users mStudent;
 
     public UserPresenter(){
-        this.mStudent = new Select().from(Users.class).where("licenseNumber = ?",
-                (Integer) Backendless.UserService.CurrentUser().getProperty(Utils.BACKENDLESS_LICENSE)).executeSingle();
+        this.mStudent = new Select().from(Users.class).where("active = ?", "1").executeSingle();
     }
 
     public Users getStudent(){

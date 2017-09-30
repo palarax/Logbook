@@ -15,11 +15,15 @@
  */
 package palarax.com.logbook.presenter;
 
+import android.app.Activity;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+
+import palarax.com.logbook.R;
 
 /**
  * Manages NFC functionality and CallBacks
@@ -27,20 +31,42 @@ import java.lang.ref.WeakReference;
  * @version 1.0
  *
  */
-public class NFCManager implements NfcAdapter.ReaderCallback{
+public class NfcManager implements NfcAdapter.ReaderCallback {
 
-    private static final String TAG = NFCManager.class.getSimpleName();
+    private static final String TAG = NfcManager.class.getSimpleName();
 
     // Weak reference to prevent retain loop. mAccountCallback is responsible for exiting
     // foreground mode before it becomes invalid (e.g. during onPause() or onStop()).
     private WeakReference<AccountCallback> mAccountCallback;
 
+    private Activity mActivity;
+
     /**
      * NFC initializes WeakReference
      * @param accountCallback callback function
      */
-    public NFCManager(AccountCallback accountCallback) {
+    public NfcManager(AccountCallback accountCallback, Activity activity) {
         mAccountCallback = new WeakReference<>(accountCallback);
+        mActivity = activity;
+    }
+
+    /**
+     * Checks if NFC is supported and is enabled
+     *
+     * @param adapter NFC adapter from activity
+     * @return true if supported and on
+     */
+    public boolean nfcSupported(NfcAdapter adapter) {
+
+        if (adapter == null) {
+            // Stop here, we definitely need NFC
+            Toast.makeText(mActivity, mActivity.getString(R.string.error_noNfc), Toast.LENGTH_LONG).show();
+            return false;
+        } else if (!adapter.isEnabled()) {
+            Toast.makeText(mActivity, mActivity.getString(R.string.error_nfcDisabled), Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     /**
