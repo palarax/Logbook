@@ -3,12 +3,10 @@ package palarax.com.logbook.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -18,11 +16,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.txusballesteros.widgets.FitChart;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import palarax.com.logbook.R;
-import palarax.com.logbook.model.Users;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.presenter.UserPresenter;
 
 /**
  * Profile Activity that gives a summary of user progress
@@ -33,11 +29,13 @@ import palarax.com.logbook.model.Utils;
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = ProfileActivity.class.getSimpleName(); //used for debugging
+    private UserPresenter mUserPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
+        mUserPresenter = new UserPresenter();
 
         BarChart chart = (BarChart) findViewById(R.id.chart);
         BarData data = new BarData(getXAxisValues(), getDataSet());
@@ -53,29 +51,16 @@ public class ProfileActivity extends AppCompatActivity {
         final TextView stateText = (TextView) findViewById(R.id.txt_state);
         final TextView progressText = (TextView) findViewById(R.id.txt_completed);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            int licence = extras.getInt(Utils.BACKENDLESS_LICENSE);
-            List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
+        mUserPresenter.populateUserData(nameText,licenseText,dobText,
+                stateText,progressText,getBaseContext());
 
-            nameText.setText(users.get(0).getUserName()+" "+users.get(0).getUserSurname());
-            licenseText.setText(Integer.toString(licence));
-            dobText.setText(users.get(0).getDob());
-            stateText.setText(users.get(0).getState());
-            if(users.get(0).getHoursCompleted()<120){
-                progressText.setText(getString(R.string.profile_in_progress));
-                progressText.setTextColor(ContextCompat.getColor(this, R.color.in_progress));
-            }else{
-                progressText.setText(getString(R.string.profile_completed));
-                progressText.setTextColor(ContextCompat.getColor(this, R.color.licence_color));
-            }
+        //TODO: remvoed bundle
+        //Toast.makeText(this,getString(R.string.error_user_not_exist),Toast.LENGTH_LONG).show();
+        //finish();
 
-        }else{
-            Toast.makeText(this,getString(R.string.error_user_not_exist),Toast.LENGTH_LONG).show();
-            finish();
-        }
         createDataSeries1();
     }
+
 
     //https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/LineChartActivity1.java
 

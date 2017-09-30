@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -108,7 +109,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             long lesson_id = extras.getLong(Utils.LESSON_ID);
-            mLesson = Lesson.findById(Lesson.class, lesson_id);
+            mLesson = Lesson.load(Lesson.class,lesson_id);
+            Log.e(TAG,"Lesson: "+mLesson.getLicencePlate());
         }
     }
 
@@ -212,10 +214,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
             //Lesson is too short or didn't travel enough
             //Remove coordinates
             Toast.makeText(this, getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();
-            List<Coordinates> coordinates = Coordinates.findWithQuery(Coordinates.class, "Select * from Coordinates where lesson_id = ?", mLesson.getId().toString());
-            for (Coordinates geoPoints : coordinates) {
-                geoPoints.delete();
-            }
+            new Delete().from(Coordinates.class).execute();
             //remove lesson
             mLesson.delete();
         }

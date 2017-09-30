@@ -34,12 +34,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-
-import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.R;
@@ -90,13 +89,20 @@ public class MainActivity extends AppCompatActivity
 
         //Update local user details
         //TODO: don't add same student
-        Users.deleteAll(Users.class);
-        mStudent = DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
+        try {
+            mStudent = new Select()
+                    .from(Users.class)
+                    .where("licenseNumber = ?", mStudent.getLicenseNumber())
+                    .executeSingle();
+        }catch(NullPointerException e){
+            Log.e(TAG,"user doesn't exist");
+            mStudent = DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
+        }
 
-        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where dob <> ?", "-1");
+        /*List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where dob <> ?", "-1");
         for (Users user : users) {
             Log.e(TAG, "NAME: " + user.getUserName());
-        }
+        }*/
 
 
         final View headerView = navigationView.getHeaderView(0);

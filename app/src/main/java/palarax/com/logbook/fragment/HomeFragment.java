@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,11 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-
-import java.util.List;
-
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.DrivingLesson;
 import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.presenter.UserPresenter;
 
 /**
  * Home fragment that initiates a lesson
@@ -37,8 +31,6 @@ import palarax.com.logbook.model.Utils;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = HomeFragment.class.getSimpleName(); //used for debugging
-
     // distance the button travels down the screen vertically
     private static final int BTN_Y_DISTANCE = 400;
     private TextView mNameText, mLicenseText, mDobText, mStateText, mProgressText;
@@ -49,27 +41,7 @@ public class HomeFragment extends Fragment {
     private RelativeLayout.LayoutParams mLayoutParams;
     private boolean mBtnAnimated = false;
 
-    private Users student = null;
-    /**
-     * Handles sliding button animation. Used to transfer the button view, as the original animation
-     * only transfers the pixels
-     */
-    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mLayoutParams.topMargin = mLayoutParams.topMargin + BTN_Y_DISTANCE;
-            mStart.setLayoutParams(mLayoutParams);
-        }
-    };
+    private UserPresenter mUserPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,11 +71,8 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //Set student
-        //TODO: pass data from login
-        BackendlessUser user = Backendless.UserService.CurrentUser();
-        int licence = ((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE));
-        List<Users> users = Users.findWithQuery(Users.class, "Select * from Users where license_number = ?", Integer.toString(licence));
-        student = users.get(0);
+        mUserPresenter = new UserPresenter();
+
 
         mNameText = view.findViewById(R.id.txt_name);
         mLicenseText = view.findViewById(R.id.txt_license);
@@ -131,10 +100,11 @@ public class HomeFragment extends Fragment {
                     if(checkIfAllComplete()) {
                         Intent intent = new Intent(getActivity(), DrivingLesson.class);
                         //Save lesson to db and send lesson id to lesson activity
+                        //TODO: check if i should put it in presenter /db manager
                         Lesson lesson = new Lesson(
                                 mLpn.getText().toString(),
                                 0, Integer.parseInt(mSupervisorLicence.getText().toString()),
-                                student, Integer.parseInt(mStartOdometer.getText().toString()),
+                                mUserPresenter.getStudent(), Integer.parseInt(mStartOdometer.getText().toString()),
                                 0, 0, Utils.getTime(), null, 0);
                         lesson.save();
                         intent.putExtra(Utils.LESSON_ID, lesson.getId());
@@ -143,25 +113,10 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        populateUserData();
+        mUserPresenter.populateUserData(mNameText,mLicenseText,mDobText,
+                mStateText,mProgressText,getContext());
     }
 
-    /**
-     * Populates view with user data
-     */
-    private void populateUserData() {
-        mNameText.setText(student.getUserName() + " " + student.getUserSurname());
-        mLicenseText.setText(student.getLicenseNumber().toString());
-        mDobText.setText(student.getDob());
-        mStateText.setText(student.getState());
-        if (student.getHoursCompleted() < 120) {
-            mProgressText.setText(getString(R.string.profile_in_progress));
-            mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.in_progress));
-        }else{
-            mProgressText.setText(getString(R.string.profile_completed));
-            mProgressText.setTextColor(ContextCompat.getColor(getActivity(), R.color.licence_color));
-        }
-    }
 
     /**
      * Checks if edit text have data
@@ -185,5 +140,25 @@ public class HomeFragment extends Fragment {
         return editEmpty;
     }
 
+    /**
+     * Handles sliding button animation. Used to transfer the button view, as the original animation
+     * only transfers the pixels
+     */
+    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mLayoutParams.topMargin = mLayoutParams.topMargin + BTN_Y_DISTANCE;
+            mStart.setLayoutParams(mLayoutParams);
+        }
+    };
 
 }

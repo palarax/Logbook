@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -42,7 +43,6 @@ import java.util.ArrayList;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.model.NdefTag;
-import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 import palarax.com.logbook.presenter.NFCManager;
 
@@ -83,7 +83,7 @@ public class LoginActivity extends Activity implements NFCManager.AccountCallbac
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                Users.findById(Users.class,(long) 1);
+                ActiveAndroid.initialize(LoginActivity.this);
                 initialize();
             }
         });

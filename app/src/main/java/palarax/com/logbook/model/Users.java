@@ -15,7 +15,9 @@
  */
 package palarax.com.logbook.model;
 
-import com.orm.SugarRecord;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Users table stores data of the app users
@@ -23,15 +25,33 @@ import com.orm.SugarRecord;
  * @author Ilya Thai (11972078)
  * @date 22-Sep-17
  */
-public class Users extends SugarRecord<Users> {
+@Table(name = "Users")
+public class Users extends Model {
 
-    private int licenseNumber, hoursCompleted;
-    private String userName, userSurname,state,dob;
+    @Column(name = "userSurname")
+    private String userSurname;
+
+    @Column(name = "licenseNumber")
+    private int licenseNumber;
+
+    @Column(name = "hoursCompleted")
+    private int hoursCompleted;
+
+    @Column(name = "userName")
+    private String userName;
+    @Column(name = "state")
+
+    private String state;
+
+    @Column(name = "dob")
+    private String dob;
+
 
     /**
      * Default constructor for SugarOrm
      */
     public Users() {
+        super();
     }
 
 

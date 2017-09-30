@@ -1,7 +1,6 @@
 package palarax.com.logbook.db;
 
 import com.backendless.BackendlessUser;
-import com.orm.SugarApp;
 
 import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
@@ -13,7 +12,7 @@ import palarax.com.logbook.model.Utils;
  * @version 1.0
  */
 
-public class DatabaseHelper extends SugarApp{
+public class DatabaseHelper {
 
     /**
      * Save a new user to the database

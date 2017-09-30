@@ -15,7 +15,9 @@
  */
 package palarax.com.logbook.model;
 
-import com.orm.SugarRecord;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Driving location points table stores data of the location during the lesson
@@ -23,16 +25,21 @@ import com.orm.SugarRecord;
  * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
+@Table(name = "Coordinates")
+public class Coordinates extends Model {
 
-public class Coordinates extends SugarRecord<Coordinates> {
-
+    @Column(name = "lessonId")
     private long lessonId;
-    private double longitude, latitude;
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
 
     /**
-     * Default constructor for SugarOrm
+     * Default constructor
      */
     public Coordinates() {
+        super();
     }
 
     /**

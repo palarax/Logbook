@@ -15,7 +15,9 @@
  */
 package palarax.com.logbook.model;
 
-import com.orm.SugarRecord;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Lesson data ( used for Lesson History)
@@ -23,19 +25,45 @@ import com.orm.SugarRecord;
  * @author Ilya Thai (11972078)
  * @date 09-Sep-17
  */
-public class Lesson extends SugarRecord<Lesson> {
+@Table(name = "Lesson")
+public class Lesson extends Model {
 
+    @Column(name = "licencePlate")
+    private String licencePlate;
+
+    @Column(name = "startTime")
+    private String startTime;
+
+    @Column(name = "endTime")
+    private String endTime;
+
+    @Column(name = "speed")
+    private double speed;
+
+    @Column(name = "distance")
+    private double distance;
+
+    @Column(name = "student")
+    private Users student;
+
+    @Column(name = "startOdometer")
+    private int startOdometer;
+
+    @Column(name = "endOdometer")
+    private int endOdometer;
+
+    @Column(name = "supervisorLicence")
+    private int supervisorLicence;
 
     //totalTime in milliseconds, start and end time in date format ( dd/MM/yy HH:mm:ss )
-    private String licencePlate, startTime, endTime;
-    private int supervisorLicence, startOdometer, endOdometer;
-    private double distance, speed;
-    private Users student;
+    @Column(name = "totalTime")
     private long totalTime;
+
     /**
      * Default constructor for SugarOrm
      */
     public Lesson() {
+        super();
     }
 
     /**
