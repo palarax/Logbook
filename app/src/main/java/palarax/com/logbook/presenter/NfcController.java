@@ -84,6 +84,7 @@ public class NfcController {
      */
     public ArrayList hasMessage(Tag tag) {
         ArrayList msgRecords;
+        //Log.e(TAG,"TAG ID: "+ Utils.bytesToHexString(tag.getId()));
         String[] techList = tag.getTechList(); //list of all Tag techs
         //Look through tech
         for (String singleTech : techList) {

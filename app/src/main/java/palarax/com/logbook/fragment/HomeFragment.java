@@ -42,6 +42,26 @@ public class HomeFragment extends Fragment {
     private boolean mBtnAnimated = false;
 
     private UserPresenter mUserPresenter;
+    /**
+     * Handles sliding button animation. Used to transfer the button view, as the original animation
+     * only transfers the pixels
+     */
+    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mLayoutParams.topMargin = mLayoutParams.topMargin + BTN_Y_DISTANCE;
+            mStart.setLayoutParams(mLayoutParams);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,8 +123,8 @@ public class HomeFragment extends Fragment {
                         //TODO: check if i should put it in presenter /db manager
                         Lesson lesson = new Lesson(
                                 mLpn.getText().toString(),
-                                0, Integer.parseInt(mSupervisorLicence.getText().toString()),
-                                mUserPresenter.getStudent(), Integer.parseInt(mStartOdometer.getText().toString()),
+                                0, Long.parseLong(mSupervisorLicence.getText().toString()),
+                                mUserPresenter.getStudent().getLicenseNumber(), Integer.parseInt(mStartOdometer.getText().toString()),
                                 0, 0, Utils.getTime(), null, 0);
                         lesson.save();
                         intent.putExtra(Utils.LESSON_ID, lesson.getId());
@@ -116,7 +136,6 @@ public class HomeFragment extends Fragment {
         mUserPresenter.populateUserData(mNameText,mLicenseText,mDobText,
                 mStateText,mProgressText,getContext());
     }
-
 
     /**
      * Checks if edit text have data
@@ -139,26 +158,5 @@ public class HomeFragment extends Fragment {
         }
         return editEmpty;
     }
-
-    /**
-     * Handles sliding button animation. Used to transfer the button view, as the original animation
-     * only transfers the pixels
-     */
-    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mLayoutParams.topMargin = mLayoutParams.topMargin + BTN_Y_DISTANCE;
-            mStart.setLayoutParams(mLayoutParams);
-        }
-    };
 
 }

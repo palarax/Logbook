@@ -40,7 +40,6 @@ import com.backendless.exceptions.BackendlessFault;
 
 import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.R;
-import palarax.com.logbook.db.DatabaseHelper;
 import palarax.com.logbook.fragment.GoalsFragment;
 import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
@@ -86,8 +85,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Update local user details
-        DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
         mUserPresenter = new UserPresenter();
 
         final View headerView = navigationView.getHeaderView(0);

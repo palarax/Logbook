@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.backendless.Backendless;
 import com.backendless.exceptions.BackendlessFault;
 import com.dd.morphingbutton.impl.IndeterminateProgressButton;
 
@@ -152,6 +153,9 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
      * Start new Activity
      */
     private void nextActivity() {
+        //Update local user details
+        DatabaseHelper.clearActiveUsers();
+        DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

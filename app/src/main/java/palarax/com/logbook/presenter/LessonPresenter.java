@@ -1,10 +1,29 @@
 package palarax.com.logbook.presenter;
 
-import com.activeandroid.query.Select;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.location.Location;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
+
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
+import palarax.com.logbook.R;
+import palarax.com.logbook.model.Coordinates;
 import palarax.com.logbook.model.Lesson;
+import palarax.com.logbook.model.Utils;
 
 /**
  * Presents and manages lesson data
@@ -15,10 +34,18 @@ import palarax.com.logbook.model.Lesson;
 
 public class LessonPresenter {
 
-    private List<Lesson> mLessonList;
+    private static final String TAG = LessonPresenter.class.getSimpleName(); //used for debugging
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-    public LessonPresenter(){
+    private List<Lesson> mLessonList;
+    private Lesson mCurrentLesson;
+    private Activity mCurrentActivity;
+    private Location mCurrentLocation;
+    private List<LatLng> mCoordinates = new ArrayList<>();  //store coordinates
+
+    public LessonPresenter(Activity activity) {
         this.mLessonList = new Select().all().from(Lesson.class).execute();
+        this.mCurrentActivity = activity;
     }
 
     public List<Lesson> getAllLessons(){
@@ -26,18 +53,225 @@ public class LessonPresenter {
     }
 
     /**
+     * Get coordinates for Polyline on the map
+     * @param options coordinates to put on the map
+     * @return coordinates to draw
+     */
+    public PolylineOptions getCoordinates(PolylineOptions options) {
+        for (int i = 0; i < mCoordinates.size(); i++) {
+            LatLng point = mCoordinates.get(i);
+            options.add(point);
+        }
+        return options;
+    }
+
+    public Lesson getCurrentLesson() {
+        return mCurrentLesson;
+    }
+
+    public void setCurrentLesson(Long lesson_id) {
+        mCurrentLesson = Lesson.load(Lesson.class, lesson_id);
+    }
+
+    /**
+     * Verify that all lesson data has been completed
+     */
+    public boolean isCurrentLessonComplete() {
+        if (mCurrentLesson.getLicencePlate().isEmpty() || mCurrentLesson.getSpeed() == 0 ||
+                mCurrentLesson.getDistance() == 0 || mCurrentLesson.getSupervisorLicence() == 0 ||
+                mCurrentLesson.getStartOdometer() == 0 || mCurrentLesson.getEndOdometer() == 0 ||
+                mCurrentLesson.getTotalTime() == 0 || mCurrentLesson.getStartTime().isEmpty() ||
+                mCurrentLesson.getEndTime().isEmpty() || mCurrentLesson.getDistance() == 0) {
+            mCurrentLesson.delete();
+            return false;
+        } else return true;
+    }
+
+    /**
      * Get data from db and load into GUI
      */
-    public void updateLessons(LessonsAdapter adapter){
+    public void updateLessons(LessonsAdapter adapter, long studentLicence) {
         //clear them
         mLessonList.clear();
         //add lessons
-        //TODO: check if you need to cycle through array
-        mLessonList = new Select().all().from(Lesson.class).execute();
-        /*List<Lesson> lessons = new Select().all().from(Lesson.class).execute();
-        for (Lesson lesson : lessons) {
+        List<Lesson> newLessons = new Select().from(Lesson.class).where("studentLicence = ?", studentLicence).execute();
+        for (Lesson lesson : newLessons) {
             mLessonList.add(lesson);
-        }*/
+        }
+
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Determines whether one Location reading is better than the current Location fix
+     *
+     * @param location            The new Location that you want to evaluate
+     * @param currentBestLocation The current Location fix, to which you want to compare the new one
+     *                            TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
+     */
+    private boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            return true;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether two providers are the same
+     * TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
+     */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
+
+    /**
+     * Checks lesson integrity. Lesson has to be longer than 10 minutes and
+     * distance travelled should be more than 500m, start odometer bigger than end odometer
+     */
+    public void checkLessonIntegrity() {
+        double distanceTravelled = SphericalUtil.computeLength(mCoordinates);//calculate distance travelled
+        long totalTime = 0;
+        try {
+            totalTime = Utils.getTimeDiffernce(getCurrentLesson().getStartTime(), mCurrentLesson.getEndTime());
+        } catch (ParseException e) {
+            Log.e(TAG, "Error: " + e);
+            //This error should never occur
+        }
+        long totalTimeMinutes = totalTime / 1000 / 60;
+        if ((
+                mCurrentLesson.getEndOdometer() > getCurrentLesson().getStartOdometer())) {
+            //TODO: once finished testing, put it back
+        /*
+        if (distanceTravelled > 500 && totalTimeMinutes > 10 && (
+                mCurrentLesson.getEndOdometer() > getCurrentLesson().getStartOdometer())) {
+*/
+            getCurrentLesson().setDistance(distanceTravelled);
+            getCurrentLesson().setTotalTime(totalTime);
+            getCurrentLesson().setSpeed(distanceTravelled / totalTime);
+            //save lesson
+            mCurrentLesson.save();
+        } else {
+            Log.e(TAG, "" + distanceTravelled);
+            Log.e(TAG, "" + totalTimeMinutes);
+            Log.e(TAG, "" + mCurrentLesson.getEndOdometer());
+            Log.e(TAG, "" + getCurrentLesson().getStartOdometer());
+            //Lesson is too short or didn't travel enough
+            //Remove coordinates
+            Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();
+
+            new Delete().from(Coordinates.class).where("lessonId = ?", mCurrentLesson.getId().toString()).execute();
+            //remove lesson
+            mCurrentLesson.delete();
+        }
+    }
+
+    /**
+     * Gets final Odometer reading from user
+     */
+    public void getEndOdometerFromUser() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
+        builder.setTitle(mCurrentActivity.getString(R.string.end_odometer_input));
+
+        // Set up the input
+        final EditText input = new EditText(mCurrentActivity);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(input.getText().toString())) {
+                    Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();
+                } else if (Long.parseLong(input.getText().toString()) < getCurrentLesson().getStartOdometer()) {
+                    Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.error_odometer_small), Toast.LENGTH_SHORT).show();
+                } else {
+                    getCurrentLesson().setEndOdometer(Integer.parseInt(input.getText().toString()));
+                    mCurrentActivity.finish();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    /**
+     * Check if location is accurate enough
+     *
+     * @param newLocation new location found
+     * @return true if an update is required
+     */
+    public boolean updateLocation(Location newLocation) {
+        if (isBetterLocation(newLocation, mCurrentLocation)) {
+            mCurrentLocation = newLocation;
+            //Update lesson object
+            mCoordinates.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+            //Store coordinates to db
+            Coordinates locationPoints = new Coordinates(mCurrentLesson.getId(),
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), mCurrentLesson.getStudentLicence());
+            locationPoints.save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if coordinates got was the first location found
+     *
+     * @param newLocation new location found
+     * @return true if it is the first location found
+     */
+    public boolean firstLocation(Location newLocation) {
+        if (mCurrentLocation == null) {
+            mCurrentLocation = newLocation;
+            return true;
+        }
+        return false;
     }
 }

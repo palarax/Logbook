@@ -28,6 +28,7 @@ import com.activeandroid.annotation.Table;
 @Table(name = "Lesson")
 public class Lesson extends Model {
 
+
     @Column(name = "licencePlate")
     private String licencePlate;
 
@@ -43,17 +44,17 @@ public class Lesson extends Model {
     @Column(name = "distance")
     private double distance;
 
-    @Column(name = "student")
-    private Users student;
+    @Column(name = "studentLicence")
+    private long studentLicence;
 
     @Column(name = "startOdometer")
-    private int startOdometer;
+    private long startOdometer;
 
     @Column(name = "endOdometer")
-    private int endOdometer;
+    private long endOdometer;
 
     @Column(name = "supervisorLicence")
-    private int supervisorLicence;
+    private long supervisorLicence;
 
     //totalTime in milliseconds, start and end time in date format ( dd/MM/yy HH:mm:ss )
     @Column(name = "totalTime")
@@ -72,7 +73,7 @@ public class Lesson extends Model {
      * @param licencePlate licence plate of the vehicle used
      * @param distance  distance travelled during the lesson
      * @param supervisorLicence supervisor licence number
-     * @param student student for this lesson
+     * @param studentLicence student for this lesson
      * @param startOdometer odometer start number
      * @param endOdometer odometer end number
      * @param totalTime  total time driving for this lesson
@@ -80,13 +81,13 @@ public class Lesson extends Model {
      * @param endTime   time ended the lesson
      * @param speed average speed
      */
-    public Lesson(String licencePlate, double distance, int supervisorLicence, Users student,
+    public Lesson(String licencePlate, double distance, long supervisorLicence, long studentLicence,
                   int startOdometer, int endOdometer, long totalTime, String startTime,
                   String endTime, double speed) {
         this.licencePlate = licencePlate;
         this.distance = distance;
         this.supervisorLicence = supervisorLicence;
-        this.student = student;
+        this.studentLicence = studentLicence;
         this.startOdometer = startOdometer;
         this.endOdometer = endOdometer;
         this.totalTime = totalTime;
@@ -94,7 +95,6 @@ public class Lesson extends Model {
         this.endTime = endTime;
         this.speed = speed;
     }
-
 
     public String getLicencePlate() {
         return licencePlate;
@@ -112,35 +112,35 @@ public class Lesson extends Model {
         this.distance = Distance;
     }
 
-    public int getSupervisorLicence() {
+    public long getSupervisorLicence() {
         return supervisorLicence;
     }
 
-    public void setSupervisorLicence(int supervisorLicence) {
+    public void setSupervisorLicence(long supervisorLicence) {
         this.supervisorLicence = supervisorLicence;
     }
 
-    public Users getStudent() {
-        return student;
+    public long getStudentLicence() {
+        return studentLicence;
     }
 
-    public void setStudent(Users student) {
-        this.student = student;
+    public void setStudentLicence(long studentId) {
+        this.studentLicence = studentId;
     }
 
-    public int getStartOdometer() {
+    public long getStartOdometer() {
         return startOdometer;
     }
 
-    public void setStartOdometer(int startOdometer) {
+    public void setStartOdometer(long startOdometer) {
         this.startOdometer = startOdometer;
     }
 
-    public int getEndOdometer() {
+    public long getEndOdometer() {
         return endOdometer;
     }
 
-    public void setEndOdometer(int endOdometer) {
+    public void setEndOdometer(long endOdometer) {
         this.endOdometer = endOdometer;
     }
 

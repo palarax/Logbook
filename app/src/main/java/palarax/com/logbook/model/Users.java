@@ -42,13 +42,12 @@ public class Users extends Model {
 
     @Column(name = "userName")
     private String userName;
-    @Column(name = "state")
 
+    @Column(name = "state")
     private String state;
 
     @Column(name = "dob")
     private String dob;
-
 
     /**
      * Default constructor

@@ -34,6 +34,8 @@ public class Coordinates extends Model {
     private double longitude;
     @Column(name = "latitude")
     private double latitude;
+    @Column(name = "userId")
+    private long userId;
 
     /**
      * Default constructor
@@ -49,10 +51,15 @@ public class Coordinates extends Model {
      * @param longitude longitude linked to lesson
      * @param latitude  latitude linked to lesson
      */
-    public Coordinates(long lessonId, double longitude, double latitude) {
+    public Coordinates(long lessonId, double longitude, double latitude, long userId) {
         this.lessonId = lessonId;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.userId = userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public long getLessonId() {

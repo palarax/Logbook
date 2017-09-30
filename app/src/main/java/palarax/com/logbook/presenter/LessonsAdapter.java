@@ -61,14 +61,15 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         Lesson lesson = mLessonsList.get(position);
 
-        holder.mTxtViewDistance.setText(mAdapterContext.getString(R.string.txt_distance, lesson.getDistance()));
-        holder.mTxtViewSupervisorLicence.setText(mAdapterContext.getString(R.string.txt_distance, lesson.getDistance()));
-        holder.mTxtViewStartOdometer.setText(Integer.toString(lesson.getStartOdometer()));
-        holder.mTxtViewEndOdometer.setText(Integer.toString(lesson.getEndOdometer()));
-        holder.mTxtViewTotalTime.setText(Utils.convertDateToHhMmSs(lesson.getTotalTime()));
-        holder.mTxtViewStartTime.setText(lesson.getStartTime());
-        holder.mTxtViewEndTime.setText(lesson.getEndTime());
-        holder.mTxtViewSpeed.setText(mAdapterContext.getString(R.string.txt_distance, lesson.getSpeed()));
+        holder.mTxtViewLpn.setText("LPN: " + lesson.getLicencePlate());
+        holder.mTxtViewDistance.setText("Distance: " + mAdapterContext.getString(R.string.txt_distance, lesson.getDistance()));
+        holder.mTxtViewSupervisorLicence.setText("SupervisorLicence: " + Long.toString(lesson.getSupervisorLicence()));
+        holder.mTxtViewStartOdometer.setText("Start Od: " + Long.toString(lesson.getStartOdometer()));
+        holder.mTxtViewEndOdometer.setText("End od: " + Long.toString(lesson.getEndOdometer()));
+        holder.mTxtViewTotalTime.setText("Total t: " + Utils.convertDateToHhMmSs(lesson.getTotalTime()));
+        holder.mTxtViewStartTime.setText("Start t: " + lesson.getStartTime());
+        holder.mTxtViewEndTime.setText("End t: " + lesson.getEndTime());
+        holder.mTxtViewSpeed.setText("Speed: " + mAdapterContext.getString(R.string.txt_speed, lesson.getSpeed()));
 
     }
 
@@ -82,10 +83,11 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
      */
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTxtViewDistance, mTxtViewSupervisorLicence, mTxtViewStartOdometer, mTxtViewEndOdometer,
-                mTxtViewTotalTime, mTxtViewStartTime, mTxtViewEndTime, mTxtViewSpeed;
+                mTxtViewTotalTime, mTxtViewStartTime, mTxtViewEndTime, mTxtViewSpeed, mTxtViewLpn;
 
         ViewHolder(View view) {
             super(view);
+            mTxtViewLpn = view.findViewById(R.id.txt_lpn);
             mTxtViewDistance = view.findViewById(R.id.txt_distance);
             mTxtViewSupervisorLicence = view.findViewById(R.id.txt_supervisorLicence);
             mTxtViewStartOdometer = view.findViewById(R.id.txt_start_odometer);

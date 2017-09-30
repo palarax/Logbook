@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 import com.backendless.BackendlessUser;
 
 import java.util.List;
@@ -26,15 +27,37 @@ public class DatabaseHelper {
      * @return user object
      */
     public static Users updateLocalUserDetails(BackendlessUser user) {
-        Users learner = new Users((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE),
-                (String) user.getProperty(Utils.BACKENDLESS_NAME),
-                (String) user.getProperty(Utils.BACKENDLESS_SURNAME),
-                (String) user.getProperty(Utils.BACKENDLESS_STATE),
-                (String) user.getProperty(Utils.BACKENDLESS_DOB),
-                (int) user.getProperty(Utils.BACKENDLESS_HOURS_COMPLETED));
-        learner.save();
-        setCurrentUser(learner.getId());
-        return learner;
+        String query = String.format(
+                "userSurname = \"%s\"," +
+                        "hoursCompleted = \"%d\" , userName = \"%s\" ," +
+                        "state = \"%s\" , dob = \"%s\"",
+                user.getProperty(Utils.BACKENDLESS_SURNAME),
+                user.getProperty(Utils.BACKENDLESS_HOURS_COMPLETED),
+                user.getProperty(Utils.BACKENDLESS_NAME),
+                user.getProperty(Utils.BACKENDLESS_STATE),
+                user.getProperty(Utils.BACKENDLESS_DOB)
+        );
+        Users student;
+        try {
+            student = new Select().from(Users.class).
+                    where("licenseNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString()).executeSingle();
+            //user exists so update them
+            new Update(Users.class).set(query)
+                    .where("licenseNumber = ?", student.getLicenseNumber()).execute();
+        } catch (NullPointerException e) {
+            //user doesn't exist so create new
+
+            student = new Users((Integer) user.getProperty(Utils.BACKENDLESS_LICENSE),
+                    (String) user.getProperty(Utils.BACKENDLESS_NAME),
+                    (String) user.getProperty(Utils.BACKENDLESS_SURNAME),
+                    (String) user.getProperty(Utils.BACKENDLESS_STATE),
+                    (String) user.getProperty(Utils.BACKENDLESS_DOB),
+                    (Integer) user.getProperty(Utils.BACKENDLESS_HOURS_COMPLETED));
+            student.save();
+        }
+        setCurrentUser(student.getId());
+
+        return student;
     }
 
     /**
@@ -57,6 +80,7 @@ public class DatabaseHelper {
             for (Users student : users) {
                 student.setActiveUser(0);
                 student.save();
+                Log.e("ds", student.getUserName() + " ID:" + student.getId());
             }
         } catch (SQLiteException e) {
             Log.e("DatabaseHelper", "Clearing user exception: " + e);

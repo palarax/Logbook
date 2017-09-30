@@ -48,7 +48,7 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserPresenter = new UserPresenter();
-        mLessonPresenter = new LessonPresenter();
+        mLessonPresenter = new LessonPresenter(getActivity());
 
         mNameText = view.findViewById(R.id.txt_name);
         mLicenseText = view.findViewById(R.id.txt_license);
@@ -66,8 +66,7 @@ public class HistoryFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
-
-        mLessonPresenter.updateLessons(mAdapter);
+        mLessonPresenter.updateLessons(mAdapter, mUserPresenter.getStudent().getLicenseNumber());
     }
 
 }
