@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,13 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.DrivingLesson;
 import palarax.com.logbook.model.Lesson;
 import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.presenter.LessonPresenter;
 import palarax.com.logbook.presenter.UserPresenter;
 
 /**
@@ -42,6 +46,7 @@ public class HomeFragment extends Fragment {
     private boolean mBtnAnimated = false;
 
     private UserPresenter mUserPresenter;
+    private LessonPresenter mLessonPresenter;
     /**
      * Handles sliding button animation. Used to transfer the button view, as the original animation
      * only transfers the pixels
@@ -92,8 +97,11 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Set student
         mUserPresenter = new UserPresenter();
+        mLessonPresenter = new LessonPresenter(getActivity());
 
-
+        final TextView numberOfLessons = view.findViewById(R.id.txt_drives);
+        final TextView hoursDroveNight = view.findViewById(R.id.hours_drove_night);
+        final TextView hoursDroveDay = view.findViewById(R.id.hours_drove_day);
         mNameText = view.findViewById(R.id.txt_name);
         mLicenseText = view.findViewById(R.id.txt_license);
         mDobText = view.findViewById(R.id.txt_dob);
@@ -135,6 +143,15 @@ public class HomeFragment extends Fragment {
         });
         mUserPresenter.populateUserData(mNameText,mLicenseText,mDobText,
                 mStateText,mProgressText,getContext());
+        numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
+        try {
+            hoursDroveNight.setText(getString(R.string.profile_day_hours,
+                    mLessonPresenter.getDayNightDroveLesson(true, mLessonPresenter.getAllLessons())));
+            hoursDroveDay.setText(getString(R.string.profile_night_hours,
+                    mLessonPresenter.getDayNightDroveLesson(false, mLessonPresenter.getAllLessons())));
+        } catch (ParseException e) {
+            Log.e("HomeFragment", "Formatting exception: " + e);
+        }
     }
 
     /**

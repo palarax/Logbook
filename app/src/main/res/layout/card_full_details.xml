@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_full_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lesson_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_distance"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_lpn"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_lpn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_supervisor_licence"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_supervisorLicence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_padding">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_start_time"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_start_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_end_time"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_end_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_total_time"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_total_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_padding">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_start_odometer"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_start_odometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_end_odometer"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_end_odometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_speed"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/column_title_txt_size"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/txt_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/column_text_size" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

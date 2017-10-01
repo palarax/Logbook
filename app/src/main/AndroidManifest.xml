@@ -65,8 +65,11 @@
         <activity
             android:name=".activity.DrivingLesson"
             android:label="@string/app_name">
-
         </activity>
+
+        <activity
+            android:name=".activity.LessonFullDetail"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.txusballesteros.widgets.FitChart;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.model.Users;
@@ -47,12 +48,25 @@ public class UserPresenter {
         stateText.setText(mStudent.getState());
 
         if (mStudent.getHoursCompleted() >= 120) {
-            progressText.setText(context.getString(R.string.profile_in_progress));
-            progressText.setTextColor(ContextCompat.getColor(context, R.color.in_progress));
-        }else{
             progressText.setText(context.getString(R.string.profile_completed));
             progressText.setTextColor(ContextCompat.getColor(context, R.color.licence_color));
+        } else {
+            progressText.setText(context.getString(R.string.profile_in_progress));
+            progressText.setTextColor(ContextCompat.getColor(context, R.color.in_progress));
         }
+    }
+
+    /**
+     * Create a data series for hours completion chart
+     *
+     * @param fitChart chart to be populated
+     */
+    public void createDataSeries(FitChart fitChart, TextView chartView, Context context) {
+        fitChart.setMinValue(0f);
+        fitChart.setMaxValue(120f);
+        int hoursCompleted = mStudent.getHoursCompleted();
+        chartView.setText(context.getString(R.string.chart_hours_completed, hoursCompleted));
+        fitChart.setValue((float) hoursCompleted);
     }
 
 }

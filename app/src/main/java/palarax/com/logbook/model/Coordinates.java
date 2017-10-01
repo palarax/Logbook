@@ -51,7 +51,7 @@ public class Coordinates extends Model {
      * @param longitude longitude linked to lesson
      * @param latitude  latitude linked to lesson
      */
-    public Coordinates(long lessonId, double longitude, double latitude, long userId) {
+    public Coordinates(long lessonId, double latitude, double longitude, long userId) {
         this.lessonId = lessonId;
         this.longitude = longitude;
         this.latitude = latitude;

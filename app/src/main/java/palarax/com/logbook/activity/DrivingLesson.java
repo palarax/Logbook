@@ -88,7 +88,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-
         mLessonPresenter = new LessonPresenter(DrivingLesson.this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

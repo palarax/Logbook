@@ -17,8 +17,6 @@ public class Utils {
     public static final String LESSON_ID = "LESSON_ID";
 
     //BACKENDLESS
-    public static final String BACKENDLESS_RESPONSE = "SUCCESS";
-
     public static final String BACKENDLESS_NAME = "name";
     public static final String BACKENDLESS_SURNAME = "surname";
     public static final String BACKENDLESS_LICENSE = "licence_id";
@@ -35,6 +33,12 @@ public class Utils {
         return new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
     }
 
+    public static String formatDate(String format, String date) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        Date formatedDate = dateFormat.parse(date);
+        return new SimpleDateFormat(format).format(formatedDate);
+    }
+
     //TODO: put into doc https://stackoverflow.com/questions/16713137/how-convert-string-to-datetime-in-android
 
     /**
@@ -42,8 +46,8 @@ public class Utils {
      *
      * @return local time
      */
-    public static long getTimeDiffernce(String strStartDate, String strEndDate) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+    public static long getTimeDiffernce(String strStartDate, String strEndDate, String format) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         Date startDate = dateFormat.parse(strStartDate);
         Date endDate = dateFormat.parse(strEndDate);
         return endDate.getTime() - startDate.getTime();
@@ -56,7 +60,7 @@ public class Utils {
      * @param totalTime total time of lesson
      * @return returns formated string
      */
-    public static String convertDateToHhMmSs(Long totalTime) {
+    public static String convertDateToFormat(Long totalTime, int format) {
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
         long hoursInMilli = minutesInMilli * 60;
@@ -70,9 +74,15 @@ public class Utils {
 
         long elapsedMinutes = totalTime / minutesInMilli;
 
-        return String.format("D:%d H:%d M:%d", elapsedDays, elapsedHours, elapsedMinutes);
+        switch (format) {
+            case 1:
+                return String.format("HOURS: %d Minutes: %d", elapsedHours, elapsedMinutes);
+            default:
+                return String.format("Days: %d Hours: %d Minutes: %d", elapsedDays, elapsedHours, elapsedMinutes);
+        }
 
     }
+
 
     /**
      * Converts bytes to hex string

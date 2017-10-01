@@ -9,6 +9,7 @@ import com.backendless.BackendlessUser;
 
 import java.util.List;
 
+import palarax.com.logbook.model.Coordinates;
 import palarax.com.logbook.model.Users;
 import palarax.com.logbook.model.Utils;
 
@@ -29,10 +30,9 @@ public class DatabaseHelper {
     public static Users updateLocalUserDetails(BackendlessUser user) {
         String query = String.format(
                 "userSurname = \"%s\"," +
-                        "hoursCompleted = \"%d\" , userName = \"%s\" ," +
+                        "userName = \"%s\" ," +
                         "state = \"%s\" , dob = \"%s\"",
                 user.getProperty(Utils.BACKENDLESS_SURNAME),
-                user.getProperty(Utils.BACKENDLESS_HOURS_COMPLETED),
                 user.getProperty(Utils.BACKENDLESS_NAME),
                 user.getProperty(Utils.BACKENDLESS_STATE),
                 user.getProperty(Utils.BACKENDLESS_DOB)
@@ -51,8 +51,7 @@ public class DatabaseHelper {
                     (String) user.getProperty(Utils.BACKENDLESS_NAME),
                     (String) user.getProperty(Utils.BACKENDLESS_SURNAME),
                     (String) user.getProperty(Utils.BACKENDLESS_STATE),
-                    (String) user.getProperty(Utils.BACKENDLESS_DOB),
-                    (Integer) user.getProperty(Utils.BACKENDLESS_HOURS_COMPLETED));
+                    (String) user.getProperty(Utils.BACKENDLESS_DOB), 0);
             student.save();
         }
         setCurrentUser(student.getId());
@@ -85,8 +84,17 @@ public class DatabaseHelper {
         } catch (SQLiteException e) {
             Log.e("DatabaseHelper", "Clearing user exception: " + e);
         }
-
     }
 
+    /**
+     * Get Coordinates for the a specific lesson
+     *
+     * @param lessonId lesson id of required coordinates
+     * @return coordiantes linked to that lesson
+     */
+    public static List<Coordinates> getLessonCoordinates(long lessonId) {
+        return new Select().from(Coordinates.class).
+                where("lessonId = ?", Long.toString(lessonId)).execute();
+    }
 
 }

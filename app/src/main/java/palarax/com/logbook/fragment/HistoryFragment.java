@@ -67,6 +67,8 @@ public class HistoryFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mLessonPresenter.updateLessons(mAdapter, mUserPresenter.getStudent().getLicenseNumber());
+
+
     }
 
 }
