@@ -23,6 +23,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -126,19 +127,13 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
     @Override
     public void onHandleResponse(Object response) {
         mMorphPresenter.morphToSuccess(mBtnMorph);
-        /*new Timer().schedule(new TimerTask() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run()
-                    {
-                        nextActivity();
-                    }
-                });
-
+                nextActivity();
             }
-
-        }, 0, 2000);*/
+        }, 500);
 
     }
 
@@ -158,6 +153,7 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
         DatabaseHelper.updateLocalUserDetails(Backendless.UserService.CurrentUser());
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.transition.fadein, R.transition.fadeout);
     }
 
 

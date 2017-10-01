@@ -1,9 +1,12 @@
 package palarax.com.logbook.activity;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,9 +20,12 @@ import palarax.com.logbook.model.Utils;
 import palarax.com.logbook.presenter.LessonPresenter;
 
 /**
- * @author Palarax
+ * Activity that displays singular lesson data
+ * @author Ilya Thai (11972078)
  * @date 02-Oct-17
+ * @version 1.0
  */
+
 public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCallback {
 
     TextView mTxtViewDistance, mTxtViewSupervisorLicence, mTxtViewStartOdometer, mTxtViewEndOdometer,
@@ -40,6 +46,17 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         mTxtViewStartTime = findViewById(R.id.txt_start_time);
         mTxtViewEndTime = findViewById(R.id.txt_end_time);
         mTxtViewSpeed = findViewById(R.id.txt_speed);
+
+        final Button btnExit = findViewById(R.id.btn_lesson_exit);
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
+                }
+                onBackPressed();
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -73,5 +90,13 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
+        }
     }
 }

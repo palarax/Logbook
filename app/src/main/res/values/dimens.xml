@@ -7,6 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="high_dif_text">4dp</dimen>
     <dimen name="layout_padding">4dp</dimen>
+    <dimen name="login_instructions">16sp</dimen>
 
     <!-- Animation -->
     <dimen name="morph_button">200dp</dimen>

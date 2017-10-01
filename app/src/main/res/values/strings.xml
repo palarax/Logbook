@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">LogBook</string>
 
+    <string name="scan_nfc">Please scan your NFC tag</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -13,6 +15,8 @@
     <string name="chart_hours_completed">%d Hours completed out of 120</string>
     <string name="profile_day_hours">Day: %d</string>
     <string name="profile_night_hours">Night: %d</string>
+
+    <string name="btn_lesson_details_exit">Back to lesson history</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="menu_user_settings">User Settings</string>

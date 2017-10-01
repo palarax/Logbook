@@ -15,11 +15,10 @@
  */
 package palarax.com.logbook.presenter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,17 +40,17 @@ import palarax.com.logbook.model.Utils;
  * @date 29-Sep-17
  */
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
-    private Context mAdapterContext;
+    private Activity mActivity;
     private List<Lesson> mLessonsList;
 
     /**
      * Initializes LessonsAdapter
      *
-     * @param context context of the activity
+     * @param activity activity initializing this adapter
      * @param lessons lesson list that contains lesson data
      */
-    public LessonsAdapter(Context context, List<Lesson> lessons) {
-        this.mAdapterContext = context;
+    public LessonsAdapter(Activity activity, List<Lesson> lessons) {
+        this.mActivity = activity;
         this.mLessonsList = lessons;
     }
 
@@ -66,38 +65,27 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int lessonPosition = position;
         final Lesson lesson = mLessonsList.get(position);
-        Log.e("test", "supervisor: " + Long.toString(lesson.getSupervisorLicence()));
-        holder.mTxtViewLessonId.setText(mAdapterContext.getString(R.string.title_lesson_id, position + 1));
+        holder.mTxtViewLessonId.setText(mActivity.getString(R.string.title_lesson_id, position + 1));
         holder.mTxtViewLpn.setText(lesson.getLicencePlate());
-        holder.mTxtViewDistance.setText(mAdapterContext.getString(R.string.txt_distance, lesson.getDistance()));
+        holder.mTxtViewDistance.setText(mActivity.getString(R.string.txt_distance, lesson.getDistance()));
         holder.mTxtViewTotalTime.setText(Utils.convertDateToFormat(lesson.getTotalTime(), 1));
+
         holder.mBtnAdvancedInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // http://www.androidauthority.com/using-shared-element-transitions-activities-fragments-631996/
-                //TODO: start new activity from this fragment with transition
-                Intent intent = new Intent(mAdapterContext, LessonFullDetail.class);
+                Intent intent = new Intent(mActivity, LessonFullDetail.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        /*ActivityOptionsCompat options = ActivityOptionsCompat.
-                                makeSceneTransitionAnimation(this, imageView, getString(R.string.activity_image_trans));*/
-                    //mAdapterContext.startActivity(intent, options.toBundle());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(Utils.LESSON_ID, mLessonsList.get(lessonPosition).getId());
-                    mAdapterContext.startActivity(intent);
+                    mActivity.startActivity(intent);
+                    mActivity.overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
                 } else {
                     intent.putExtra(Utils.LESSON_ID, lesson.getId());
-                    mAdapterContext.startActivity(intent);
+                    mActivity.startActivity(intent);
                 }
             }
         });
-        /*
-        holder.mTxtViewSupervisorLicence.setText("SupervisorLicence: " + Long.toString(lesson.getSupervisorLicence()));
-        holder.mTxtViewStartOdometer.setText("Start Od: " + Long.toString(lesson.getStartOdometer()));
-        holder.mTxtViewEndOdometer.setText("End od: " + Long.toString(lesson.getEndOdometer()));
-
-        holder.mTxtViewStartTime.setText("Start t: " + lesson.getStartTime());
-        holder.mTxtViewEndTime.setText("End t: " + lesson.getEndTime());
-        holder.mTxtViewSpeed.setText("Speed: " + mAdapterContext.getString(R.string.txt_speed, lesson.getSpeed()));*/
-
     }
 
     @Override
@@ -112,8 +100,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         TextView mTxtViewDistance, mTxtViewTotalTime, mTxtViewLpn,
                 mTxtViewLessonId;
         Button mBtnAdvancedInfo;
+        View mView;
         ViewHolder(View view) {
             super(view);
+            mView = view;
             mTxtViewLessonId = view.findViewById(R.id.txt_lesson_id);
             mTxtViewLpn = view.findViewById(R.id.txt_lpn);
             mTxtViewDistance = view.findViewById(R.id.txt_distance);

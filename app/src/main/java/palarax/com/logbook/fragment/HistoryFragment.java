@@ -60,7 +60,7 @@ public class HistoryFragment extends Fragment {
                 mStateText,mProgressText,getContext());
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
-        mAdapter = new LessonsAdapter(getContext(), mLessonPresenter.getAllLessons());
+        mAdapter = new LessonsAdapter(getActivity(), mLessonPresenter.getAllLessons());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setLayoutManager(mLayoutManager);
