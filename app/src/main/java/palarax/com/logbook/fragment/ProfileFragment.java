@@ -22,10 +22,7 @@ import palarax.com.logbook.presenter.UserPresenter;
  */
 public class ProfileFragment extends Fragment {
 
-    private TextView mNameText, mLicenseText, mDobText, mStateText, mProgressText;
-
     private UserPresenter mUserPresenter;
-    private LessonPresenter mLessonPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,13 +37,13 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         super.onViewCreated(view, savedInstanceState);
         mUserPresenter = new UserPresenter();
-        mLessonPresenter = new LessonPresenter(getActivity());
+        LessonPresenter mLessonPresenter = new LessonPresenter(getActivity());
 
-        mNameText = view.findViewById(R.id.txt_name);
-        mLicenseText = view.findViewById(R.id.txt_license);
-        mDobText = view.findViewById(R.id.txt_dob);
-        mStateText = view.findViewById(R.id.txt_state);
-        mProgressText = view.findViewById(R.id.txt_completed);
+        TextView mNameText = view.findViewById(R.id.txt_name);
+        TextView mLicenseText = view.findViewById(R.id.txt_license);
+        TextView mDobText = view.findViewById(R.id.txt_dob);
+        TextView mStateText = view.findViewById(R.id.txt_state);
+        TextView mProgressText = view.findViewById(R.id.txt_completed);
         Button btnDeleteAll = view.findViewById(R.id.btn_delete_all);
         btnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +51,8 @@ public class ProfileFragment extends Fragment {
                 mUserPresenter.deleteAllUsers();
             }
         });
-        mUserPresenter.populateUserData(mNameText,mLicenseText,mDobText,
-                mStateText,mProgressText,getContext());
+        mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
+                mStateText, mProgressText, getContext());
     }
 
 }

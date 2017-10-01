@@ -68,7 +68,7 @@ public class LessonPresenter {
      * @return hours for day or night
      * @throws ParseException
      */
-    public long getLessonDayNightHours(boolean isDay, Lesson lesson) throws ParseException {
+    private long getLessonDayNightHours(boolean isDay, Lesson lesson) throws ParseException {
         long totalDayHours = 0;
         long totalNightHours = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");

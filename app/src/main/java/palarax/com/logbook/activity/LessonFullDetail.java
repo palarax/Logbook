@@ -28,8 +28,6 @@ import palarax.com.logbook.presenter.LessonPresenter;
 
 public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCallback {
 
-    TextView mTxtViewDistance, mTxtViewSupervisorLicence, mTxtViewStartOdometer, mTxtViewEndOdometer,
-            mTxtViewTotalTime, mTxtViewStartTime, mTxtViewEndTime, mTxtViewSpeed, mTxtViewLpn;
     private LessonPresenter mLessonPresenter;
 
     @Override
@@ -37,15 +35,15 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_full);
         mLessonPresenter = new LessonPresenter(LessonFullDetail.this);
-        mTxtViewLpn = findViewById(R.id.txt_lpn);
-        mTxtViewDistance = findViewById(R.id.txt_distance);
-        mTxtViewSupervisorLicence = findViewById(R.id.txt_supervisorLicence);
-        mTxtViewStartOdometer = findViewById(R.id.txt_start_odometer);
-        mTxtViewEndOdometer = findViewById(R.id.txt_end_odometer);
-        mTxtViewTotalTime = findViewById(R.id.txt_total_time);
-        mTxtViewStartTime = findViewById(R.id.txt_start_time);
-        mTxtViewEndTime = findViewById(R.id.txt_end_time);
-        mTxtViewSpeed = findViewById(R.id.txt_speed);
+        TextView mTxtViewLpn = findViewById(R.id.txt_lpn);
+        TextView mTxtViewDistance = findViewById(R.id.txt_distance);
+        TextView mTxtViewSupervisorLicence = findViewById(R.id.txt_supervisorLicence);
+        TextView mTxtViewStartOdometer = findViewById(R.id.txt_start_odometer);
+        TextView mTxtViewEndOdometer = findViewById(R.id.txt_end_odometer);
+        TextView mTxtViewTotalTime = findViewById(R.id.txt_total_time);
+        TextView mTxtViewStartTime = findViewById(R.id.txt_start_time);
+        TextView mTxtViewEndTime = findViewById(R.id.txt_end_time);
+        TextView mTxtViewSpeed = findViewById(R.id.txt_speed);
 
         final Button btnExit = findViewById(R.id.btn_lesson_exit);
         btnExit.setOnClickListener(new View.OnClickListener() {

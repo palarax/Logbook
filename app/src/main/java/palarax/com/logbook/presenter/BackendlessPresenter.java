@@ -17,9 +17,9 @@ import java.lang.ref.WeakReference;
  */
 public class BackendlessPresenter {
 
-    public static final String BACKENDLESS_APPLICATION_ID = "F1D55E01-2495-D20A-FF0E-58AE50CB9700";
-    public static final String BACKENDLESS_API_KEY = "5DB4EEBE-A054-CE7D-FFCD-F6F74B4FC500";
-    public static final String BACKENDLESS_SERVER_URL = "http://api.backendless.com";
+    private static final String BACKENDLESS_APPLICATION_ID = "F1D55E01-2495-D20A-FF0E-58AE50CB9700";
+    private static final String BACKENDLESS_API_KEY = "5DB4EEBE-A054-CE7D-FFCD-F6F74B4FC500";
+    private static final String BACKENDLESS_SERVER_URL = "http://api.backendless.com";
 
     private WeakReference<BackendlessPresenter.HandleResponse> mHandleResponse;
 

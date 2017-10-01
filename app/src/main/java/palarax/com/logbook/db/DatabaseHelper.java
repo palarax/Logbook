@@ -79,7 +79,6 @@ public class DatabaseHelper {
             for (Users student : users) {
                 student.setActiveUser(0);
                 student.save();
-                Log.e("ds", student.getUserName() + " ID:" + student.getId());
             }
         } catch (SQLiteException e) {
             Log.e("DatabaseHelper", "Clearing user exception: " + e);

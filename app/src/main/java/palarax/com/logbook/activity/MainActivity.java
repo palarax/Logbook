@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity
     public void onHandleResponse(Object response) {
         mProgress.dismiss();
         finish();
+        overridePendingTransition(R.transition.fadein, R.transition.fadeout);
     }
 
     @Override

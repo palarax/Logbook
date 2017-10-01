@@ -96,7 +96,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     /**
      * Describess item view and metadata about its place within the RecyclerView
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTxtViewDistance, mTxtViewTotalTime, mTxtViewLpn,
                 mTxtViewLessonId;
         Button mBtnAdvancedInfo;

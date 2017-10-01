@@ -40,7 +40,7 @@ public class NfcController {
     // activity is interested in NFC-A devices (including other Android devices), and that the
     // system should not check for the presence of NDEF-formatted data (e.g. Android Beam).
     //| NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
-    public static int READER_FLAGS =
+    private static int READER_FLAGS =
             NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B | NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V;
 
     private Activity mActivity;
@@ -84,7 +84,6 @@ public class NfcController {
      */
     public ArrayList hasMessage(Tag tag) {
         ArrayList msgRecords;
-        //Log.e(TAG,"TAG ID: "+ Utils.bytesToHexString(tag.getId()));
         String[] techList = tag.getTechList(); //list of all Tag techs
         //Look through tech
         for (String singleTech : techList) {

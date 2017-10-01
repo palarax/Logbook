@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
 
     // distance the button travels down the screen vertically
     private static final int BTN_Y_DISTANCE = 400;
-    private TextView mNameText, mLicenseText, mDobText, mStateText, mProgressText;
 
     private EditText mLpn, mStartOdometer, mSupervisorLicence;
 
@@ -46,7 +45,6 @@ public class HomeFragment extends Fragment {
     private boolean mBtnAnimated = false;
 
     private UserPresenter mUserPresenter;
-    private LessonPresenter mLessonPresenter;
     /**
      * Handles sliding button animation. Used to transfer the button view, as the original animation
      * only transfers the pixels
@@ -97,16 +95,16 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Set student
         mUserPresenter = new UserPresenter();
-        mLessonPresenter = new LessonPresenter(getActivity());
+        LessonPresenter mLessonPresenter = new LessonPresenter(getActivity());
 
         final TextView numberOfLessons = view.findViewById(R.id.txt_drives);
         final TextView hoursDroveNight = view.findViewById(R.id.hours_drove_night);
         final TextView hoursDroveDay = view.findViewById(R.id.hours_drove_day);
-        mNameText = view.findViewById(R.id.txt_name);
-        mLicenseText = view.findViewById(R.id.txt_license);
-        mDobText = view.findViewById(R.id.txt_dob);
-        mStateText = view.findViewById(R.id.txt_state);
-        mProgressText = view.findViewById(R.id.txt_completed);
+        TextView mNameText = view.findViewById(R.id.txt_name);
+        TextView mLicenseText = view.findViewById(R.id.txt_license);
+        TextView mDobText = view.findViewById(R.id.txt_dob);
+        TextView mStateText = view.findViewById(R.id.txt_state);
+        TextView mProgressText = view.findViewById(R.id.txt_completed);
         mStart = view.findViewById(R.id.start_lesson);
 
         mLpn = view.findViewById(R.id.edit_lpn);
@@ -141,8 +139,8 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mUserPresenter.populateUserData(mNameText,mLicenseText,mDobText,
-                mStateText,mProgressText,getContext());
+        mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
+                mStateText, mProgressText, getContext());
         numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
         try {
             hoursDroveNight.setText(getString(R.string.profile_day_hours,
@@ -175,5 +173,6 @@ public class HomeFragment extends Fragment {
         }
         return editEmpty;
     }
+
 
 }
