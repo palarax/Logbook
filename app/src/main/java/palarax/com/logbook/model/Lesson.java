@@ -38,9 +38,6 @@ public class Lesson extends Model {
     @Column(name = "endTime")
     private String endTime;
 
-    @Column(name = "speed")
-    private double speed;
-
     @Column(name = "distance")
     private double distance;
 
@@ -79,11 +76,10 @@ public class Lesson extends Model {
      * @param totalTime  total time driving for this lesson
      * @param startTime time started the lesson
      * @param endTime   time ended the lesson
-     * @param speed average speed
      */
     public Lesson(String licencePlate, double distance, long supervisorLicence, long studentLicence,
                   int startOdometer, int endOdometer, long totalTime, String startTime,
-                  String endTime, double speed) {
+                  String endTime) {
         this.licencePlate = licencePlate;
         this.distance = distance;
         this.supervisorLicence = supervisorLicence;
@@ -93,7 +89,6 @@ public class Lesson extends Model {
         this.totalTime = totalTime;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.speed = speed;
     }
 
     public String getLicencePlate() {
@@ -166,14 +161,6 @@ public class Lesson extends Model {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
     }
 
 }

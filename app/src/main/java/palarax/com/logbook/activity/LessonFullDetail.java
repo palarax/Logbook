@@ -61,7 +61,8 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
             mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
             mLessonPresenter.setCurrentCoordinates(extras.getLong(Utils.LESSON_ID));
         }
-
+        double speed = (mLessonPresenter.getCurrentLesson().getDistance() / 1000) /
+                (mLessonPresenter.getCurrentLesson().getTotalTime() / 1000 / 60 / 60);
         mTxtViewLpn.setText(mLessonPresenter.getCurrentLesson().getLicencePlate());
         mTxtViewDistance.setText(getString(R.string.txt_distance, mLessonPresenter.getCurrentLesson().getDistance() / 1000));
         mTxtViewTotalTime.setText(Utils.convertDateToFormat(mLessonPresenter.getCurrentLesson().getTotalTime(), 1));
@@ -70,7 +71,7 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         mTxtViewEndOdometer.setText(Long.toString(mLessonPresenter.getCurrentLesson().getEndOdometer()));
         mTxtViewStartTime.setText(mLessonPresenter.getCurrentLesson().getStartTime());
         mTxtViewEndTime.setText(mLessonPresenter.getCurrentLesson().getEndTime());
-        mTxtViewSpeed.setText(getString(R.string.txt_speed, mLessonPresenter.getCurrentLesson().getSpeed()));
+        mTxtViewSpeed.setText(getString(R.string.txt_speed, speed));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

@@ -42,7 +42,7 @@ public class Utils {
     //TODO: put into doc https://stackoverflow.com/questions/16713137/how-convert-string-to-datetime-in-android
 
     /**
-     * Get local time
+     * Get time difference in milliseconds
      *
      * @return local time
      */

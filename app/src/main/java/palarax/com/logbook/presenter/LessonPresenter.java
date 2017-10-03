@@ -232,7 +232,7 @@ public class LessonPresenter {
      * Verify that all lesson data has been completed
      */
     public boolean isCurrentLessonComplete() {
-        if (mCurrentLesson.getLicencePlate().isEmpty() || mCurrentLesson.getSpeed() == 0 ||
+        if (mCurrentLesson.getLicencePlate().isEmpty() ||
                 mCurrentLesson.getDistance() == 0 || mCurrentLesson.getSupervisorLicence() == 0 ||
                 mCurrentLesson.getStartOdometer() == 0 || mCurrentLesson.getEndOdometer() == 0 ||
                 mCurrentLesson.getTotalTime() == 0 || mCurrentLesson.getStartTime().isEmpty() ||
@@ -341,14 +341,9 @@ public class LessonPresenter {
 */
             getCurrentLesson().setDistance(distanceTravelled);
             getCurrentLesson().setTotalTime(totalTime);
-            getCurrentLesson().setSpeed(distanceTravelled / totalTime);
             //save lesson
             mCurrentLesson.save();
         } else {
-            Log.e(TAG, "" + distanceTravelled);
-            Log.e(TAG, "" + totalTimeMinutes);
-            Log.e(TAG, "" + mCurrentLesson.getEndOdometer());
-            Log.e(TAG, "" + getCurrentLesson().getStartOdometer());
             //Lesson is too short or didn't travel enough
             //Remove coordinates
             Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();

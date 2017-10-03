@@ -77,7 +77,7 @@
 
     <!-- History Card view -->
     <string name="txt_distance">%.2f km</string>
-    <string name="txt_speed">%.0f km/h</string>
+    <string name="txt_speed">%.2f km/h</string>
     <string name="title_lesson_id">Lesson #%d</string>
     <string name="title_lpn">Plate number</string>
     <string name="title_supervisor_licence">Supervisor Licence</string>
