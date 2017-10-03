@@ -199,7 +199,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
     }
 
@@ -210,6 +209,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     public void onRestart() {
         super.onRestart();
         Log.d(TAG, "onRestart");
+        Log.e(TAG, "onRestart: " + mLessonPresenter.getCurrentLesson().getEndOdometer());
         if(this.mGoogleApiClient != null) this.mGoogleApiClient.connect();
     }
 
@@ -248,7 +248,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         super.onStop();
         Log.d(TAG, "onStop");
         mGoogleApiClient.disconnect();
-        mLessonPresenter.checkLessonIntegrity();
     }
 
     /**
@@ -258,7 +257,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        mLessonPresenter.isCurrentLessonComplete();
     }
 
     /**

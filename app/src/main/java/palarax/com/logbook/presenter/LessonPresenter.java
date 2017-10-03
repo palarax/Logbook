@@ -5,13 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -218,7 +218,13 @@ public class LessonPresenter {
      * @return Latitude /Longitude
      */
     public LatLng getFirstCoordinates() {
-        return mCoordinates.get(0);
+        try {
+            return mCoordinates.get(0);
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "no coordinates found");
+            Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.error_no_coordinates), Toast.LENGTH_LONG).show();
+        }
+        return new LatLng(0, 0); //default
     }
 
     public void setCurrentCoordinates(Long lesson_id) {
@@ -226,21 +232,6 @@ public class LessonPresenter {
         for (Coordinates coordinates : lessonCoordinates) {
             mCoordinates.add(new LatLng(coordinates.getLatitude(), coordinates.getLongitude()));
         }
-    }
-
-    /**
-     * Verify that all lesson data has been completed
-     */
-    public boolean isCurrentLessonComplete() {
-        if (mCurrentLesson.getLicencePlate().isEmpty() ||
-                mCurrentLesson.getDistance() == 0 || mCurrentLesson.getSupervisorLicence() == 0 ||
-                mCurrentLesson.getStartOdometer() == 0 || mCurrentLesson.getEndOdometer() == 0 ||
-                mCurrentLesson.getTotalTime() == 0 || mCurrentLesson.getStartTime().isEmpty() ||
-                mCurrentLesson.getEndTime().isEmpty() || mCurrentLesson.getDistance() == 0) {
-            mCurrentLesson.delete();
-            return false;
-        } return true;
-
     }
 
     /**
@@ -331,27 +322,37 @@ public class LessonPresenter {
             Log.e(TAG, "Error: " + e);
             //This error should never occur
         }
-        long totalTimeMinutes = totalTime / 1000 / 60;
-        if ((
-                mCurrentLesson.getEndOdometer() > getCurrentLesson().getStartOdometer())) {
-            //TODO: once finished testing, put it back
-        /*
-        if (distanceTravelled > 500 && totalTimeMinutes > 10 && (
-                mCurrentLesson.getEndOdometer() > getCurrentLesson().getStartOdometer())) {
-*/
+        if (getCurrentLesson().getEndOdometer() > getCurrentLesson().getStartOdometer()) {
+            //if(isCurrentLessonComplete()){
+            //TODO: once finished testing, replace with isCurrentLessonComplete()
             getCurrentLesson().setDistance(distanceTravelled);
             getCurrentLesson().setTotalTime(totalTime);
             //save lesson
-            mCurrentLesson.save();
-        } else {
+            getCurrentLesson().save();
+        }
+    }
+
+
+    /**
+     * Verify that all lesson data has been completed
+     */
+    public boolean isCurrentLessonComplete() {
+
+        if (mCurrentLesson.getLicencePlate().isEmpty() ||
+                mCurrentLesson.getDistance() < 500 || mCurrentLesson.getSupervisorLicence() == 0 ||
+                mCurrentLesson.getStartOdometer() == 0 || mCurrentLesson.getStartTime().isEmpty() ||
+                (mCurrentLesson.getTotalTime() / 1000 / 60) < 10 ||
+                mCurrentLesson.getEndTime().isEmpty() || mCurrentLesson.getDistance() == 0) {
+            mCurrentLesson.delete();
             //Lesson is too short or didn't travel enough
             //Remove coordinates
             Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();
-
-            new Delete().from(Coordinates.class).where("lessonId = ?", mCurrentLesson.getId().toString()).execute();
             //remove lesson
-            mCurrentLesson.delete();
+            getCurrentLesson().delete();
+            return false;
         }
+        return true;
+
     }
 
     /**
@@ -365,6 +366,7 @@ public class LessonPresenter {
         final EditText input = new EditText(mCurrentActivity);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
         builder.setView(input);
 
         // Set up the buttons
@@ -376,7 +378,8 @@ public class LessonPresenter {
                 } else if (Long.parseLong(input.getText().toString()) < getCurrentLesson().getStartOdometer()) {
                     Toast.makeText(mCurrentActivity, mCurrentActivity.getString(R.string.error_odometer_small), Toast.LENGTH_SHORT).show();
                 } else {
-                    getCurrentLesson().setEndOdometer(Integer.parseInt(input.getText().toString()));
+                    getCurrentLesson().setEndOdometer(Long.parseLong(input.getText().toString()));
+                    checkLessonIntegrity();
                     mCurrentActivity.finish();
                 }
             }

@@ -45,6 +45,7 @@
                 android:layout_margin="4dp"
                 android:hint="@string/edit_start_odometer"
                 android:inputType="number"
+                android:maxLength="6"
                 android:textAlignment="center"/>
 
             <EditText
@@ -54,6 +55,7 @@
                 android:layout_margin="4dp"
                 android:hint="@string/edit_supervisor"
                 android:inputType="number"
+                android:maxLength="11"
                 android:textAlignment="center"/>
 
 

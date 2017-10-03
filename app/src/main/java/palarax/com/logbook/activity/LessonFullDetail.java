@@ -61,8 +61,9 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
             mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
             mLessonPresenter.setCurrentCoordinates(extras.getLong(Utils.LESSON_ID));
         }
-        double speed = (mLessonPresenter.getCurrentLesson().getDistance() / 1000) /
-                (mLessonPresenter.getCurrentLesson().getTotalTime() / 1000 / 60 / 60);
+        double speed = (mLessonPresenter.getCurrentLesson().getDistance()) /
+                (mLessonPresenter.getCurrentLesson().getTotalTime() / 60 / 60);
+
         mTxtViewLpn.setText(mLessonPresenter.getCurrentLesson().getLicencePlate());
         mTxtViewDistance.setText(getString(R.string.txt_distance, mLessonPresenter.getCurrentLesson().getDistance() / 1000));
         mTxtViewTotalTime.setText(Utils.convertDateToFormat(mLessonPresenter.getCurrentLesson().getTotalTime(), 1));

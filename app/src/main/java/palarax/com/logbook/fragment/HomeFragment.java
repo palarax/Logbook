@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mLessonPresenter = new LessonPresenter(getActivity());  //update lesson presenter
         updateLessonInformation();
         //clear edit
         mLpn.setText("");

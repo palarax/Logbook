@@ -67,6 +67,7 @@
     <string name="error_supervisor_null">Supervisor licence number cannot be empty</string>
     <string name="error_gms_connect">ERROR: Google Play Services could not be connected</string>
     <string name="error_user_not_exist">ERROR: The user does not exist</string>
+    <string name="error_no_coordinates">ERROR: No coordinates found</string>
     <string name="bad_lesson">DELETING DATA: lesson or distance travelled too short (min 10 min, 500m)</string>
     <string name="guest_user">ERROR: Guest User</string>
     <string name="user_not_exist">ERROR: User does not exist</string>

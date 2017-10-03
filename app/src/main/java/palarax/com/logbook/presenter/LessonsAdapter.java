@@ -67,7 +67,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         final Lesson lesson = mLessonsList.get(position);
         holder.mTxtViewLessonId.setText(mActivity.getString(R.string.title_lesson_id, position + 1));
         holder.mTxtViewLpn.setText(lesson.getLicencePlate());
-        holder.mTxtViewDistance.setText(mActivity.getString(R.string.txt_distance, lesson.getDistance()));
+        holder.mTxtViewDistance.setText(mActivity.getString(R.string.txt_distance, lesson.getDistance() / 1000));
         holder.mTxtViewTotalTime.setText(Utils.convertDateToFormat(lesson.getTotalTime(), 1));
 
         holder.mBtnAdvancedInfo.setOnClickListener(new View.OnClickListener() {
