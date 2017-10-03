@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 
@@ -39,12 +40,13 @@ public class HomeFragment extends Fragment {
     private static final int BTN_Y_DISTANCE = 400;
 
     private EditText mLpn, mStartOdometer, mSupervisorLicence;
-
+    private TextView numberOfLessons, hoursDroveNight, hoursDroveDay;
     private Button mStart;
     private RelativeLayout.LayoutParams mLayoutParams;
     private boolean mBtnAnimated = false;
 
     private UserPresenter mUserPresenter;
+    private LessonPresenter mLessonPresenter;
     /**
      * Handles sliding button animation. Used to transfer the button view, as the original animation
      * only transfers the pixels
@@ -77,6 +79,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateLessonInformation();
         //clear edit
         mLpn.setText("");
         mStartOdometer.setText("");
@@ -95,11 +98,11 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Set student
         mUserPresenter = new UserPresenter();
-        LessonPresenter mLessonPresenter = new LessonPresenter(getActivity());
+        mLessonPresenter = new LessonPresenter(getActivity());
 
-        final TextView numberOfLessons = view.findViewById(R.id.txt_drives);
-        final TextView hoursDroveNight = view.findViewById(R.id.hours_drove_night);
-        final TextView hoursDroveDay = view.findViewById(R.id.hours_drove_day);
+        numberOfLessons = view.findViewById(R.id.txt_drives);
+        hoursDroveNight = view.findViewById(R.id.hours_drove_night);
+        hoursDroveDay = view.findViewById(R.id.hours_drove_day);
         TextView mNameText = view.findViewById(R.id.txt_name);
         TextView mLicenseText = view.findViewById(R.id.txt_license);
         TextView mDobText = view.findViewById(R.id.txt_dob);
@@ -141,6 +144,13 @@ public class HomeFragment extends Fragment {
         });
         mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
                 mStateText, mProgressText, getContext());
+        updateLessonInformation();
+    }
+
+    /**
+     * Updates lesson information on GUI
+     */
+    private void updateLessonInformation() {
         numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
         try {
             hoursDroveNight.setText(getString(R.string.profile_day_hours,
@@ -149,6 +159,7 @@ public class HomeFragment extends Fragment {
                     mLessonPresenter.getDayNightDroveLesson(false, mLessonPresenter.getAllLessons())));
         } catch (ParseException e) {
             Log.e("HomeFragment", "Formatting exception: " + e);
+            Toast.makeText(getContext(), getString(R.string.generic_error, e), Toast.LENGTH_SHORT).show();
         }
     }
 

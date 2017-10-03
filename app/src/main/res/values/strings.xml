@@ -70,6 +70,7 @@
     <string name="bad_lesson">DELETING DATA: lesson or distance travelled too short (min 10 min, 500m)</string>
     <string name="guest_user">ERROR: Guest User</string>
     <string name="user_not_exist">ERROR: User does not exist</string>
+    <string name="generic_error">ERROR: %s</string>
     <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
     
     <!-- Google maps API key -->
