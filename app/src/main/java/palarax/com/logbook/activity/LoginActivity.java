@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 import palarax.com.logbook.R;
 import palarax.com.logbook.db.DatabaseHelper;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 import palarax.com.logbook.presenter.BackendlessPresenter;
 import palarax.com.logbook.presenter.MorphBtnPresenter;
 import palarax.com.logbook.presenter.NfcController;

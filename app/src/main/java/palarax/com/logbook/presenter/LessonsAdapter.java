@@ -30,7 +30,7 @@ import java.util.List;
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.LessonFullDetail;
 import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 
 /**
  * Sets up and managesRecycler View with lesson objects

@@ -9,6 +9,8 @@ import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import palarax.com.logbook.Utils;
+
 /**
  * NDEF TAG object that retrieves and reads all TAG data
  *

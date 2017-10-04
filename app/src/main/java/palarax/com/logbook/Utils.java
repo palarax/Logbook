@@ -1,4 +1,4 @@
-package palarax.com.logbook.model;
+package palarax.com.logbook;
 
 
 import java.text.ParseException;

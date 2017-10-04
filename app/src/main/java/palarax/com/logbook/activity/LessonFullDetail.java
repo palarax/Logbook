@@ -16,7 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import palarax.com.logbook.R;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 import palarax.com.logbook.presenter.LessonPresenter;
 
 /**

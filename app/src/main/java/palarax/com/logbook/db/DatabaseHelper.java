@@ -11,7 +11,7 @@ import java.util.List;
 
 import palarax.com.logbook.model.Coordinates;
 import palarax.com.logbook.model.Users;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 
 /**
  * Class that handles Database calls

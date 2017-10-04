@@ -30,7 +30,7 @@ import palarax.com.logbook.db.DatabaseHelper;
 import palarax.com.logbook.model.Coordinates;
 import palarax.com.logbook.model.Lesson;
 import palarax.com.logbook.model.Users;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 
 /**
  * Presents and manages lesson data

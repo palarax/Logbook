@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
 import palarax.com.logbook.R;
 
 /**
- * Manages NFC functionality and CallBacks
+ * Manages NFC functionality and their callbacks
  * @author Ilya Thai (11972078)
  * @version 1.0
  *

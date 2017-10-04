@@ -22,7 +22,7 @@ import java.text.ParseException;
 import palarax.com.logbook.R;
 import palarax.com.logbook.activity.DrivingLesson;
 import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.model.Utils;
+import palarax.com.logbook.Utils;
 import palarax.com.logbook.presenter.LessonPresenter;
 import palarax.com.logbook.presenter.UserPresenter;
 
