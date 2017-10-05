@@ -38,7 +38,7 @@ public class Users extends Model {
     private int licenseNumber;
 
     @Column(name = "hoursCompleted")
-    private int hoursCompleted;
+    private double hoursCompleted;
 
     @Column(name = "userName")
     private String userName;
@@ -64,7 +64,7 @@ public class Users extends Model {
      * @param userName      Surname of the user
      * @param userSurname   Surname of the user
      */
-    public Users(Integer licenseNumber, String userName, String userSurname,String state,String dob,int hours_completed) {
+    public Users(Integer licenseNumber, String userName, String userSurname,String state,String dob,double hours_completed) {
         this.licenseNumber = licenseNumber;
         this.userName = userName;
         this.userSurname = userSurname;
@@ -82,11 +82,11 @@ public class Users extends Model {
         this.activeUser = activeUser;
     }
 
-    public int getHoursCompleted() {
+    public double getHoursCompleted() {
         return hoursCompleted;
     }
 
-    public void setHoursCompleted(int hours_completed) {
+    public void setHoursCompleted(double hours_completed) {
         this.hoursCompleted = hours_completed;
     }
 

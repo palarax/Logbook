@@ -26,11 +26,11 @@ import java.util.Date;
 import java.util.List;
 
 import palarax.com.logbook.R;
+import palarax.com.logbook.Utils;
 import palarax.com.logbook.db.DatabaseHelper;
 import palarax.com.logbook.model.Coordinates;
 import palarax.com.logbook.model.Lesson;
 import palarax.com.logbook.model.Users;
-import palarax.com.logbook.Utils;
 
 /**
  * Presents and manages lesson data
@@ -62,15 +62,14 @@ public class LessonPresenter {
     }
 
     /**
-     * Get day or night hours for the lesson
-     * @param isDay are day night hours needed
+     * Get day or night time in milliseconds for the lesson
      * @param lesson lesson to be analysed
-     * @return hours for day or night
+     * @return hours for day and night
      * @throws ParseException
      */
-    private long getLessonDayNightHours(boolean isDay, Lesson lesson) throws ParseException {
-        long totalDayHours = 0;
-        long totalNightHours = 0;
+    private double[] getLessonDayNightTime(Lesson lesson) throws ParseException {
+        double totalDayTime = 0;
+        double totalNightTime = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         Date formatedEndDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getEndTime()));
         Date formatedStartDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getStartTime()));
@@ -79,43 +78,45 @@ public class LessonPresenter {
                 (formatedStartDate.after(dateFormat.parse("19:00"))))) {
             if ((formatedEndDate.before(dateFormat.parse("07:00")) ||
                     (formatedEndDate.after(dateFormat.parse("19:00"))))) {
-                totalNightHours += lesson.getTotalTime() / 1000 / 60 / 60;
-            } else if (formatedEndDate.before(dateFormat.parse("07:00"))) {
-                totalDayHours = Utils.getTimeDiffernce("07:00",
-                        Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm") / 1000 / 60;
-                totalNightHours += lesson.getTotalTime() / 1000 / 60 - totalDayHours;
+                totalNightTime += lesson.getTotalTime();
+            } //else if (formatedEndDate.after(dateFormat.parse("07:00"))) {
+                else {
+                totalDayTime = Utils.getTimeDiffernce("07:00",
+                        Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm");
+                totalNightTime += (lesson.getTotalTime()- totalDayTime);
             }
         } else {
             if ((formatedEndDate.before(dateFormat.parse("19:00")))) {
-                totalDayHours += lesson.getTotalTime() / 1000 / 60 / 60;
+                totalDayTime += lesson.getTotalTime();
             } else if (formatedEndDate.after(dateFormat.parse("19:00"))) {
-                totalNightHours = Utils.getTimeDiffernce("19:00",
-                        Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm") / 1000 / 60;
-                totalDayHours += lesson.getTotalTime() / 1000 / 60 - totalNightHours;
+                totalNightTime = Utils.getTimeDiffernce("19:00",
+                        Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm");
+                totalDayTime += (lesson.getTotalTime()- totalNightTime);
             }
         }
 
-        if (isDay) {
-            return totalDayHours;
-        } else {
-            return totalNightHours;
-        }
+
+        return  new double[]{totalDayTime,totalNightTime};
     }
 
-    public long getDayNightDroveLesson(boolean isDay, List<Lesson> lessons) throws ParseException {
-        long totalDayHours = 0;
-        long totalNightHours = 0;
+    /**
+     * Gets day and night milliseconds drove in total
+     * @param lessons a list of lessons to get data from
+     * @return day or night time in milliseconds
+     * @throws ParseException
+     */
+    public double[] getDayNightDroveLesson(List<Lesson> lessons) throws ParseException {
+        double totalDayHours = 0;
+        double totalNightHours = 0;
+        double[] dayNightTime;
 
         for (Lesson lesson : lessons) {
-            totalDayHours = +getLessonDayNightHours(true, lesson);
-            totalNightHours = +getLessonDayNightHours(false, lesson);
+            dayNightTime=getLessonDayNightTime(lesson);
+            totalDayHours += dayNightTime[0];
+            totalNightHours += dayNightTime[1];
         }
 
-        if (isDay) {
-            return totalDayHours;
-        } else {
-            return totalNightHours;
-        }
+       return new double[]{totalDayHours,totalNightHours};
 
     }
 
@@ -141,8 +142,14 @@ public class LessonPresenter {
     public ArrayList<String> getLessonMonths() throws ParseException {
         ArrayList dates = new ArrayList();
         for (Lesson lesson : mLessonList) {
+            //start month may not be end month
             if (!dates.contains(Utils.formatDate("MM/yy", lesson.getStartTime()))) {
                 dates.add(Utils.formatDate("MM/yy", lesson.getStartTime()));
+
+            }
+            if (!dates.contains(Utils.formatDate("MM/yy", lesson.getEndTime()))) {
+                dates.add(Utils.formatDate("MM/yy", lesson.getEndTime()));
+
             }
         }
         return dates;
@@ -161,26 +168,40 @@ public class LessonPresenter {
         ArrayList<BarEntry> distanceList = new ArrayList<>();
         ArrayList<BarEntry> dayHoursList = new ArrayList<>();
         ArrayList<BarEntry> nightHoursList = new ArrayList<>();
-        double totalMonthDistance = 0.0;
-        long totalDayHours = 0;
-        long totalNightHours = 0;
+        double totalMonthDistance =0;
+        double totalDayHours=0;
+        double totalNightHours=0;
+        double[] dayNightTime = new double[]{0,0};
 
         for (String mmyy : xAxisValues) {
+            //reset all values for new month
+            totalMonthDistance=0;
+            totalDayHours=0;
+            totalNightHours=0;
             for (Lesson lesson : mLessonList) {
-                totalDayHours = 0;
-                totalNightHours = 0;
-                totalMonthDistance += lesson.getDistance();
                 if (Utils.formatDate("MM/yy", lesson.getStartTime()).equals(mmyy) &&
                         Utils.formatDate("MM/yy", lesson.getEndTime()).equals(mmyy)) {
-                    totalDayHours = +getLessonDayNightHours(true, lesson);
-                    totalNightHours = +getLessonDayNightHours(false, lesson);
+                    totalMonthDistance += lesson.getDistance();
+                    dayNightTime = getLessonDayNightTime(lesson);
+                    totalDayHours += dayNightTime[0];
+                    totalNightHours += dayNightTime[1];
                 } else if (Utils.formatDate("MM/yy", lesson.getStartTime()).equals(mmyy)) {
-                    totalDayHours = +getLessonDayNightHours(true, lesson);
-                    totalNightHours = +Utils.getTimeDiffernce("19:00",
+                    //instance where the lesson start and end are not in the same month
+                    totalMonthDistance += lesson.getDistance();
+                    dayNightTime = getLessonDayNightTime(lesson);
+                    totalDayHours += dayNightTime[0];
+                    totalNightHours += dayNightTime[1];
+                    totalNightHours -= Utils.getTimeDiffernce("00:00",
                             Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm");
 
+                }else if(Utils.formatDate("MM/yy", lesson.getEndTime()).equals(mmyy)) {
+                    //get remaining night hours drove
+                    totalNightHours += Utils.getTimeDiffernce("00:00",
+                            Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm");
                 }
             }
+
+            //convert values to km and hours
             totalDayHours = totalDayHours / 1000 / 60 / 60;
             totalNightHours = totalNightHours / 1000 / 60 / 60;
             totalMonthDistance = totalMonthDistance / 1000;
@@ -189,12 +210,12 @@ public class LessonPresenter {
             nightHoursList.add(new BarEntry((float) totalNightHours, xAxisValues.indexOf(mmyy)));
         }
 
-        BarDataSet barDataSet1 = new BarDataSet(distanceList, "Kms");
+        BarDataSet barDataSet1 = new BarDataSet(distanceList, mCurrentActivity.getString(R.string.distance_units));
         barDataSet1.setColor(Color.rgb(0, 155, 0));
-        BarDataSet barDataSet2 = new BarDataSet(dayHoursList, "Day hours");
-        barDataSet2.setColor(Color.rgb(155, 0, 0));
-        BarDataSet barDataSet3 = new BarDataSet(nightHoursList, "Day hours");
+        BarDataSet barDataSet2 = new BarDataSet(dayHoursList, mCurrentActivity.getString(R.string.xAxis_day_hours));
         barDataSet2.setColor(Color.rgb(0, 0, 155));
+        BarDataSet barDataSet3 = new BarDataSet(nightHoursList, mCurrentActivity.getString(R.string.xAxis_night_hours));
+        barDataSet2.setColor(Color.rgb(155, 0, 0));
 
         lessonDataSet.add(barDataSet1);
         lessonDataSet.add(barDataSet2);

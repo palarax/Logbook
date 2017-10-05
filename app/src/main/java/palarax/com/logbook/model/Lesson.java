@@ -68,14 +68,14 @@ public class Lesson extends Model {
      * Lesson object constructor that initializes the object
      *
      * @param licencePlate licence plate of the vehicle used
-     * @param distance  distance travelled during the lesson
+     * @param distance  distance travelled during the lesson (meters)
      * @param supervisorLicence supervisor licence number
      * @param studentLicence student for this lesson
      * @param startOdometer odometer start number
      * @param endOdometer odometer end number
-     * @param totalTime  total time driving for this lesson
-     * @param startTime time started the lesson
-     * @param endTime   time ended the lesson
+     * @param totalTime  total time driving for this lesson (milliseconds)
+     * @param startTime time started the lesson ( dd/MM/yy HH:mm:ss )
+     * @param endTime   time ended the lesson   ( dd/MM/yy HH:mm:ss )
      */
     public Lesson(String licencePlate, double distance, long supervisorLicence, long studentLicence,
                   int startOdometer, int endOdometer, long totalTime, String startTime,

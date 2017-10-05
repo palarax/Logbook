@@ -153,15 +153,20 @@ public class HomeFragment extends Fragment {
      */
     private void updateLessonInformation() {
         numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
+        double[] dayNightTime = new double[]{0,0};
         try {
-            hoursDroveNight.setText(getString(R.string.profile_day_hours,
-                    mLessonPresenter.getDayNightDroveLesson(true, mLessonPresenter.getAllLessons())));
-            hoursDroveDay.setText(getString(R.string.profile_night_hours,
-                    mLessonPresenter.getDayNightDroveLesson(false, mLessonPresenter.getAllLessons())));
+            dayNightTime = mLessonPresenter.getDayNightDroveLesson(mLessonPresenter.getAllLessons());
         } catch (ParseException e) {
             Log.e("HomeFragment", "Formatting exception: " + e);
             Toast.makeText(getContext(), getString(R.string.generic_error, e), Toast.LENGTH_SHORT).show();
         }
+
+        hoursDroveNight.setText(getString(R.string.profile_night_hours,dayNightTime[1]/1000/60/60));
+        hoursDroveDay.setText(getString(R.string.profile_day_hours,dayNightTime[0]/1000/60/60));
+
+        //Update user hours completed
+        mUserPresenter.getStudent().setHoursCompleted(dayNightTime[0]+dayNightTime[1]);
+        mUserPresenter.getStudent().save();
     }
 
     /**

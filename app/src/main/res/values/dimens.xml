@@ -27,4 +27,7 @@
     <dimen name="title_txt_size">20sp</dimen>
     <dimen name="column_title_txt_size">12sp</dimen>
     <dimen name="column_text_size">10sp</dimen>
+
+    <!-- graph layout -->
+    <dimen name="chart_title_text">16sp</dimen>
 </resources>

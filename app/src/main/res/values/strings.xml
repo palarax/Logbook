@@ -10,11 +10,16 @@
 
     <string name="action_settings">Back</string>
 
+    <!-- graphs and statistics -->
     <string name="graph_distance">km</string>
     <string name="graph_hours">Hours</string>
-    <string name="chart_hours_completed">%d Hours completed out of 120</string>
-    <string name="profile_day_hours">Day: %d</string>
-    <string name="profile_night_hours">Night: %d</string>
+    <string name="chart_hours_completed">%.1f Hours completed out of 120</string>
+    <string name="profile_day_hours">Day: %.1f</string>
+    <string name="profile_night_hours">Night: %.1f</string>
+    <string name="distance_units">km</string>
+    <string name="xAxis_night_hours">Day hours</string>
+    <string name="xAxis_day_hours">Night hours</string>
+    <string name="chart_title">Distance and Hours drove over time</string>
 
     <string name="btn_lesson_details_exit">Back to lesson history</string>
 

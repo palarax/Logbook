@@ -22,8 +22,18 @@
 
             <include layout="@layout/user_drive_detail" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/chart_title"
+                android:textAlignment="center"
+                android:textSize="@dimen/chart_title_text"
+                android:textStyle="bold|italic"/>
+
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart"
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
 

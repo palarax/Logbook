@@ -47,7 +47,7 @@ public class UserPresenter {
         dobText.setText(mStudent.getDob());
         stateText.setText(mStudent.getState());
 
-        if (mStudent.getHoursCompleted() >= 120) {
+        if ((mStudent.getHoursCompleted()/1000/60/60) >= 120) {
             progressText.setText(context.getString(R.string.profile_completed));
             progressText.setTextColor(ContextCompat.getColor(context, R.color.licence_color));
         } else {
@@ -64,7 +64,7 @@ public class UserPresenter {
     public void createDataSeries(FitChart fitChart, TextView chartView, Context context) {
         fitChart.setMinValue(0f);
         fitChart.setMaxValue(120f);
-        int hoursCompleted = mStudent.getHoursCompleted();
+        double hoursCompleted = mStudent.getHoursCompleted()/1000/60/60;
         chartView.setText(context.getString(R.string.chart_hours_completed, hoursCompleted));
         fitChart.setValue((float) hoursCompleted);
     }

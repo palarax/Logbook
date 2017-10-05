@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -26,14 +27,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = ProfileActivity.class.getSimpleName(); //used for debugging
     private UserPresenter mUserPresenter;
+    private LessonPresenter mLessonPresenter;
 
+    private TextView numberOfLessons,hoursDroveNight,hoursDroveDay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         mUserPresenter = new UserPresenter();
-        LessonPresenter mLessonPresenter = new LessonPresenter(this);
+        mLessonPresenter = new LessonPresenter(this);
         BarChart chart = findViewById(R.id.chart);
 
         BarData data = null;
@@ -49,9 +52,9 @@ public class ProfileActivity extends AppCompatActivity {
         chart.animateXY(2000, 2000);
         chart.invalidate();
 
-        final TextView numberOfLessons = findViewById(R.id.txt_drives);
-        final TextView hoursDroveNight = findViewById(R.id.hours_drove_night);
-        final TextView hoursDroveDay = findViewById(R.id.hours_drove_day);
+        numberOfLessons = findViewById(R.id.txt_drives);
+        hoursDroveNight = findViewById(R.id.hours_drove_night);
+        hoursDroveDay = findViewById(R.id.hours_drove_day);
         final TextView nameText = findViewById(R.id.txt_name);
         final TextView licenseText = findViewById(R.id.txt_license);
         final TextView dobText = findViewById(R.id.txt_dob);
@@ -64,16 +67,27 @@ public class ProfileActivity extends AppCompatActivity {
                 stateText,progressText,getBaseContext());
         mUserPresenter.createDataSeries(fitChart, mHoursCompleted, this);
 
-        numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
-        try {
-            hoursDroveNight.setText(getString(R.string.profile_day_hours,
-                    mLessonPresenter.getDayNightDroveLesson(true, mLessonPresenter.getAllLessons())));
-            hoursDroveDay.setText(getString(R.string.profile_night_hours,
-                    mLessonPresenter.getDayNightDroveLesson(false, mLessonPresenter.getAllLessons())));
-        } catch (ParseException e) {
-            Log.e(TAG, "Formatting exception: " + e);
-        }
+        updateLessonInformation();
+    }
 
+    /**
+     * Updates lesson information on GUI
+     */
+    private void updateLessonInformation() {
+        numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
+        double[] dayNightTime = new double[]{0,0};
+        try {
+            dayNightTime = mLessonPresenter.getDayNightDroveLesson(mLessonPresenter.getAllLessons());
+        } catch (ParseException e) {
+            Log.e("HomeFragment", "Formatting exception: " + e);
+            Toast.makeText(this, getString(R.string.generic_error, e), Toast.LENGTH_SHORT).show();
+        }
+        hoursDroveNight.setText(getString(R.string.profile_night_hours,dayNightTime[1]/1000/60/60));
+        hoursDroveDay.setText(getString(R.string.profile_day_hours,dayNightTime[0]/1000/60/60));
+
+        //Update user hours completed
+        mUserPresenter.getStudent().setHoursCompleted(dayNightTime[0]+dayNightTime[1]);
+        mUserPresenter.getStudent().save();
     }
 
 
