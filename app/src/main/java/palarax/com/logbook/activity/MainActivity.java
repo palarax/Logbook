@@ -43,7 +43,6 @@ import java.text.ParseException;
 import dmax.dialog.SpotsDialog;
 import palarax.com.logbook.R;
 import palarax.com.logbook.Utils;
-import palarax.com.logbook.fragment.GoalsFragment;
 import palarax.com.logbook.fragment.HistoryFragment;
 import palarax.com.logbook.fragment.HomeFragment;
 import palarax.com.logbook.fragment.ProfileFragment;
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity
     private UserPresenter mUserPresenter;
     private HomeFragment mHomeFragment = new HomeFragment();
     private HistoryFragment mHistoryFragment = new HistoryFragment();
-    private GoalsFragment mGoalsFragment = new GoalsFragment();
     private ProfileFragment mProfileFragment = new ProfileFragment();
 
     private AlertDialog mProgress;
@@ -265,9 +263,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_history:
                 fragment = mHistoryFragment;
-                break;
-            case R.id.nav_goals:
-                fragment = mGoalsFragment;
                 break;
             case R.id.nav_profile:
                 fragment = mProfileFragment;
