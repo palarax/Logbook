@@ -43,7 +43,7 @@ public class DatabaseHelper {
                     where("licenceNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString()).executeSingle();
             //user exists so update them
             new Update(Users.class).set(query)
-                    .where("licenseNumber = ?", student.getLicenceNumber()).execute();
+                    .where("licenceNumber = ?", student.getLicenceNumber()).execute();
         } catch (NullPointerException e) {
             //user doesn't exist so create new
 

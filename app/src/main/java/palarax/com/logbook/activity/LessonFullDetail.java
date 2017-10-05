@@ -1,7 +1,6 @@
 package palarax.com.logbook.activity;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +35,7 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_full);
+
         mLessonPresenter = new LessonPresenter(LessonFullDetail.this);
         TextView mTxtViewLpn = findViewById(R.id.txt_lpn);
         TextView mTxtViewDistance = findViewById(R.id.txt_distance);
@@ -51,9 +51,6 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
-                }
                 onBackPressed();
             }
         });
@@ -89,6 +86,7 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
                 newLatLngZoom(mLessonPresenter.getFirstCoordinates(), 18));
     }
 
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -97,9 +95,7 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
-        }
+        supportFinishAfterTransition();
     }
 
     @Override

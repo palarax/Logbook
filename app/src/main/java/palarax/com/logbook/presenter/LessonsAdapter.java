@@ -16,6 +16,7 @@
 package palarax.com.logbook.presenter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -28,9 +29,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import palarax.com.logbook.R;
+import palarax.com.logbook.Utils;
 import palarax.com.logbook.activity.LessonFullDetail;
 import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.Utils;
 
 /**
  * Sets up and managesRecycler View with lesson objects
@@ -62,7 +63,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final int lessonPosition = position;
         final Lesson lesson = mLessonsList.get(position);
         holder.mTxtViewLessonId.setText(mActivity.getString(R.string.title_lesson_id, position + 1));
@@ -75,15 +76,16 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, LessonFullDetail.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    String transitionName = mActivity.getString(R.string.animation_transition);
+                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(mActivity,holder.mBtnAdvancedInfo, transitionName);
                     intent.putExtra(Utils.LESSON_ID, mLessonsList.get(lessonPosition).getId());
-                    mActivity.startActivity(intent);
-                    mActivity.overridePendingTransition(R.transition.slide_down, R.transition.slide_up);
+                    mActivity.startActivity(intent, transitionActivityOptions.toBundle());
                 } else {
                     intent.putExtra(Utils.LESSON_ID, lesson.getId());
                     mActivity.startActivity(intent);
                 }
+
+
             }
         });
     }

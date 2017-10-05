@@ -100,4 +100,7 @@
     <string name="title_start_odometer">Start Odometer</string>
     <string name="title_end_odometer">End Odometer</string>
 
+    <!-- Material transition -->
+    <string name="animation_transition">material_transition</string>
+
 </resources>

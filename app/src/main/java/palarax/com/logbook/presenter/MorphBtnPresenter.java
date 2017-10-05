@@ -65,7 +65,7 @@ public class MorphBtnPresenter {
      * @param button button to morph
      */
     public void morphToProgress(@NonNull final IndeterminateProgressButton button) {
-        int progressColor1 = ContextCompat.getColor(mContext, R.color.holo_blue_bright);
+        int progressColor1 = ContextCompat.getColor(mContext, R.color.mb_blue);
         int progressColor2 = ContextCompat.getColor(mContext, R.color.mb_green);
         int progressColor3 = ContextCompat.getColor(mContext, R.color.holo_orange_light);
         int progressColor4 = ContextCompat.getColor(mContext, R.color.holo_red_light);
