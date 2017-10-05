@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">LogBook</string>
+    <string name="app_lesson">Driving Lesson</string>
+    <string name="app_lesson_advanced">Lesson Details</string>
+    <string name="app_profile">Student Profile</string>
 
     <string name="scan_nfc">Please scan your NFC tag</string>
 
@@ -22,6 +25,7 @@
     <string name="chart_title">Distance and Hours drove over time</string>
 
     <string name="btn_lesson_details_exit">Back to lesson history</string>
+    <string name="btn_advanced_detail">View more detail</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="menu_user_settings">User Settings</string>
@@ -41,7 +45,7 @@
     <string name="profile_dob_lbl">Date of birth:</string>
     <string name="profile_state_lbl">State:</string>
     <string name="profile_name_lbl">Name:</string>
-    <string name="profile_completed">HOURS COMPLETED</string>
+    <string name="profile_completed">ALL HOURS COMPLETED</string>
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
     <!-- Lesson activity -->

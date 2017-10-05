@@ -34,8 +34,8 @@ public class Users extends Model {
     @Column(name = "userSurname")
     private String userSurname;
 
-    @Column(name = "licenseNumber", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int licenseNumber;
+    @Column(name = "licenceNumber", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private long licenseNumber;
 
     @Column(name = "hoursCompleted")
     private double hoursCompleted;
@@ -60,12 +60,12 @@ public class Users extends Model {
     /**
      * Users object constructor that initializes the object
      *
-     * @param licenseNumber License number of the user
+     * @param licenceNumber License number of the user
      * @param userName      Surname of the user
      * @param userSurname   Surname of the user
      */
-    public Users(Integer licenseNumber, String userName, String userSurname,String state,String dob,double hours_completed) {
-        this.licenseNumber = licenseNumber;
+    public Users(long licenceNumber, String userName, String userSurname,String state,String dob,double hours_completed) {
+        this.licenseNumber = licenceNumber;
         this.userName = userName;
         this.userSurname = userSurname;
         this.state = state;
@@ -106,12 +106,12 @@ public class Users extends Model {
         this.state = state;
     }
 
-    public Integer getLicenseNumber() {
+    public long getLicenceNumber() {
         return licenseNumber;
     }
 
-    public void setLicenseNumber(Integer licenseNumber) {
-        this.licenseNumber = licenseNumber;
+    public void setLicenceNumber(long licenceNumber) {
+        this.licenseNumber = licenceNumber;
     }
 
 

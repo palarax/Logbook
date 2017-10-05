@@ -40,10 +40,10 @@ public class DatabaseHelper {
         Users student;
         try {
             student = new Select().from(Users.class).
-                    where("licenseNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString()).executeSingle();
+                    where("licenceNumber = ?", user.getProperty(Utils.BACKENDLESS_LICENSE).toString()).executeSingle();
             //user exists so update them
             new Update(Users.class).set(query)
-                    .where("licenseNumber = ?", student.getLicenseNumber()).execute();
+                    .where("licenseNumber = ?", student.getLicenceNumber()).execute();
         } catch (NullPointerException e) {
             //user doesn't exist so create new
 

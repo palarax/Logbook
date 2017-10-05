@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         Lesson lesson = new Lesson(
                 "TEST1",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST2",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST3",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST4",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST5",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST6",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST7",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST8",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST9",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST10",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         lesson = new Lesson(
                 "TEST11",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                mUserPresenter.getStudent().getLicenceNumber(), 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();

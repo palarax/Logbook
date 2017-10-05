@@ -43,7 +43,7 @@ public class UserPresenter {
                                   TextView stateText, TextView progressText,Context context) {
         nameText.setText(mStudent.getUserName()
                 + " " + mStudent.getUserSurname());
-        licenseText.setText(mStudent.getLicenseNumber().toString());
+        licenseText.setText(Long.toString(mStudent.getLicenceNumber()));
         dobText.setText(mStudent.getDob());
         stateText.setText(mStudent.getState());
 

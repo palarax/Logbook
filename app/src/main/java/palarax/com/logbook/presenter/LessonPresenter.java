@@ -53,7 +53,7 @@ public class LessonPresenter {
     public LessonPresenter(Activity activity) {
         Users currentUser = new Select().from(Users.class).where("active = ?", "1").executeSingle();
         this.mLessonList = new Select().from(Lesson.class).where("studentLicence = ?",
-                currentUser.getLicenseNumber()).execute();
+                currentUser.getLicenceNumber()).execute();
         this.mCurrentActivity = activity;
     }
 
@@ -429,7 +429,7 @@ public class LessonPresenter {
             mCoordinates.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
             //Store coordinates to db
             Coordinates locationPoints = new Coordinates(mCurrentLesson.getId(),
-                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), mCurrentLesson.getStudentLicence());
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             locationPoints.save();
             return true;
         }

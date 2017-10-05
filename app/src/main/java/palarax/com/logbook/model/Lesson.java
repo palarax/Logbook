@@ -28,7 +28,6 @@ import com.activeandroid.annotation.Table;
 @Table(name = "Lesson")
 public class Lesson extends Model {
 
-
     @Column(name = "licencePlate")
     private String licencePlate;
 

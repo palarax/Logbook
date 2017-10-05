@@ -55,9 +55,7 @@ public class HistoryFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
-        mLessonPresenter.updateLessons(mAdapter, mUserPresenter.getStudent().getLicenseNumber());
-
-
+        mLessonPresenter.updateLessons(mAdapter, mUserPresenter.getStudent().getLicenceNumber());
     }
 
 }

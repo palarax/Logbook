@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment {
                         Lesson lesson = new Lesson(
                                 mLpn.getText().toString(),
                                 0, Long.parseLong(mSupervisorLicence.getText().toString()),
-                                mUserPresenter.getStudent().getLicenseNumber(), Integer.parseInt(mStartOdometer.getText().toString()),
+                                mUserPresenter.getStudent().getLicenceNumber(), Integer.parseInt(mStartOdometer.getText().toString()),
                                 0, 0, Utils.getTime(), null);
                         lesson.save();
                         intent.putExtra(Utils.LESSON_ID, lesson.getId());
