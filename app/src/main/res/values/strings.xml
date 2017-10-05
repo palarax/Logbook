@@ -13,6 +13,19 @@
 
     <string name="action_settings">Back</string>
 
+    <!-- profile fragment -->
+    <string-array name="states">
+        <item>NSW</item>
+        <item>VIC</item>
+        <item>QLD</item>
+        <item>WA</item>
+        <item>TA</item>
+        <item>SA</item>
+    </string-array>
+    <string name="hint_name">New name</string>
+    <string name="hint_surname">New surname</string>
+    <string name="btn_submit_lbl">Submit data</string>
+
     <!-- graphs and statistics -->
     <string name="graph_distance">km</string>
     <string name="graph_hours">Hours</string>
@@ -45,6 +58,7 @@
     <string name="profile_dob_lbl">Date of birth:</string>
     <string name="profile_state_lbl">State:</string>
     <string name="profile_name_lbl">Name:</string>
+    <string name="profile_suname_lbl">Surname:</string>
     <string name="profile_completed">ALL HOURS COMPLETED</string>
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 

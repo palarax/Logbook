@@ -14,6 +14,7 @@
     <color name="mb_red">#ffff4444</color>
     <color name="mb_red_dark">#ffcd3a3a</color>
     <color name="mb_gray">#ffdedede</color>
+    <color name="grey">#BDBDBD</color>
 
     <color name="holo_blue_bright">#CCFFFF</color>
     <color name="holo_red_light">#ffff4444</color>

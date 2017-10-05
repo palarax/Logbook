@@ -8,6 +8,7 @@
     <dimen name="high_dif_text">4dp</dimen>
     <dimen name="layout_padding">4dp</dimen>
     <dimen name="login_instructions">16sp</dimen>
+    <dimen name="user_detail_padding">20dp</dimen>
 
     <!-- Animation -->
     <dimen name="morph_button">200dp</dimen>
@@ -15,6 +16,7 @@
 
     <!-- Text size -->
     <dimen name="profile_values">16sp</dimen>
+    <dimen name="edit_values">20sp</dimen>
     <dimen name="nav_details">12sp</dimen>
 
     <!-- Profile image -->

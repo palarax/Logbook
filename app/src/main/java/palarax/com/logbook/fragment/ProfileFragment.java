@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import palarax.com.logbook.R;
-import palarax.com.logbook.presenter.LessonPresenter;
 import palarax.com.logbook.presenter.UserPresenter;
 
 /**
@@ -35,16 +37,27 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        super.onViewCreated(view, savedInstanceState);
         mUserPresenter = new UserPresenter();
-        LessonPresenter mLessonPresenter = new LessonPresenter(getActivity());
 
-        TextView mNameText = view.findViewById(R.id.txt_name);
-        TextView mLicenseText = view.findViewById(R.id.txt_license);
-        TextView mDobText = view.findViewById(R.id.txt_dob);
-        TextView mStateText = view.findViewById(R.id.txt_state);
-        TextView mProgressText = view.findViewById(R.id.txt_completed);
-        Button btnDeleteAll = view.findViewById(R.id.btn_delete_all);
+        final EditText nameEdit = (EditText) view.findViewById(R.id.edit_name);
+        final EditText sureNameEdit = (EditText) view.findViewById(R.id.edit_surname);
+
+        //setup and populate spinner
+        final Spinner statesSpinner = (Spinner) view.findViewById(R.id.spinner_state);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.states, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        statesSpinner.setAdapter(adapter);
+
+        final TextView mNameText = view.findViewById(R.id.txt_name);
+        final TextView mLicenseText = view.findViewById(R.id.txt_license);
+        final TextView mDobText = view.findViewById(R.id.txt_dob);
+        final TextView mStateText = view.findViewById(R.id.txt_state);
+        final TextView mProgressText = view.findViewById(R.id.txt_completed);
+        final Button btnDeleteAll = view.findViewById(R.id.btn_submit);
         btnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +66,8 @@ public class ProfileFragment extends Fragment {
         });
         mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
                 mStateText, mProgressText, getContext());
+
+        //TODO: update backendless data
     }
 
 }
