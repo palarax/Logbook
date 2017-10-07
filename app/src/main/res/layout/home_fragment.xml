@@ -27,6 +27,11 @@
 
                 <include layout="@layout/user_drive_detail" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,6 +47,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginTop="8dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -79,9 +89,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:maxWidth="200dp"
-                            android:text="Hours completed"
-                            android:textColor="#212121"
-                            android:textSize="10sp"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/chart_text_size"
                             android:textStyle="bold" />
 
                     </LinearLayout>

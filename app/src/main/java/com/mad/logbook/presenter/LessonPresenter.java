@@ -331,7 +331,7 @@ public class LessonPresenter {
      * Checks lesson integrity. Lesson has to be longer than 10 minutes and
      * distance travelled should be more than 500m, start odometer bigger than end odometer
      */
-    public void checkLessonIntegrity() {
+    private void checkLessonIntegrity() {
         double distanceTravelled = SphericalUtil.computeLength(mCoordinates);//calculate distance travelled
         long totalTime = 0;
         try {

@@ -10,7 +10,6 @@ import com.mad.logbook.Utils;
 import com.mad.logbook.model.Coordinates;
 import com.mad.logbook.model.Users;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,13 +57,6 @@ public class DatabaseHelper {
 
         return student;
     }
-
-    public static void testString(){
-        Date test = new Date();
-        Log.e("TEST","Date: "+test);
-        Log.e("TEST","Date: "+test.getTime());
-    }
-
     /**
      * Set current user boolean to true
      *

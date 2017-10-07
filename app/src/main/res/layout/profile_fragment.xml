@@ -86,10 +86,13 @@
             android:id="@+id/edit_dob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="@string/hint_dob"
             android:inputType="textPersonName|textCapWords"
             android:textColor="@color/primary_text"
             android:textColorHint="@color/grey"
-            android:textSize="@dimen/profile_values"/>
+            android:textSize="@dimen/edit_values" />
+
 
         <LinearLayout
             android:layout_width="match_parent"

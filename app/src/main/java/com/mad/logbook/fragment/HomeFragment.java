@@ -1,6 +1,7 @@
 package com.mad.logbook.fragment;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +23,6 @@ import com.github.mikephil.charting.data.BarData;
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
 import com.mad.logbook.activity.DrivingLesson;
-import com.mad.logbook.db.DatabaseHelper;
 import com.mad.logbook.model.Lesson;
 import com.mad.logbook.presenter.LessonPresenter;
 import com.mad.logbook.presenter.UserPresenter;
@@ -37,7 +38,7 @@ import java.text.ParseException;
  * @date 09-Sep-17
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private TextView numberOfLessons, hoursDroveNight, hoursDroveDay;
 
@@ -70,7 +71,6 @@ public class HomeFragment extends Fragment {
         //Set student
         mUserPresenter = new UserPresenter();
         mLessonPresenter = new LessonPresenter(getActivity());
-        DatabaseHelper.testString();
         BarChart chart = view.findViewById(R.id.chart);
         BarData data = null;
         try {
@@ -107,10 +107,8 @@ public class HomeFragment extends Fragment {
 
         mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
                 mStateText, mProgressText, getContext());
-
-        mUserPresenter.createDataSeries(fitChart, mHoursCompleted, getActivity());
         updateLessonInformation();
-
+        mUserPresenter.createDataSeries(fitChart, mHoursCompleted, getActivity());
     }
 
     /**
@@ -202,4 +200,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+    }
 }

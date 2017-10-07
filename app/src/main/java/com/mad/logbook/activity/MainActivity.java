@@ -37,15 +37,11 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.exceptions.BackendlessFault;
 import com.mad.logbook.R;
-import com.mad.logbook.Utils;
 import com.mad.logbook.fragment.HistoryFragment;
 import com.mad.logbook.fragment.HomeFragment;
 import com.mad.logbook.fragment.ProfileFragment;
-import com.mad.logbook.model.Lesson;
 import com.mad.logbook.presenter.BackendlessPresenter;
 import com.mad.logbook.presenter.UserPresenter;
-
-import java.text.ParseException;
 
 import dmax.dialog.SpotsDialog;
 
@@ -95,16 +91,17 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit();
 
-        try{
+        //TODO: delete after testing
+        /*try{
             testCreateData();
         }catch (ParseException e){
             Log.e(TAG,""+e);
-        }
+        }*/
 
     }
 
-
-    private void testCreateData() throws ParseException {
+    //TODO: delete after testing
+    /*private void testCreateData() throws ParseException {
 
         String startT = "05/10/17 15:00:00";
         String endT = "05/10/17 18:00:00";
@@ -215,8 +212,7 @@ public class MainActivity extends AppCompatActivity
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
-
-    }
+    }*/
 
     /**
      * Populates nav header with user data
@@ -278,7 +274,7 @@ public class MainActivity extends AppCompatActivity
      * Logout from the app and destroy activity
      */
     private void logout() {
-        mProgress = new SpotsDialog(this, R.style.Custom);
+        mProgress = new SpotsDialog(this, R.style.CustomLogoutDialog);
         mProgress.show();
         mBackendlessPresenter.logoutBackEndless(this);
     }

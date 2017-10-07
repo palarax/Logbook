@@ -131,7 +131,7 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
             public void run() {
                 nextActivity();
             }
-        }, 500);
+        }, 200);
 
     }
 
