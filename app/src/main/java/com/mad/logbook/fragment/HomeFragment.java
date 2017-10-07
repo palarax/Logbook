@@ -1,8 +1,10 @@
 package com.mad.logbook.fragment;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,22 +14,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
 import com.mad.logbook.activity.DrivingLesson;
 import com.mad.logbook.db.DatabaseHelper;
+import com.mad.logbook.interfaces.HomeContract;
 import com.mad.logbook.model.Lesson;
-import com.mad.logbook.presenter.LessonPresenter;
-import com.mad.logbook.presenter.UserPresenter;
+import com.mad.logbook.model.Users;
+import com.mad.logbook.presenter.HomePresenter;
 import com.txusballesteros.widgets.FitChart;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Home fragment that initiates a lesson
@@ -37,12 +45,16 @@ import java.text.ParseException;
  * @date 09-Sep-17
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
+        HomeContract.View {
 
-    private TextView numberOfLessons, hoursDroveNight, hoursDroveDay;
+    private TextView numberOfLessons, hoursDroveNight, hoursDroveDay, mNameText, mLicenseText,
+            mStateText, mProgressText, mDobText, mHoursCompleted;
 
-    private UserPresenter mUserPresenter;
-    private LessonPresenter mLessonPresenter;
+    private FitChart mFitChart;
+    private BarChart chart;
+
+    private HomeContract.Presenter mHomePresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +64,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mLessonPresenter = new LessonPresenter(getActivity());  //update lesson presenter
         updateLessonInformation();
     }
 
@@ -68,22 +79,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //Set student
-        mUserPresenter = new UserPresenter();
-        mLessonPresenter = new LessonPresenter(getActivity());
-        DatabaseHelper.testString();
-        BarChart chart = view.findViewById(R.id.chart);
-        BarData data = null;
-        try {
-            data = new BarData(mLessonPresenter.getLessonMonths(),
-                    mLessonPresenter.getGraphDataSet(mLessonPresenter.getLessonMonths()));
-        } catch (ParseException e) {
-            Log.e("HomeFragment", "ERROR: " + e);
-            //TODO: what can i do here
-        }
-        chart.setData(data);
-        chart.setDescription("");
-        chart.animateXY(2000, 2000);
-        chart.invalidate();
+        mHomePresenter = new HomePresenter(this);
+
+        chart = view.findViewById(R.id.chart);
+        populateBarGraph();
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,30 +96,85 @@ public class HomeFragment extends Fragment {
         numberOfLessons = view.findViewById(R.id.txt_drives);
         hoursDroveNight = view.findViewById(R.id.hours_drove_night);
         hoursDroveDay = view.findViewById(R.id.hours_drove_day);
-        TextView mNameText = view.findViewById(R.id.txt_name);
-        TextView mLicenseText = view.findViewById(R.id.txt_license);
-        TextView mDobText = view.findViewById(R.id.txt_dob);
-        TextView mStateText = view.findViewById(R.id.txt_state);
-        TextView mProgressText = view.findViewById(R.id.txt_completed);
-        final FitChart fitChart = view.findViewById(R.id.fitChart);
-        final TextView mHoursCompleted = view.findViewById(R.id.hours_completed);
+        mNameText = view.findViewById(R.id.txt_name);
+        mLicenseText = view.findViewById(R.id.txt_license);
+        mDobText = view.findViewById(R.id.txt_dob);
+        mStateText = view.findViewById(R.id.txt_state);
+        mProgressText = view.findViewById(R.id.txt_completed);
+        mFitChart = view.findViewById(R.id.fitChart);
+        mHoursCompleted = view.findViewById(R.id.hours_completed);
 
-        mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
-                mStateText, mProgressText, getContext());
-
-        mUserPresenter.createDataSeries(fitChart, mHoursCompleted, getActivity());
         updateLessonInformation();
+    }
 
+    private void populateFitChart() {
+        mFitChart.setMinValue(0f);
+        mFitChart.setMaxValue(120f);
+        double hoursCompleted = DatabaseHelper.getCurrentUser().getHoursCompleted() / 1000 / 60 / 60;
+        mHoursCompleted.setText(getString(R.string.chart_hours_completed, hoursCompleted));
+        mFitChart.setValue((float) hoursCompleted);
+    }
+
+    /**
+     * Populates view with user data
+     */
+    private void populateUserData() {
+        Users student = DatabaseHelper.getCurrentUser();
+        mNameText.setText(student.getUserName()
+                + " " + student.getUserSurname());
+        mLicenseText.setText(Long.toString(student.getLicenceNumber()));
+        mDobText.setText(student.getDob());
+        mStateText.setText(student.getState());
+
+        if ((student.getHoursCompleted() / 1000 / 60 / 60) >= 120) {
+            mProgressText.setText(this.getString(R.string.profile_completed));
+            mProgressText.setTextColor(getResources().getColor(R.color.licence_color));
+        } else {
+            mProgressText.setText(this.getString(R.string.profile_in_progress));
+            mProgressText.setTextColor(getResources().getColor(R.color.in_progress));
+        }
+    }
+
+    /**
+     * Populates bar graph with lesson data related to the current user
+     */
+    private void populateBarGraph() {
+        ArrayList<ArrayList<BarEntry>> dataSet = new ArrayList<>();
+        ArrayList<String> lessonMonths = new ArrayList<>();
+        try {
+            lessonMonths = mHomePresenter.getLessonMonths(DatabaseHelper.getUserLessons());
+            dataSet = mHomePresenter.getGraphDataSet(DatabaseHelper.getUserLessons(), lessonMonths);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        BarDataSet barDataSet1 = new BarDataSet(dataSet.get(0), getString(R.string.distance_units));
+        barDataSet1.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSet2 = new BarDataSet(dataSet.get(1), getString(R.string.xAxis_day_hours));
+        barDataSet2.setColor(Color.rgb(0, 0, 155));
+        BarDataSet barDataSet3 = new BarDataSet(dataSet.get(2), getString(R.string.xAxis_night_hours));
+        barDataSet2.setColor(Color.rgb(155, 0, 0));
+
+        ArrayList<BarDataSet> lessonDataSet = new ArrayList<>();
+        lessonDataSet.add(barDataSet1);
+        lessonDataSet.add(barDataSet2);
+        lessonDataSet.add(barDataSet3);
+
+        chart.setData(new BarData(lessonMonths, lessonDataSet));
+        chart.setDescription("");
+        chart.animateXY(2000, 2000);
+        chart.invalidate();
     }
 
     /**
      * Updates lesson information on GUI
      */
     private void updateLessonInformation() {
-        numberOfLessons.setText(Integer.toString(mLessonPresenter.getAllLessons().size()));
+        List<Lesson> userLessons = DatabaseHelper.getUserLessons();
+        numberOfLessons.setText(Integer.toString(userLessons.size()));
         double[] dayNightTime = new double[]{0,0};
         try {
-            dayNightTime = mLessonPresenter.getDayNightDroveLesson(mLessonPresenter.getAllLessons());
+            dayNightTime = mHomePresenter.getDayNightDroveLesson(userLessons);
         } catch (ParseException e) {
             Log.e("HomeFragment", "Formatting exception: " + e);
             Toast.makeText(getContext(), getString(R.string.generic_error, e), Toast.LENGTH_SHORT).show();
@@ -128,8 +182,11 @@ public class HomeFragment extends Fragment {
         hoursDroveNight.setText(getString(R.string.profile_night_hours,dayNightTime[1]/1000/60/60));
         hoursDroveDay.setText(getString(R.string.profile_day_hours,dayNightTime[0]/1000/60/60));
         //Update user hours completed
-        mUserPresenter.getStudent().setHoursCompleted(dayNightTime[0]+dayNightTime[1]);
-        mUserPresenter.getStudent().save();
+        DatabaseHelper.getCurrentUser().setHoursCompleted(dayNightTime[0] + dayNightTime[1]);
+        DatabaseHelper.getCurrentUser().save();
+
+        populateUserData();
+        populateFitChart();
     }
 
     /**
@@ -191,7 +248,7 @@ public class HomeFragment extends Fragment {
                     Lesson lesson = new Lesson(
                             editLpn.getText().toString(),
                             0, Long.parseLong(editSupervisorLicence.getText().toString()),
-                            mUserPresenter.getStudent().getLicenceNumber(),
+                            DatabaseHelper.getCurrentUser().getLicenceNumber(),
                             Integer.parseInt(editStartOdometer.getText().toString()),
                             0, 0, Utils.getTime(), null);
                     lesson.save();
@@ -202,4 +259,13 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void setPresenter(HomeContract.Presenter presenter) {
+        mHomePresenter = presenter;
+    }
 }

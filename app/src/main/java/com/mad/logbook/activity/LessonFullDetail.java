@@ -4,20 +4,24 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
-import com.mad.logbook.presenter.LessonPresenter;
+import com.mad.logbook.interfaces.LessonFullDetailContract;
+import com.mad.logbook.presenter.LessonFullDetailPresenter;
 
 /**
  * Activity that displays singular lesson data
@@ -26,16 +30,18 @@ import com.mad.logbook.presenter.LessonPresenter;
  * @version 1.0
  */
 
-public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCallback {
+public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCallback,
+        LessonFullDetailContract.View {
 
-    private LessonPresenter mLessonPresenter;
+
+    LessonFullDetailContract.Presenter mLessonFullDetailPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_full);
 
-        mLessonPresenter = new LessonPresenter(LessonFullDetail.this);
+
         TextView mTxtViewLpn = findViewById(R.id.txt_lpn);
         TextView mTxtViewDistance = findViewById(R.id.txt_distance);
         TextView mTxtViewSupervisorLicence = findViewById(R.id.txt_supervisorLicence);
@@ -56,20 +62,20 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
-            mLessonPresenter.setCurrentCoordinates(extras.getLong(Utils.LESSON_ID));
+            mLessonFullDetailPresenter = new LessonFullDetailPresenter(this, extras.getLong(Utils.LESSON_ID));
         }
-        double speed = (mLessonPresenter.getCurrentLesson().getDistance()) /
-                (mLessonPresenter.getCurrentLesson().getTotalTime() / 60 / 60);
 
-        mTxtViewLpn.setText(mLessonPresenter.getCurrentLesson().getLicencePlate());
-        mTxtViewDistance.setText(getString(R.string.txt_distance, mLessonPresenter.getCurrentLesson().getDistance() / 1000));
-        mTxtViewTotalTime.setText(Utils.convertDateToFormat(mLessonPresenter.getCurrentLesson().getTotalTime(), 1));
-        mTxtViewSupervisorLicence.setText(Long.toString(mLessonPresenter.getCurrentLesson().getSupervisorLicence()));
-        mTxtViewStartOdometer.setText(Long.toString(mLessonPresenter.getCurrentLesson().getStartOdometer()));
-        mTxtViewEndOdometer.setText(Long.toString(mLessonPresenter.getCurrentLesson().getEndOdometer()));
-        mTxtViewStartTime.setText(mLessonPresenter.getCurrentLesson().getStartTime());
-        mTxtViewEndTime.setText(mLessonPresenter.getCurrentLesson().getEndTime());
+        double speed = (mLessonFullDetailPresenter.getCurrentLesson().getDistance()) /
+                (mLessonFullDetailPresenter.getCurrentLesson().getTotalTime() / 60 / 60);
+
+        mTxtViewLpn.setText(mLessonFullDetailPresenter.getCurrentLesson().getLicencePlate());
+        mTxtViewDistance.setText(getString(R.string.txt_distance, mLessonFullDetailPresenter.getCurrentLesson().getDistance() / 1000));
+        mTxtViewTotalTime.setText(Utils.convertDateToFormat(mLessonFullDetailPresenter.getCurrentLesson().getTotalTime(), 1));
+        mTxtViewSupervisorLicence.setText(Long.toString(mLessonFullDetailPresenter.getCurrentLesson().getSupervisorLicence()));
+        mTxtViewStartOdometer.setText(Long.toString(mLessonFullDetailPresenter.getCurrentLesson().getStartOdometer()));
+        mTxtViewEndOdometer.setText(Long.toString(mLessonFullDetailPresenter.getCurrentLesson().getEndOdometer()));
+        mTxtViewStartTime.setText(mLessonFullDetailPresenter.getCurrentLesson().getStartTime());
+        mTxtViewEndTime.setText(mLessonFullDetailPresenter.getCurrentLesson().getEndTime());
         mTxtViewSpeed.setText(getString(R.string.txt_speed, speed));
 
 
@@ -81,9 +87,18 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         //googleMap.clear();  //clears all Markers and Polylines
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-        googleMap.addPolyline(mLessonPresenter.getCoordinates(options)); //add Polyline
-        googleMap.moveCamera(CameraUpdateFactory.
-                newLatLngZoom(mLessonPresenter.getFirstCoordinates(), 18));
+        googleMap.addPolyline(mLessonFullDetailPresenter
+                .getPolyLine(options, mLessonFullDetailPresenter.getActiveLessonCoordinates())); //add Polyline
+        try {
+            googleMap.moveCamera(CameraUpdateFactory.
+                    newLatLngZoom(mLessonFullDetailPresenter.getActiveLessonCoordinates().get(0), 18));
+        } catch (IndexOutOfBoundsException e) {
+            Log.e("LessonFullDetail", "no coordinates found");
+            Toast.makeText(this, getString(R.string.error_no_coordinates), Toast.LENGTH_LONG).show();
+            googleMap.moveCamera(CameraUpdateFactory.
+                    newLatLngZoom(new LatLng(0, 0), 18));
+        }
+
     }
 
 
@@ -117,5 +132,10 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setPresenter(LessonFullDetailContract.Presenter presenter) {
+        mLessonFullDetailPresenter = presenter;
     }
 }

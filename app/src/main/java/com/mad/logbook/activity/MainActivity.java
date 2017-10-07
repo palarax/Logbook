@@ -33,19 +33,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.exceptions.BackendlessFault;
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
 import com.mad.logbook.fragment.HistoryFragment;
 import com.mad.logbook.fragment.HomeFragment;
 import com.mad.logbook.fragment.ProfileFragment;
-import com.mad.logbook.model.Lesson;
-import com.mad.logbook.presenter.BackendlessPresenter;
-import com.mad.logbook.presenter.UserPresenter;
-
-import java.text.ParseException;
+import com.mad.logbook.interfaces.MainActivityContract;
+import com.mad.logbook.presenter.MainActivityPresenter;
 
 import dmax.dialog.SpotsDialog;
 
@@ -57,12 +52,12 @@ import dmax.dialog.SpotsDialog;
  *
  */
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BackendlessPresenter.HandleResponse {
+        implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract.View {
 
     private static final String TAG = MainActivity.class.getSimpleName(); //used for debugging
 
-    private BackendlessPresenter mBackendlessPresenter;
-    private UserPresenter mUserPresenter;
+    private MainActivityContract.Presenter mMainActivityPresenter;
+
     private HomeFragment mHomeFragment = new HomeFragment();
     private HistoryFragment mHistoryFragment = new HistoryFragment();
     private ProfileFragment mProfileFragment = new ProfileFragment();
@@ -75,7 +70,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mBackendlessPresenter = new BackendlessPresenter(this);
+
+        mMainActivityPresenter = new MainActivityPresenter(this);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,25 +82,25 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mUserPresenter = new UserPresenter();
-
         final View headerView = navigationView.getHeaderView(0);
-        populateNavHeader(headerView, Backendless.UserService.CurrentUser());
+
+        populateNavHeader(headerView);
 
         //Open HomeFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit();
 
-        try{
+        //TODO: delete after testing
+        /*try{
             testCreateData();
         }catch (ParseException e){
             Log.e(TAG,""+e);
-        }
+        }*/
 
     }
 
-
-    private void testCreateData() throws ParseException {
+    //TODO: delete after testing
+    /*private void testCreateData() throws ParseException {
 
         String startT = "05/10/17 15:00:00";
         String endT = "05/10/17 18:00:00";
@@ -215,32 +211,26 @@ public class MainActivity extends AppCompatActivity
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
-
-    }
+    }*/
 
     /**
      * Populates nav header with user data
      *
      * @param headView header view object
-     * @param user     Backendless user object
      */
-    private void populateNavHeader(View headView, BackendlessUser user) {
-        String nameAndSurname="";
-        if (user != null) {
-            try {
-                Log.d(TAG,"SEARCHING FOR USER");
-                nameAndSurname = mUserPresenter.getStudent().getUserName() + " "
-                        + mUserPresenter.getStudent().getUserSurname();
-            } catch (NullPointerException e) {
-                Log.e(TAG, "User does not exist");
-                nameAndSurname = getString(R.string.guest_user);
-                Toast.makeText(this, getString(R.string.user_not_exist), Toast.LENGTH_LONG).show();
-            }finally {
+    private void populateNavHeader(View headView) {
+        String nameAndSurname = mMainActivityPresenter.getUserName();
+        switch (nameAndSurname) {
+            case Utils.BACKENDLESS_ERROR_USER:
+                Toast.makeText(this, getString(R.string.backendless_user_null), Toast.LENGTH_LONG).show();
+                finish();   //this should NEVER happen
+                break;
+            case Utils.ERROR_USER:
+                ((TextView) headView.findViewById(R.id.nav_header_name)).setText(getString(R.string.guest_user));
+                break;
+            default:
                 ((TextView) headView.findViewById(R.id.nav_header_name)).setText(nameAndSurname);
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.backendless_user_null), Toast.LENGTH_LONG).show();
-            finish();   //this should NEVER happen
+                break;
         }
     }
 
@@ -261,7 +251,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_logout:
                 fragment = mHomeFragment; //make sure not to get null object error
-                logout();
+                mProgress = new SpotsDialog(this, R.style.CustomLogoutDialog);
+                mProgress.show();
+                mMainActivityPresenter.logoutBackEndless(this);
                 break;
         }
 
@@ -273,25 +265,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-    /**
-     * Logout from the app and destroy activity
-     */
-    private void logout() {
-        mProgress = new SpotsDialog(this, R.style.Custom);
-        mProgress.show();
-        mBackendlessPresenter.logoutBackEndless(this);
-    }
-
-    @Override
-    public void onHandleResponse(Object response) {
+    public void logout() {
         mProgress.dismiss();
         finish();
         overridePendingTransition(R.transition.fadein, R.transition.fadeout);
     }
 
-    @Override
-    public void onHandleFault(BackendlessFault fault) {
+
+    public void showLogoutError(BackendlessFault fault) {
         Log.e(TAG, "Backendless error: " + fault.getMessage());
         mProgress.dismiss();
         Toast.makeText(this, getString(R.string.error_logout), Toast.LENGTH_LONG).show();
@@ -305,7 +286,9 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            logout();
+            mProgress = new SpotsDialog(this, R.style.CustomLogoutDialog);
+            mProgress.show();
+            mMainActivityPresenter.logoutBackEndless(this);
         }
     }
 
@@ -361,5 +344,10 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public void setPresenter(MainActivityContract.Presenter presenter) {
+        mMainActivityPresenter = presenter;
     }
 }

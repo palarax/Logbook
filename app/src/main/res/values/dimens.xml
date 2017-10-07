@@ -21,6 +21,7 @@
     <dimen name="profile_values">16sp</dimen>
     <dimen name="edit_values">20sp</dimen>
     <dimen name="nav_details">12sp</dimen>
+    <dimen name="chart_text_size">10sp</dimen>
 
     <!-- Profile image -->
     <dimen name="drive_image_dim">80dp</dimen>

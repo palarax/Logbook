@@ -79,8 +79,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         holder.mDivider.setBackgroundColor(dividerColor);
         holder.mAddressDivider.setColorFilter(dividerColor);
 
-
-
         holder.mBtnAdvancedInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

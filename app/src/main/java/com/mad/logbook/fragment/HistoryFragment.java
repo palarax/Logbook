@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mad.logbook.R;
-import com.mad.logbook.presenter.LessonPresenter;
+import com.mad.logbook.db.DatabaseHelper;
+import com.mad.logbook.model.Lesson;
 import com.mad.logbook.presenter.LessonsAdapter;
-import com.mad.logbook.presenter.UserPresenter;
+
+import java.util.List;
 
 /**
  * History fragment that displays historic data and allows user to go to "history detail screen"
@@ -24,29 +26,42 @@ import com.mad.logbook.presenter.UserPresenter;
  */
 public class HistoryFragment extends Fragment {
 
+    private List<Lesson> userLessons;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().setTitle(getString(R.string.fragment_title_history));
         return inflater.inflate(R.layout.history_fragment, container, false);
-
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        UserPresenter mUserPresenter = new UserPresenter();
-        LessonPresenter mLessonPresenter = new LessonPresenter(getActivity());
-
         RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
-        LessonsAdapter mAdapter = new LessonsAdapter(getActivity(), mLessonPresenter.getAllLessons());
+        userLessons = DatabaseHelper.getUserLessons();
+        LessonsAdapter mAdapter = new LessonsAdapter(getActivity(), userLessons);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
-        mLessonPresenter.updateLessons(mAdapter, mUserPresenter.getStudent().getLicenceNumber());
+        updateLessons(mAdapter);
+    }
+
+    /**
+     * Get data from db and load into GUI
+     */
+    public void updateLessons(LessonsAdapter adapter) {
+        //clear them
+        userLessons.clear();
+        //add lessons
+        List<Lesson> newLessons = DatabaseHelper.getUserLessons();
+        for (Lesson lesson : newLessons) {
+            userLessons.add(lesson);
+        }
+        adapter.notifyDataSetChanged();
     }
 
 }

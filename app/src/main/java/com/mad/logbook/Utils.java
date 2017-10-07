@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.nfc.NfcAdapter;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.mad.logbook.db.DatabaseHelper;
@@ -28,8 +30,15 @@ public class Utils {
     public static final String UTF8 = "UTF-8";
     public static final String UTF16 = "UTF-16";
     public static final String LESSON_ID = "LESSON_ID";
+    public static final String ERROR_USER = "NO USER";
 
     //BACKENDLESS
+    public static final String BACKENDLESS_APPLICATION_ID = "F1D55E01-2495-D20A-FF0E-58AE50CB9700";
+    public static final String BACKENDLESS_API_KEY = "5DB4EEBE-A054-CE7D-FFCD-F6F74B4FC500";
+    public static final String BACKENDLESS_SERVER_URL = "http://api.backendless.com";
+
+    public static final String BACKENDLESS_ERROR_USER = "NO BACKENDLESS USER";
+
     public static final String BACKENDLESS_NAME = "name";
     public static final String BACKENDLESS_SURNAME = "surname";
     public static final String BACKENDLESS_LICENSE = "licence_id";
@@ -37,19 +46,24 @@ public class Utils {
     public static final String BACKENDLESS_STATE = "state";
     public static final String BACKENDLESS_CONTACT_NUMBER = "contact_number";
 
+
+    //NFC
+    public static int NFC_READER_FLAGS =
+            NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B | NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V;
+
     /**
      * Get local time
      *
      * @return local time
      */
     public static String getTime() {
-        return new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+        return new SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault()).format(new Date());
     }
 
     public static String formatDate(String format, String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault());
         Date formatedDate = dateFormat.parse(date);
-        return new SimpleDateFormat(format).format(formatedDate);
+        return new SimpleDateFormat(format, Locale.getDefault()).format(formatedDate);
     }
 
     /**
@@ -58,10 +72,27 @@ public class Utils {
      * @return local time
      */
     public static long getTimeDiffernce(String strStartDate, String strEndDate, String format) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         Date startDate = dateFormat.parse(strStartDate);
         Date endDate = dateFormat.parse(strEndDate);
         return endDate.getTime() - startDate.getTime();
+    }
+
+    /**
+     * Checks if the date selected is before today
+     * @param date date to compare
+     * @return true if date is before today
+     */
+    public static boolean isDobCorrect(String date) {
+        Date currentDate = new Date();
+        Date formattedDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            formattedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return !DateUtils.isToday(formattedDate.getTime()) && formattedDate.before(currentDate);
     }
 
     /**
@@ -85,9 +116,9 @@ public class Utils {
 
         switch (format) {
             case 1:
-                return String.format("HOURS: %d Minutes: %d", elapsedHours, elapsedMinutes);
+                return String.format(Locale.getDefault(), "HOURS: %d Minutes: %d", elapsedHours, elapsedMinutes);
             default:
-                return String.format("Days: %d Hours: %d Minutes: %d", elapsedDays, elapsedHours, elapsedMinutes);
+                return String.format(Locale.getDefault(), "Days: %d Hours: %d Minutes: %d", elapsedDays, elapsedHours, elapsedMinutes);
         }
 
     }

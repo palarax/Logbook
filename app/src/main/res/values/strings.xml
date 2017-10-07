@@ -23,11 +23,13 @@
         <item>VIC</item>
         <item>QLD</item>
         <item>WA</item>
-        <item>TA</item>
+        <item>TAS</item>
+        <item>NT</item>
         <item>SA</item>
     </string-array>
     <string name="hint_name">New name</string>
     <string name="hint_surname">New surname</string>
+    <string name="hint_dob">New date of birth</string>
     <string name="hint_contact_number">New contact number</string>
     <string name="btn_submit_lbl">Submit data</string>
 
@@ -53,8 +55,6 @@
     <string name="nav_goals">Learning Goals</string>
     <string name="nav_logout">Logout</string>
     <string name="nav_profile_settings">Profile Settings</string>
-
-    <string name="dialog_logout">Login out of the app …</string>
 
     <!-- Profile values -->
     <string name="profile_learner_lbl">Learner Driver Licence</string>
@@ -102,6 +102,7 @@
     <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
     <string name="error_address_not_found">Address unknown</string>
     <string name="error_not_updated">ERROR: update was not successful, try again later</string>
+    <string name="error_incorrect_date_input">Date cannot be higher or equal to the current date</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
@@ -129,5 +130,7 @@
     <string name="alert_title">Confirm</string>
     <string name="alert_exit">Exit lesson</string>
     <string name="alert_stay">Continue lesson</string>
+    <string name="dialog_logout">Login out of the app …</string>
+    <string name="dialog_update_user">Updating user details …</string>
 
 </resources>

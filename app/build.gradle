@@ -49,7 +49,5 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
 
     compile 'com.backendless:backendless:4.0.+'
-
-    compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.8'   //interesting date time picker
 }
 

@@ -11,10 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,7 +36,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
-import com.mad.logbook.presenter.LessonPresenter;
+import com.mad.logbook.interfaces.DrivingLessonContract;
+import com.mad.logbook.presenter.DrivingLessonPresenter;
 
 /**
  * Activity that records and displays live lesson data
@@ -43,7 +48,7 @@ import com.mad.logbook.presenter.LessonPresenter;
 
 public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallback, LocationListener,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, DrivingLessonContract.View {
 
     private static final String TAG = DrivingLesson.class.getSimpleName(); //used for debugging
 
@@ -58,7 +63,7 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
 
-    private LessonPresenter mLessonPresenter;
+    private DrivingLessonContract.Presenter mDrivingLessonPresenter;
 
 
     @Override
@@ -66,10 +71,12 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
         Button btnEndStop = findViewById(R.id.btn_end_lesson);
-        mLessonPresenter = new LessonPresenter(DrivingLesson.this);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
+            mDrivingLessonPresenter = new DrivingLessonPresenter(this, extras.getLong(Utils.LESSON_ID));
+        } else {
+            finish();
         }
 
         if (!isGooglePlayServicesAvailable()) {
@@ -110,12 +117,13 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onLocationChanged(Location location) {
-        if (mLessonPresenter.firstLocation(location)) {
+
+        if (mDrivingLessonPresenter.firstLocation(location)) {
             LatLng locl = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locl, 18));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
         }
-        if (mLessonPresenter.updateLocation(location)) {
+        if (mDrivingLessonPresenter.updateLocation(location)) {
             updateMap(location.getLatitude(), location.getLongitude());
         }
     }
@@ -130,7 +138,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG,"updateMap");
         mMap.clear();  //clears all Markers and Polylines
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-        mPolyline = mMap.addPolyline(mLessonPresenter.getCoordinates(options)); //add Polyline
+        mPolyline = mMap.addPolyline(mDrivingLessonPresenter.getPolyLine(options,
+                mDrivingLessonPresenter.getActiveLessonCoordinates())); //add Polyline
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLatitude,currentLongitude)));
     }
 
@@ -181,13 +190,55 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mLessonPresenter.getCurrentLesson().setEndTime(Utils.getTime());
-                mLessonPresenter.getEndOdometerFromUser();
+                mDrivingLessonPresenter.getActvieLesson().setEndTime(Utils.getTime());
+                getEndOdometerFromUser();
             }
         });
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    /**
+     * Gets final Odometer reading from user
+     */
+    public void getEndOdometerFromUser() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.end_odometer_input));
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(input.getText().toString())) {
+                    Toast.makeText(getBaseContext(), getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();
+                } else if (Long.parseLong(input.getText().toString()) < mDrivingLessonPresenter.getActvieLesson().getStartOdometer()) {
+                    Toast.makeText(getBaseContext(), getString(R.string.error_odometer_small), Toast.LENGTH_SHORT).show();
+                } else {
+                    mDrivingLessonPresenter.getActvieLesson().setEndOdometer(Long.parseLong(input.getText().toString()));
+                    if (!mDrivingLessonPresenter.checkLessonIntegrity(mDrivingLessonPresenter.getActvieLesson())) {
+                        Toast.makeText(getBaseContext(), getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getBaseContext(), getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     /**
@@ -206,7 +257,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     public void onRestart() {
         super.onRestart();
         Log.d(TAG, "onRestart");
-        Log.e(TAG, "onRestart: " + mLessonPresenter.getCurrentLesson().getEndOdometer());
         if(this.mGoogleApiClient != null) this.mGoogleApiClient.connect();
     }
 
@@ -308,4 +358,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
     public void onConnectionSuspended(int i) {
     }
 
+    @Override
+    public void setPresenter(DrivingLessonContract.Presenter presenter) {
+        mDrivingLessonPresenter = presenter;
+    }
 }

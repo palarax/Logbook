@@ -8,9 +8,9 @@ import com.activeandroid.query.Update;
 import com.backendless.BackendlessUser;
 import com.mad.logbook.Utils;
 import com.mad.logbook.model.Coordinates;
+import com.mad.logbook.model.Lesson;
 import com.mad.logbook.model.Users;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,10 +59,8 @@ public class DatabaseHelper {
         return student;
     }
 
-    public static void testString(){
-        Date test = new Date();
-        Log.e("TEST","Date: "+test);
-        Log.e("TEST","Date: "+test.getTime());
+    public static Users getCurrentUser() {
+        return new Select().from(Users.class).where("active = ?", "1").executeSingle();
     }
 
     /**
@@ -100,6 +98,11 @@ public class DatabaseHelper {
     public static List<Coordinates> getLessonCoordinates(long lessonId) {
         return new Select().from(Coordinates.class).
                 where("lessonId = ?", Long.toString(lessonId)).execute();
+    }
+
+    public static List<Lesson> getUserLessons() {
+        return new Select().from(Lesson.class).where("studentLicence = ?",
+                getCurrentUser().getLicenceNumber()).execute();
     }
 
 }
