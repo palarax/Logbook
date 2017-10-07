@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package palarax.com.logbook.activity;
+package com.mad.logbook.activity;
 
 
 import android.app.Activity;
@@ -32,16 +32,15 @@ import com.activeandroid.ActiveAndroid;
 import com.backendless.Backendless;
 import com.backendless.exceptions.BackendlessFault;
 import com.dd.morphingbutton.impl.IndeterminateProgressButton;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.db.DatabaseHelper;
+import com.mad.logbook.presenter.BackendlessPresenter;
+import com.mad.logbook.presenter.MorphBtnPresenter;
+import com.mad.logbook.presenter.NfcController;
+import com.mad.logbook.presenter.NfcManager;
 
 import java.util.ArrayList;
-
-import palarax.com.logbook.R;
-import palarax.com.logbook.db.DatabaseHelper;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.presenter.BackendlessPresenter;
-import palarax.com.logbook.presenter.MorphBtnPresenter;
-import palarax.com.logbook.presenter.NfcController;
-import palarax.com.logbook.presenter.NfcManager;
 
 /**
  * Initial activity that requires the user to login using NFC
@@ -82,8 +81,8 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
 
         //Initialize DB and NFC
         AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
+                @Override
+                public void run() {
                 ActiveAndroid.initialize(LoginActivity.this);
                 DatabaseHelper.clearActiveUsers();
                 if (mCardReader.nfcSupported(NfcAdapter.getDefaultAdapter(LoginActivity.this))) {
@@ -123,7 +122,6 @@ public class LoginActivity extends Activity implements NfcManager.AccountCallbac
     }
 
 
-    //TODO: pause, then auto login
     @Override
     public void onHandleResponse(Object response) {
         mMorphPresenter.morphToSuccess(mBtnMorph);

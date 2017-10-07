@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -22,7 +22,7 @@ import android.support.v4.content.ContextCompat;
 import com.dd.morphingbutton.MorphingButton;
 import com.dd.morphingbutton.impl.IndeterminateProgressButton;
 
-import palarax.com.logbook.R;
+import com.mad.logbook.R;
 
 /**
  * Manages Morphing button functionality

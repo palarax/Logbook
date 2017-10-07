@@ -1,4 +1,4 @@
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.app.Activity;
 

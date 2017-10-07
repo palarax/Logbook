@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.app.Activity;
 import android.nfc.NfcAdapter;
@@ -22,9 +22,9 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.util.Log;
 
-import java.util.ArrayList;
+import com.mad.logbook.model.NdefTag;
 
-import palarax.com.logbook.model.NdefTag;
+import java.util.ArrayList;
 
 
 /**

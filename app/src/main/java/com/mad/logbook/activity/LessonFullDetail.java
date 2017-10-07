@@ -1,4 +1,4 @@
-package palarax.com.logbook.activity;
+package com.mad.logbook.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +15,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import palarax.com.logbook.R;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.presenter.LessonPresenter;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.presenter.LessonPresenter;
 
 /**
  * Activity that displays singular lesson data
@@ -73,13 +72,14 @@ public class LessonFullDetail extends AppCompatActivity implements OnMapReadyCal
         mTxtViewEndTime.setText(mLessonPresenter.getCurrentLesson().getEndTime());
         mTxtViewSpeed.setText(getString(R.string.txt_speed, speed));
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.clear();  //clears all Markers and Polylines
+        //googleMap.clear();  //clears all Markers and Polylines
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         googleMap.addPolyline(mLessonPresenter.getCoordinates(options)); //add Polyline
         googleMap.moveCamera(CameraUpdateFactory.

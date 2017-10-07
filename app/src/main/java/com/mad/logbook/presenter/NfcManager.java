@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.app.Activity;
 import android.nfc.NfcAdapter;
@@ -21,9 +21,9 @@ import android.nfc.Tag;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
+import com.mad.logbook.R;
 
-import palarax.com.logbook.R;
+import java.lang.ref.WeakReference;
 
 /**
  * Manages NFC functionality and their callbacks

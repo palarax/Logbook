@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package palarax.com.logbook.activity;
+package com.mad.logbook.activity;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -37,18 +36,18 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.exceptions.BackendlessFault;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.fragment.HistoryFragment;
+import com.mad.logbook.fragment.HomeFragment;
+import com.mad.logbook.fragment.ProfileFragment;
+import com.mad.logbook.model.Lesson;
+import com.mad.logbook.presenter.BackendlessPresenter;
+import com.mad.logbook.presenter.UserPresenter;
 
 import java.text.ParseException;
 
 import dmax.dialog.SpotsDialog;
-import palarax.com.logbook.R;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.fragment.HistoryFragment;
-import palarax.com.logbook.fragment.HomeFragment;
-import palarax.com.logbook.fragment.ProfileFragment;
-import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.presenter.BackendlessPresenter;
-import palarax.com.logbook.presenter.UserPresenter;
 
 
 /**
@@ -90,13 +89,6 @@ public class MainActivity extends AppCompatActivity
         mUserPresenter = new UserPresenter();
 
         final View headerView = navigationView.getHeaderView(0);
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
         populateNavHeader(headerView, Backendless.UserService.CurrentUser());
 
         //Open HomeFragment

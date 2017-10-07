@@ -47,7 +47,6 @@
     <string name="nav_goals">Learning Goals</string>
     <string name="nav_logout">Logout</string>
     <string name="nav_profile_settings">Profile Settings</string>
-    <string name="header_tip">Click here to see profile summary</string>
 
     <string name="dialog_logout">Login out of the app …</string>
 
@@ -96,6 +95,7 @@
     <string name="user_not_exist">ERROR: User does not exist</string>
     <string name="generic_error">ERROR: %s</string>
     <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
+    <string name="error_address_not_found">Address unknown</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
@@ -106,8 +106,8 @@
     <string name="title_lesson_id">Lesson #%d</string>
     <string name="title_lpn">Plate number</string>
     <string name="title_supervisor_licence">Supervisor Licence</string>
-    <string name="title_distance">Distance travelled</string>
-    <string name="title_total_time">Total time driving</string>
+    <string name="title_distance">Distance</string>
+    <string name="title_total_time">Total time</string>
     <string name="title_speed">Average speed</string>
     <string name="title_start_time">Start Time</string>
     <string name="title_end_time">End Time</string>

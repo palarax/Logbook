@@ -1,4 +1,4 @@
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -8,8 +8,8 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.txusballesteros.widgets.FitChart;
 
-import palarax.com.logbook.R;
-import palarax.com.logbook.model.Users;
+import com.mad.logbook.R;
+import com.mad.logbook.model.Users;
 
 
 /**

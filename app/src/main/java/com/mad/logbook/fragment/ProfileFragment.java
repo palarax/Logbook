@@ -1,4 +1,4 @@
-package palarax.com.logbook.fragment;
+package com.mad.logbook.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import palarax.com.logbook.R;
-import palarax.com.logbook.presenter.UserPresenter;
+import com.mad.logbook.R;
+import com.mad.logbook.presenter.UserPresenter;
 
 /**
  * Profile fragment that allows user to update their information

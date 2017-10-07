@@ -10,6 +10,7 @@
         android:layout_height="30dp"
         android:background="@drawable/curved_subshape"
         android:gravity="center"
+        android:layout_margin="2dp"
         android:scaleType="fitCenter" />
 
     <TextView

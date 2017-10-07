@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -24,14 +24,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.activity.LessonFullDetail;
+import com.mad.logbook.model.Lesson;
 
-import palarax.com.logbook.R;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.activity.LessonFullDetail;
-import palarax.com.logbook.model.Lesson;
+import java.util.List;
 
 /**
  * Sets up and managesRecycler View with lesson objects
@@ -71,13 +72,22 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         holder.mTxtViewDistance.setText(mActivity.getString(R.string.txt_distance, lesson.getDistance() / 1000));
         holder.mTxtViewTotalTime.setText(Utils.convertDateToFormat(lesson.getTotalTime(), 1));
 
+        holder.mStartAddress.setText(Utils.getAddress(lesson.getId(),mActivity)[0]);
+        holder.mEndAddress.setText(Utils.getAddress(lesson.getId(),mActivity)[1]);
+
+        int dividerColor =Utils.getRandomColor();
+        holder.mDivider.setBackgroundColor(dividerColor);
+        holder.mAddressDivider.setColorFilter(dividerColor);
+
+
+
         holder.mBtnAdvancedInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, LessonFullDetail.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     String transitionName = mActivity.getString(R.string.animation_transition);
-                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(mActivity,holder.mBtnAdvancedInfo, transitionName);
+                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(mActivity,holder.mDivider, transitionName);
                     intent.putExtra(Utils.LESSON_ID, mLessonsList.get(lessonPosition).getId());
                     mActivity.startActivity(intent, transitionActivityOptions.toBundle());
                 } else {
@@ -100,12 +110,21 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
      */
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTxtViewDistance, mTxtViewTotalTime, mTxtViewLpn,
-                mTxtViewLessonId;
+                mTxtViewLessonId,mStartAddress,mEndAddress;
         Button mBtnAdvancedInfo;
+
+        View mDivider;
+        ImageView mAddressDivider;
+
         View mView;
         ViewHolder(View view) {
             super(view);
             mView = view;
+            mStartAddress = view.findViewById(R.id.address_start);
+            mEndAddress = view.findViewById(R.id.address_end);
+            mDivider = view.findViewById(R.id.divider);
+            mAddressDivider = view.findViewById(R.id.address_seperator);
+
             mTxtViewLessonId = view.findViewById(R.id.txt_lesson_id);
             mTxtViewLpn = view.findViewById(R.id.txt_lpn);
             mTxtViewDistance = view.findViewById(R.id.txt_distance);

@@ -1,4 +1,4 @@
-package palarax.com.logbook.presenter;
+package com.mad.logbook.presenter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,19 +18,18 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.db.DatabaseHelper;
+import com.mad.logbook.model.Coordinates;
+import com.mad.logbook.model.Lesson;
+import com.mad.logbook.model.Users;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import palarax.com.logbook.R;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.db.DatabaseHelper;
-import palarax.com.logbook.model.Coordinates;
-import palarax.com.logbook.model.Lesson;
-import palarax.com.logbook.model.Users;
 
 /**
  * Presents and manages lesson data
@@ -212,9 +211,9 @@ public class LessonPresenter {
 
         BarDataSet barDataSet1 = new BarDataSet(distanceList, mCurrentActivity.getString(R.string.distance_units));
         barDataSet1.setColor(Color.rgb(0, 155, 0));
-        BarDataSet barDataSet2 = new BarDataSet(dayHoursList, mCurrentActivity.getString(R.string.xAxis_day_hours));
+        BarDataSet barDataSet2 = new BarDataSet(nightHoursList, mCurrentActivity.getString(R.string.xAxis_day_hours));
         barDataSet2.setColor(Color.rgb(0, 0, 155));
-        BarDataSet barDataSet3 = new BarDataSet(nightHoursList, mCurrentActivity.getString(R.string.xAxis_night_hours));
+        BarDataSet barDataSet3 = new BarDataSet(dayHoursList, mCurrentActivity.getString(R.string.xAxis_night_hours));
         barDataSet2.setColor(Color.rgb(155, 0, 0));
 
         lessonDataSet.add(barDataSet1);
@@ -275,7 +274,6 @@ public class LessonPresenter {
      *
      * @param location            The new Location that you want to evaluate
      * @param currentBestLocation The current Location fix, to which you want to compare the new one
-     *                            TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
      */
     private boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
@@ -321,7 +319,6 @@ public class LessonPresenter {
 
     /**
      * Checks whether two providers are the same
-     * TODO: Code from: https://developer.android.com/guide/topics/location/strategies.html add to Software doc
      */
     private boolean isSameProvider(String provider1, String provider2) {
         if (provider1 == null) {

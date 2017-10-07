@@ -1,4 +1,4 @@
-package palarax.com.logbook.model;
+package com.mad.logbook.model;
 
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -6,10 +6,10 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.util.Log;
 
+import com.mad.logbook.Utils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import palarax.com.logbook.Utils;
 
 /**
  * NDEF TAG object that retrieves and reads all TAG data

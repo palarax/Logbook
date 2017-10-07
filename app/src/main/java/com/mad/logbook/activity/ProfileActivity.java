@@ -1,4 +1,4 @@
-package palarax.com.logbook.activity;
+package com.mad.logbook.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +10,12 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
+import com.mad.logbook.R;
+import com.mad.logbook.presenter.LessonPresenter;
+import com.mad.logbook.presenter.UserPresenter;
 import com.txusballesteros.widgets.FitChart;
 
 import java.text.ParseException;
-
-import palarax.com.logbook.R;
-import palarax.com.logbook.presenter.LessonPresenter;
-import palarax.com.logbook.presenter.UserPresenter;
 
 /**
  * Profile Activity that gives a summary of user progress

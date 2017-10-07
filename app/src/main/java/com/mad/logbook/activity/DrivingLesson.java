@@ -1,4 +1,4 @@
-package palarax.com.logbook.activity;
+package com.mad.logbook.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -31,9 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import palarax.com.logbook.R;
-import palarax.com.logbook.Utils;
-import palarax.com.logbook.presenter.LessonPresenter;
+import com.mad.logbook.R;
+import com.mad.logbook.Utils;
+import com.mad.logbook.presenter.LessonPresenter;
 
 /**
  * Activity that records and displays live lesson data
@@ -153,7 +153,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    //TODO: put into doc: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
     /**
      * Pressing the back button alerts the user that the lesson will end
      */

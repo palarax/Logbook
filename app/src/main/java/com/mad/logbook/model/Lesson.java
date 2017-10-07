@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package palarax.com.logbook.model;
+package com.mad.logbook.model;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;

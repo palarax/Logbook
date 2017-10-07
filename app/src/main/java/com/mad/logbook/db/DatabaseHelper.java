@@ -1,4 +1,4 @@
-package palarax.com.logbook.db;
+package com.mad.logbook.db;
 
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -6,12 +6,12 @@ import android.util.Log;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.backendless.BackendlessUser;
+import com.mad.logbook.Utils;
+import com.mad.logbook.model.Coordinates;
+import com.mad.logbook.model.Users;
 
+import java.util.Date;
 import java.util.List;
-
-import palarax.com.logbook.model.Coordinates;
-import palarax.com.logbook.model.Users;
-import palarax.com.logbook.Utils;
 
 /**
  * Class that handles Database calls
@@ -57,6 +57,12 @@ public class DatabaseHelper {
         setCurrentUser(student.getId());
 
         return student;
+    }
+
+    public static void testString(){
+        Date test = new Date();
+        Log.e("TEST","Date: "+test);
+        Log.e("TEST","Date: "+test.getTime());
     }
 
     /**
