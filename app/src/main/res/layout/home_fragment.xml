@@ -17,7 +17,8 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:paddingTop="@dimen/layout_padding">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,15 +33,27 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/chart_title"
                     android:textAlignment="center"
-                    android:textSize="@dimen/chart_title_text"
                     android:textColor="@color/primary_text"
+                    android:textSize="@dimen/chart_title_text"
                     android:textStyle="bold|italic"/>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart"
-                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="200dp"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/fitChart_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/chart_title_text"
+                    android:textStyle="bold|italic" />
+
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -83,8 +96,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
+        android:src="@android:drawable/ic_input_add"
         android:tint="@color/icons"
-        android:src="@android:drawable/ic_input_add" />
+        app:backgroundTint="@color/colorPrimary" />
 
 </android.support.design.widget.CoordinatorLayout>

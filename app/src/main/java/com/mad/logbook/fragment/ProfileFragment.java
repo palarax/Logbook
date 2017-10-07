@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
 import com.mad.logbook.R;
 import com.mad.logbook.presenter.UserPresenter;
 
@@ -26,10 +27,14 @@ public class ProfileFragment extends Fragment {
 
     private UserPresenter mUserPresenter;
 
+    private EditText nameEdit, surnameEdit, contactEdit, editDob;
+    private Spinner statesSpinner;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle(getString(R.string.fragment_title_profile));
         return inflater.inflate(R.layout.profile_fragment, container, false);
 
     }
@@ -37,16 +42,18 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mUserPresenter = new UserPresenter();
 
-        final EditText nameEdit = (EditText) view.findViewById(R.id.edit_name);
-        final EditText sureNameEdit = (EditText) view.findViewById(R.id.edit_surname);
+        mUserPresenter = new UserPresenter();
+        nameEdit = view.findViewById(R.id.edit_name);
+        surnameEdit = view.findViewById(R.id.edit_surname);
+        contactEdit = view.findViewById(R.id.edit_contact_number);
+        editDob = view.findViewById(R.id.edit_dob);
 
         //setup and populate spinner
-        final Spinner statesSpinner = (Spinner) view.findViewById(R.id.spinner_state);
+        statesSpinner = view.findViewById(R.id.spinner_state);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.states, R.layout.spinner_item);
+                R.array.states, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -57,17 +64,18 @@ public class ProfileFragment extends Fragment {
         final TextView mDobText = view.findViewById(R.id.txt_dob);
         final TextView mStateText = view.findViewById(R.id.txt_state);
         final TextView mProgressText = view.findViewById(R.id.txt_completed);
-        final Button btnDeleteAll = view.findViewById(R.id.btn_submit);
-        btnDeleteAll.setOnClickListener(new View.OnClickListener() {
+        final Button btnSubmit = view.findViewById(R.id.btn_submit);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mUserPresenter.deleteAllUsers();
+                mUserPresenter.updateBackendlessUser(getActivity(), Backendless.UserService.CurrentUser(), nameEdit.getText().toString(),
+                        surnameEdit.getText().toString(), editDob.getText().toString(),
+                        statesSpinner.getSelectedItem().toString(), contactEdit.getText().toString());
             }
         });
         mUserPresenter.populateUserData(mNameText, mLicenseText, mDobText,
                 mStateText, mProgressText, getContext());
-
-        //TODO: update backendless data
     }
 
 }

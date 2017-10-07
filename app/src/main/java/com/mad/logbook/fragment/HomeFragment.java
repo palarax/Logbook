@@ -1,22 +1,28 @@
 package com.mad.logbook.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.mad.logbook.R;
+import com.mad.logbook.Utils;
 import com.mad.logbook.activity.DrivingLesson;
 import com.mad.logbook.db.DatabaseHelper;
+import com.mad.logbook.model.Lesson;
 import com.mad.logbook.presenter.LessonPresenter;
 import com.mad.logbook.presenter.UserPresenter;
 import com.txusballesteros.widgets.FitChart;
@@ -54,6 +60,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle(getString(R.string.fragment_title_home));
         return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
@@ -78,13 +85,13 @@ public class HomeFragment extends Fragment {
         chart.animateXY(2000, 2000);
         chart.invalidate();
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Click action
-                Intent intent = new Intent(getActivity(), DrivingLesson.class);
-                startActivity(intent);
+                getUserData();
+
             }
         });
         numberOfLessons = view.findViewById(R.id.txt_drives);
@@ -125,5 +132,74 @@ public class HomeFragment extends Fragment {
         mUserPresenter.getStudent().save();
     }
 
+    /**
+     * Get initial lesson data from user
+     */
+    public void getUserData() {
+        LayoutInflater li = LayoutInflater.from(getContext());
+        View promptsView = li.inflate(R.layout.input_form, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getContext());
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText editLpn = promptsView.findViewById(R.id.edit_lpn);
+        final EditText editStartOdometer = promptsView.findViewById(R.id.edit_start_odometer);
+        final EditText editSupervisorLicence = promptsView.findViewById(R.id.edit_supervisor_license);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.dialog_ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do nothing here because we will override everything
+                            }
+                        })
+                .setNegativeButton(getString(R.string.dialog_cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+        //override ok button to display errors instead of closing
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean editEmpty = true;
+                //check if all data is complete
+                if (TextUtils.isEmpty(editLpn.getText().toString())) {
+                    editLpn.setError(getString(R.string.error_lpn_null));
+                    editEmpty = false;
+                }
+                if (TextUtils.isEmpty(editStartOdometer.getText().toString())) {
+                    editStartOdometer.setError(getString(R.string.error_odometer_null));
+                    editEmpty = false;
+                }
+                if (TextUtils.isEmpty(editSupervisorLicence.getText().toString())) {
+                    editSupervisorLicence.setError(getString(R.string.error_supervisor_null));
+                    editEmpty = false;
+                }
+
+                if (editEmpty) {
+                    alertDialog.dismiss();
+                    Intent intent = new Intent(getActivity(), DrivingLesson.class);
+                    Lesson lesson = new Lesson(
+                            editLpn.getText().toString(),
+                            0, Long.parseLong(editSupervisorLicence.getText().toString()),
+                            mUserPresenter.getStudent().getLicenceNumber(),
+                            Integer.parseInt(editStartOdometer.getText().toString()),
+                            0, 0, Utils.getTime(), null);
+                    lesson.save();
+                    intent.putExtra(Utils.LESSON_ID, lesson.getId());
+                    startActivity(intent);
+                }
+            }
+        });
+    }
 
 }

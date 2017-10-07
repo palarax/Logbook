@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">LogBook</string>
+    <string name="fragment_title_home">Begin Lesson</string>
+    <string name="fragment_title_history">Lesson history</string>
+    <string name="fragment_title_profile">User profile</string>
     <string name="app_lesson">Driving Lesson</string>
     <string name="app_lesson_advanced">Lesson Details</string>
     <string name="app_profile">Student Profile</string>
@@ -10,6 +13,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="db_look">Reviewing database,this won\'t take long</string>
+    <string name="user_updated">Update was successful</string>
 
     <string name="action_settings">Back</string>
 
@@ -24,6 +28,7 @@
     </string-array>
     <string name="hint_name">New name</string>
     <string name="hint_surname">New surname</string>
+    <string name="hint_contact_number">New contact number</string>
     <string name="btn_submit_lbl">Submit data</string>
 
     <!-- graphs and statistics -->
@@ -36,6 +41,7 @@
     <string name="xAxis_night_hours">Day hours</string>
     <string name="xAxis_day_hours">Night hours</string>
     <string name="chart_title">Distance and Hours drove over time</string>
+    <string name="fitChart_title">Hours completed</string>
 
     <string name="btn_lesson_details_exit">Back to lesson history</string>
     <string name="btn_advanced_detail">View more detail</string>
@@ -57,19 +63,18 @@
     <string name="profile_dob_lbl">Date of birth:</string>
     <string name="profile_state_lbl">State:</string>
     <string name="profile_name_lbl">Name:</string>
-    <string name="profile_suname_lbl">Surname:</string>
+    <string name="profile_surname_lbl">Surname:</string>
+    <string name="profile_contact_number">Contact number:</string>
     <string name="profile_completed">ALL HOURS COMPLETED</string>
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
     <!-- Lesson activity -->
+    <string name="dialog_title">Lesson pre-requests</string>
     <string name="edit_lpn">Licence Plate Number</string>
     <string name="edit_start_odometer">Start odometer</string>
     <string name="edit_end_odometer">End odometer</string>
     <string name="edit_supervisor">Supervisor licence number</string>
-    <string name="alert_title">Confirm</string>
     <string name="backpress_alert">Exiting will result in termination of lesson</string>
-    <string name="alert_exit">Exit lesson</string>
-    <string name="alert_stay">Continue lesson</string>
     <string name="end_odometer_input">Please enter final odometer value</string>
     <string name="btn_end_lesson">End Lesson</string>
 
@@ -96,6 +101,7 @@
     <string name="generic_error">ERROR: %s</string>
     <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
     <string name="error_address_not_found">Address unknown</string>
+    <string name="error_not_updated">ERROR: update was not successful, try again later</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>
@@ -116,5 +122,12 @@
 
     <!-- Material transition -->
     <string name="animation_transition">material_transition</string>
+
+    <!-- Dialog box -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="alert_title">Confirm</string>
+    <string name="alert_exit">Exit lesson</string>
+    <string name="alert_stay">Continue lesson</string>
 
 </resources>

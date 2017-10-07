@@ -30,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import com.mad.logbook.R;
 import com.mad.logbook.Utils;
 import com.mad.logbook.presenter.LessonPresenter;
@@ -67,10 +66,22 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
         Button btnEndStop = findViewById(R.id.btn_end_lesson);
+        mLessonPresenter = new LessonPresenter(DrivingLesson.this);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
+        }
 
         if (!isGooglePlayServicesAvailable()) {
             finish();
         }
+
+        btnEndStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                endLesson();
+            }
+        });
         createLocationRequest();
         //Set up google api client for locations services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -79,24 +90,12 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        btnEndStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                endLesson();
-            }
-        });
         // Keep the screen always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        mLessonPresenter = new LessonPresenter(DrivingLesson.this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mLessonPresenter.setCurrentLesson(extras.getLong(Utils.LESSON_ID));
-        }
     }
 
     /**
@@ -190,7 +189,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     /**
      * Called when activity becomes visible to the user

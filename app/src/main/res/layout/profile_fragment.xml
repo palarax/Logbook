@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/side_nav_bar"
     android:padding="@dimen/layout_padding">
 
     <include
@@ -14,18 +13,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="15dp"
-        android:padding="@dimen/user_detail_padding"
         android:layout_below="@+id/fragment_header"
-        android:layout_alignParentStart="true">
+        android:layout_centerInParent="true"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        android:padding="@dimen/user_detail_padding">
 
         <TextView
             android:id="@+id/lbl_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/profile_name_lbl"
-            android:textColor="@color/mb_white"
             android:textSize="@dimen/profile_values"
             android:textStyle="bold" />
 
@@ -35,8 +33,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_name"
             android:inputType="textPersonName|textCapWords"
-            android:textAlignment="center"
-            android:textColor="@color/mb_white"
+            android:textColor="@color/primary_text"
             android:textColorHint="@color/grey"
             android:textSize="@dimen/edit_values" />
 
@@ -45,8 +42,7 @@
             android:id="@+id/lbl_surname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/profile_suname_lbl"
-            android:textColor="@color/mb_white"
+            android:text="@string/profile_surname_lbl"
             android:textSize="@dimen/profile_values"
             android:textStyle="bold" />
 
@@ -54,19 +50,35 @@
             android:id="@+id/edit_surname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName|textCapWords"
             android:hint="@string/hint_surname"
-            android:textSize="@dimen/edit_values"
-            android:textAlignment="center"
-            android:textColor="@color/mb_white"
-            android:textColorHint="@color/grey" />
+            android:inputType="textPersonName|textCapWords"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/grey"
+            android:textSize="@dimen/edit_values" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_contact_number"
+            android:textSize="@dimen/profile_values"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_contact_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_contact_number"
+            android:inputType="number"
+            android:maxLength="13"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/grey"
+            android:textSize="@dimen/edit_values" />
 
         <TextView
             android:id="@+id/lbl_dob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/profile_dob_lbl"
-            android:textColor="@color/mb_white"
             android:textSize="@dimen/profile_values"
             android:textStyle="bold" />
 
@@ -75,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName|textCapWords"
-            android:textColor="@color/mb_white"
+            android:textColor="@color/primary_text"
             android:textColorHint="@color/grey"
             android:textSize="@dimen/profile_values"/>
 
@@ -90,18 +102,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_state_lbl"
-                android:textColor="@color/mb_white"
                 android:textSize="@dimen/profile_values"
                 android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinner_state"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dropdown"
+                android:layout_marginStart="24dp"
                 android:background="@drawable/spinner_style"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginStart="24dp" />
+                android:spinnerMode="dropdown"
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
 
@@ -109,12 +120,12 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_submit"
-        android:padding="@dimen/layout_padding"
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_submit_lbl"
         android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:padding="@dimen/layout_padding"
+        android:text="@string/btn_submit_lbl"
         android:textColor="@color/mb_white"
         app:backgroundTint="@color/colorAccent"/>
 

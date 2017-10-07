@@ -21,6 +21,8 @@ public class BackendlessPresenter {
     private static final String BACKENDLESS_API_KEY = "5DB4EEBE-A054-CE7D-FFCD-F6F74B4FC500";
     private static final String BACKENDLESS_SERVER_URL = "http://api.backendless.com";
 
+    private BackendlessUser user = null;
+
     private WeakReference<BackendlessPresenter.HandleResponse> mHandleResponse;
 
     /**
@@ -52,6 +54,7 @@ public class BackendlessPresenter {
         Backendless.UserService.login(username, password, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser backendlessUser) {
+
                 mHandleResponse.get().onHandleResponse(backendlessUser);
             }
 
@@ -60,6 +63,10 @@ public class BackendlessPresenter {
                 mHandleResponse.get().onHandleFault(fault);
             }
         });
+    }
+
+    public BackendlessUser getBackendlessUser() {
+        return user;
     }
 
     /**

@@ -25,7 +25,7 @@
         <meta-data android:name="AA_DB_NAME" android:value="lessons" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="2" />
+            android:value="1" />
         <meta-data
             android:name="AA_MODELS"
             android:value="com.mad.logbook.model.Users, com.mad.logbook.model.Lesson,com.mad.logbook.model.Coordinates" />
@@ -55,11 +55,6 @@
             android:label="@string/app_name"
             android:parentActivityName=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
-            android:name=".activity.ProfileActivity"
-            android:label="@string/app_profile">
         </activity>
 
         <activity
