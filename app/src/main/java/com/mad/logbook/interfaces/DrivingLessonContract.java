@@ -46,7 +46,7 @@ public interface DrivingLessonContract {
 
         PolylineOptions getPolyLine(PolylineOptions options, List<LatLng> coordinates);
 
-        Lesson getActvieLesson();
+        Lesson getActiveLesson();
 
         boolean checkLessonIntegrity(Lesson currentLesson);
     }

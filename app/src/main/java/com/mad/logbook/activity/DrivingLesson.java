@@ -188,7 +188,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
      * initiates the end of the lesson
      */
     public void endLesson() {
-        stopLocationUpdates();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.alert_title));
         builder.setMessage(getString(R.string.backpress_alert));
@@ -196,7 +195,6 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         builder.setPositiveButton(getString(R.string.alert_stay), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
-                startLocationUpdates();
                 dialog.dismiss();
             }
         });
@@ -205,7 +203,8 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mDrivingLessonPresenter.getActvieLesson().setEndTime(Utils.getTime());
+                stopLocationUpdates();
+                mDrivingLessonPresenter.getActiveLesson().setEndTime(Utils.getTime());
                 getEndOdometerFromUser();
             }
         });
@@ -229,23 +228,24 @@ public class DrivingLesson extends AppCompatActivity implements OnMapReadyCallba
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(input.getText().toString())) {
                     Toast.makeText(getBaseContext(), getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();
-                } else if (Long.parseLong(input.getText().toString()) < mDrivingLessonPresenter.getActvieLesson().getStartOdometer()) {
+                } else if (Long.parseLong(input.getText().toString()) < mDrivingLessonPresenter.getActiveLesson().getStartOdometer()) {
                     Toast.makeText(getBaseContext(), getString(R.string.error_odometer_small), Toast.LENGTH_SHORT).show();
                 } else {
-                    mDrivingLessonPresenter.getActvieLesson().setEndOdometer(Long.parseLong(input.getText().toString()));
-                    if (!mDrivingLessonPresenter.checkLessonIntegrity(mDrivingLessonPresenter.getActvieLesson())) {
+                    mDrivingLessonPresenter.getActiveLesson().setEndOdometer(Long.parseLong(input.getText().toString()));
+                    if (!mDrivingLessonPresenter.checkLessonIntegrity(mDrivingLessonPresenter.getActiveLesson())) {
+
                         Toast.makeText(getBaseContext(), getString(R.string.bad_lesson), Toast.LENGTH_SHORT).show();
                     }
                     finish();
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getBaseContext(), getString(R.string.error_odometer_null), Toast.LENGTH_SHORT).show();

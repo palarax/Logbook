@@ -21,11 +21,10 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-//TODO: put code into software doc
-//https://stackoverflow.com/questions/20673609/implement-a-datepicker-inside-a-fragment
 
 /**
- * Creates a date picker dialog
+ * Creates a date picker dialog.
+ * Code found on: https://stackoverflow.com/questions/20673609/implement-a-datepicker-inside-a-fragment
  *
  * @author Amritha
  * @date 19-Dec-13

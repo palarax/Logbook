@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
@@ -40,14 +41,12 @@ import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class HomePresenter implements HomeContract.Presenter {
 
-    private HomeContract.View mHomeView;
-
     /**
      * Backendless initializes WeakReference
      */
     public HomePresenter(@NonNull HomeContract.View view) {
 
-        mHomeView = checkNotNull(view, "HomeView cannot be null");
+        HomeContract.View mHomeView = checkNotNull(view, "HomeView cannot be null");
         mHomeView.setPresenter(this);
     }
 
@@ -77,7 +76,7 @@ public class HomePresenter implements HomeContract.Presenter {
      *
      * @param userLessons a list of lessons to get data from
      * @return a list of Bar data sets
-     * @throws ParseException
+     * @throws ParseException whilst parsing dates
      */
     public ArrayList<ArrayList<BarEntry>> getGraphDataSet(
             List<Lesson> userLessons, ArrayList<String> xAxisValues) throws ParseException {
@@ -124,7 +123,7 @@ public class HomePresenter implements HomeContract.Presenter {
      * @param monthYear month and year selected in format "mmyy"
      * @param lesson    lesson to analyse
      * @return an array with distance, day and night hours
-     * @throws ParseException
+     * @throws ParseException whilst parsing dates
      */
     private double[] getMonthStats(String monthYear, Lesson lesson) throws ParseException {
         double distance = 0;
@@ -160,19 +159,19 @@ public class HomePresenter implements HomeContract.Presenter {
      *
      * @param lesson lesson to be analysed
      * @return hours for day and night
-     * @throws ParseException
+     * @throws ParseException whilst parsing dates
      */
     private double[] getLessonDayNightTime(Lesson lesson) throws ParseException {
         double totalDayTime = 0;
         double totalNightTime = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date formatedEndDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getEndTime()));
-        Date formatedStartDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getStartTime()));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        Date formattedEndDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getEndTime()));
+        Date formattedStartDate = dateFormat.parse(Utils.formatDate("HH:mm", lesson.getStartTime()));
 
-        if ((formatedStartDate.before(dateFormat.parse("07:00")) ||
-                (formatedStartDate.after(dateFormat.parse("19:00"))))) {
-            if ((formatedEndDate.before(dateFormat.parse("07:00")) ||
-                    (formatedEndDate.after(dateFormat.parse("19:00"))))) {
+        if ((formattedStartDate.before(dateFormat.parse("07:00")) ||
+                (formattedStartDate.after(dateFormat.parse("19:00"))))) {
+            if ((formattedEndDate.before(dateFormat.parse("07:00")) ||
+                    (formattedEndDate.after(dateFormat.parse("19:00"))))) {
                 totalNightTime += lesson.getTotalTime();
             } else {
                 totalDayTime = Utils.getTimeDiffernce("07:00",
@@ -180,9 +179,9 @@ public class HomePresenter implements HomeContract.Presenter {
                 totalNightTime += (lesson.getTotalTime() - totalDayTime);
             }
         } else {
-            if ((formatedEndDate.before(dateFormat.parse("19:00")))) {
+            if ((formattedEndDate.before(dateFormat.parse("19:00")))) {
                 totalDayTime += lesson.getTotalTime();
-            } else if (formatedEndDate.after(dateFormat.parse("19:00"))) {
+            } else if (formattedEndDate.after(dateFormat.parse("19:00"))) {
                 totalNightTime = Utils.getTimeDiffernce("19:00",
                         Utils.formatDate("HH:mm", lesson.getEndTime()), "HH:mm");
                 totalDayTime += (lesson.getTotalTime() - totalNightTime);
@@ -197,7 +196,7 @@ public class HomePresenter implements HomeContract.Presenter {
      *
      * @param lessons a list of lessons to get data from
      * @return day or night time in milliseconds
-     * @throws ParseException
+     * @throws ParseException whilst parsing dates
      */
     public double[] getDayNightDroveLesson(List<Lesson> lessons) throws ParseException {
         double totalDayHours = 0;

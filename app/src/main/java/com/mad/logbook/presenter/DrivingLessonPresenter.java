@@ -47,7 +47,6 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-    private DrivingLessonContract.View mHomeView;
     private Lesson mCurrentLesson;
     private Location mCurrentLocation;
     private List<LatLng> mCoordinates = new ArrayList<>();  //store coordinates
@@ -57,7 +56,7 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
      */
     public DrivingLessonPresenter(@NonNull DrivingLessonContract.View view, Long lesson_id) {
 
-        mHomeView = checkNotNull(view, "loginView cannot be null");
+        DrivingLessonContract.View mHomeView = checkNotNull(view, "loginView cannot be null");
         mHomeView.setPresenter(this);
         mCurrentLesson = Lesson.load(Lesson.class, lesson_id);
     }
@@ -100,7 +99,7 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
         return mCoordinates;
     }
 
-    public Lesson getActvieLesson() {
+    public Lesson getActiveLesson() {
         return mCurrentLesson;
     }
 
@@ -191,17 +190,9 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
             Log.e(TAG, "Error: " + e);
             //This error should never occur
         }
-        //if (currentLesson.getEndOdometer() > currentLesson.getStartOdometer()) {
-        if (isCurrentLessonComplete(currentLesson)) {
-            //TODO: once finished testing, replace with isCurrentLessonComplete()
-            currentLesson.setDistance(distanceTravelled);
-            currentLesson.setTotalTime(totalTime);
-            //save lesson
-            currentLesson.save();
-            return true;
-        } else {
-            return false;
-        }
+        currentLesson.setDistance(distanceTravelled);
+        currentLesson.setTotalTime(totalTime);
+        return isCurrentLessonComplete(currentLesson);
     }
 
 
@@ -214,16 +205,17 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
                 currentLesson.getDistance() < 500 || currentLesson.getSupervisorLicence() == 0 ||
                 currentLesson.getStartOdometer() == 0 || currentLesson.getStartTime().isEmpty() ||
                 (currentLesson.getTotalTime() / 1000 / 60) < 10 ||
-                currentLesson.getEndTime().isEmpty() || currentLesson.getDistance() == 0) {
+                currentLesson.getEndTime().isEmpty()) {
             currentLesson.delete();
             //Lesson is too short or didn't travel enough
             //Remove coordinates
             //remove lesson
             currentLesson.delete();
             return false;
+        } else {
+            currentLesson.save();
+            return true;
         }
-        return true;
-
     }
 
 
