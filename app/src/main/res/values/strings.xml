@@ -102,7 +102,7 @@
     <string name="backendless_user_null">ERROR: user could not be retrieved from server</string>
     <string name="error_address_not_found">Address unknown</string>
     <string name="error_not_updated">ERROR: update was not successful, try again later</string>
-    <string name="error_incorrect_date_input">Date cannot be higher or equal to the current date</string>
+    <string name="error_incorrect_date_input">Date cannot be shorter than 16 year ago</string>
     
     <!-- Google maps API key -->
     <string name="google_maps_api">AIzaSyC5UHViQYMaSrnkBes0YJn2bWIyPFVqhUM</string>

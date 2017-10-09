@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mad.logbook;
 
 
@@ -86,13 +101,19 @@ public class Utils {
     public static boolean isDobCorrect(String date) {
         Date currentDate = new Date();
         Date formattedDate = new Date();
+        int legalDrivingAge = 16;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             formattedDate = dateFormat.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return !DateUtils.isToday(formattedDate.getTime()) && formattedDate.before(currentDate);
+
+        //Check that selected data is older than 16 years ago
+        Date drivingAge = currentDate;
+        drivingAge.setYear(currentDate.getYear() - legalDrivingAge);
+
+        return !DateUtils.isToday(formattedDate.getTime()) && formattedDate.before(drivingAge);
     }
 
     /**
