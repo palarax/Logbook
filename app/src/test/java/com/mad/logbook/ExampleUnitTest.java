@@ -1,4 +1,4 @@
-package palarax.com.logbook;
+package com.mad.logbook;
 
 import org.junit.Test;
 
@@ -14,6 +14,7 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
 
     //TODO: use this to test distance and time statistics
     /*

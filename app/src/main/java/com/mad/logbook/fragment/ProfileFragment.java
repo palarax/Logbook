@@ -42,6 +42,7 @@ import com.mad.logbook.model.Users;
 import com.mad.logbook.presenter.ProfilePresenter;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 
@@ -110,7 +111,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
         mNameText = view.findViewById(R.id.txt_name);
         mLicenseText = view.findViewById(R.id.txt_license);
-        mDobText = view.findViewById(R.id.txt_dob);  //TODO: get correct format
+        mDobText = view.findViewById(R.id.txt_dob);
         mStateText = view.findViewById(R.id.txt_state);
         mProgressText = view.findViewById(R.id.txt_completed);
         final Button btnSubmit = view.findViewById(R.id.btn_submit);
@@ -155,7 +156,8 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         Users student = DatabaseHelper.getCurrentUser();
         mNameText.setText(student.getUserName()
                 + " " + student.getUserSurname());
-        mLicenseText.setText(Long.toString(student.getLicenceNumber()));
+
+        mLicenseText.setText(String.format(Locale.getDefault(), "%d", student.getLicenceNumber()));
         mDobText.setText(student.getDob());
         mStateText.setText(student.getState());
 

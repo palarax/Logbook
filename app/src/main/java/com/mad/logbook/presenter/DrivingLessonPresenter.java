@@ -186,13 +186,13 @@ public class DrivingLessonPresenter implements DrivingLessonContract.Presenter {
         double distanceTravelled = SphericalUtil.computeLength(mCoordinates);//calculate distance travelled
         long totalTime = 0;
         try {
-            totalTime = Utils.getTimeDiffernce(currentLesson.getStartTime(), mCurrentLesson.getEndTime(), "dd/MM/yy HH:mm:ss");
+            totalTime = Utils.getTimeDiffernce(currentLesson.getStartTime(), currentLesson.getEndTime(), "dd/MM/yy HH:mm:ss");
         } catch (ParseException e) {
             Log.e(TAG, "Error: " + e);
             //This error should never occur
         }
-        if (currentLesson.getEndOdometer() > currentLesson.getStartOdometer()) {
-            //if(isCurrentLessonComplete()){
+        //if (currentLesson.getEndOdometer() > currentLesson.getStartOdometer()) {
+        if (isCurrentLessonComplete(currentLesson)) {
             //TODO: once finished testing, replace with isCurrentLessonComplete()
             currentLesson.setDistance(distanceTravelled);
             currentLesson.setTotalTime(totalTime);

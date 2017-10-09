@@ -110,8 +110,8 @@ public class LoginPresenter implements NfcAdapter.ReaderCallback, LoginContract.
     /**
      * Handles tag data and updates the UI as required
      *
-     * @param tag
-     * @throws Exception
+     * @param tag Tag that will be analysed
+     * @throws Exception tag exception
      */
     private void onAccountReceived(Tag tag) throws Exception {
         ArrayList nfcMessage = hasMessage(tag);
