@@ -31,7 +31,7 @@
     <string name="hint_surname">New surname</string>
     <string name="hint_dob">New date of birth</string>
     <string name="hint_contact_number">New contact number</string>
-    <string name="btn_submit_lbl">Submit data</string>
+    <string name="btn_submit_lbl">Update information</string>
 
     <!-- graphs and statistics -->
     <string name="graph_distance">km</string>
@@ -40,8 +40,8 @@
     <string name="profile_day_hours">Day: %.1f</string>
     <string name="profile_night_hours">Night: %.1f</string>
     <string name="distance_units">km</string>
-    <string name="xAxis_night_hours">Day hours</string>
-    <string name="xAxis_day_hours">Night hours</string>
+    <string name="xAxis_night_hours">Night hours</string>
+    <string name="xAxis_day_hours">Day hours</string>
     <string name="chart_title">Distance and Hours drove over time</string>
     <string name="fitChart_title">Hours completed</string>
 
