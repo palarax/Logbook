@@ -20,16 +20,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class HomePresenterTest extends com.activeandroid.app.Application implements HomeContract.View {
 
-
     HomePresenter mHomePresenter;
 
     @Before
     public void setup() {
+
         mHomePresenter = new HomePresenter(this);
     }
 
     @Test
     public void getLessonMonths() throws Exception {
+        //TODO: how do i mock it
         ActiveAndroid.initialize(this);
         List<String> mmyy = Arrays.asList("10/17", "11/17", "12/17", "01/18");
         List<Lesson> lessons = createLessons();

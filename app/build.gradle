@@ -28,6 +28,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    testCompile "org.mockito:mockito-core:2.+"
 
     compile "com.google.android.gms:play-services-maps:$googleGmsVersion"
     compile "com.google.android.gms:play-services-location:$googleGmsVersion"

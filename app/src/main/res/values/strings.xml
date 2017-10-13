@@ -69,7 +69,7 @@
     <string name="profile_in_progress">HOURS IN PROGRESS</string>
 
     <!-- Lesson activity -->
-    <string name="dialog_title">Lesson pre-requests</string>
+    <string name="dialog_title">Lesson prerequisite</string>
     <string name="edit_lpn">Licence Plate Number</string>
     <string name="edit_start_odometer">Start odometer</string>
     <string name="edit_end_odometer">End odometer</string>

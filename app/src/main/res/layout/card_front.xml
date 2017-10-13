@@ -18,7 +18,7 @@
             android:id="@+id/divider"
             android:layout_width="10dp"
             android:layout_height="match_parent"
-            android:transitionName="@string/animation_transition"/>
+            android:transitionName="@string/animation_transition" />
 
 
         <LinearLayout
@@ -135,9 +135,11 @@
                         android:id="@+id/address_start"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_above="@+id/address_divider"
                         android:layout_alignParentTop="true" />
 
                     <View
+                        android:id="@+id/address_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerInParent="true"
@@ -147,7 +149,8 @@
                         android:id="@+id/address_end"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true" />
+                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/address_divider" />
                 </RelativeLayout>
             </LinearLayout>
 

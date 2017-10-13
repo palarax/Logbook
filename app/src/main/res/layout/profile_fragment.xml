@@ -13,9 +13,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_submit"
         android:layout_below="@+id/fragment_header"
         android:layout_centerInParent="true"
-        android:layout_marginTop="15dp"
+        android:layout_margin="@dimen/profile_form_dimen"
+        android:background="@drawable/profile_form_border"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="@dimen/user_detail_padding">
 
@@ -118,9 +121,7 @@
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
-
     </LinearLayout>
-
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_submit"
         android:layout_width="match_parent"
