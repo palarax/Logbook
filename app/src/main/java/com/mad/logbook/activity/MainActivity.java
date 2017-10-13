@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity
         //Open HomeFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit();
+        
 
     }
 

@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment implements DatePickerDialog.OnDateSet
     private void populateFitChart() {
         mFitChart.setMinValue(0f);
         mFitChart.setMaxValue(120f);
-        double hoursCompleted = DatabaseHelper.getCurrentUser().getHoursCompleted() / 1000 / 60 / 60;
+        double hoursCompleted = DatabaseHelper.getCurrentUser().getHoursCompleted();
         mHoursCompleted.setText(getString(R.string.chart_hours_completed, hoursCompleted));
         mFitChart.setValue((float) hoursCompleted);
     }
@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment implements DatePickerDialog.OnDateSet
         mDobText.setText(student.getDob());
         mStateText.setText(student.getState());
 
-        if ((student.getHoursCompleted() / 1000 / 60 / 60) >= 120) {
+        if (student.getHoursCompleted() >= 120) {
             mProgressText.setText(this.getString(R.string.profile_completed));
             mProgressText.setTextColor(getResources().getColor(R.color.licence_color));
         } else {
@@ -199,8 +199,10 @@ public class HomeFragment extends Fragment implements DatePickerDialog.OnDateSet
         hoursDroveNight.setText(getString(R.string.profile_night_hours,dayNightTime[1]/1000/60/60));
         hoursDroveDay.setText(getString(R.string.profile_day_hours,dayNightTime[0]/1000/60/60));
         //Update user hours completed
-        DatabaseHelper.getCurrentUser().setHoursCompleted(dayNightTime[0] + dayNightTime[1]);
-        DatabaseHelper.getCurrentUser().save();
+        double totalHoursCompleted = (dayNightTime[0] + dayNightTime[1]) / 1000 / 60 / 60;
+        Users currentStudent = DatabaseHelper.getCurrentUser();
+        currentStudent.setHoursCompleted(totalHoursCompleted);
+        currentStudent.save();
 
         populateBarGraph();
         populateUserData();

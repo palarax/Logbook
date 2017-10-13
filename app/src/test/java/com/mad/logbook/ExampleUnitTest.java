@@ -18,14 +18,14 @@ public class ExampleUnitTest {
 
     //TODO: use this to test distance and time statistics
     /*
-    private void testCreateData() throws ParseException {
+      private void testCreateData() throws ParseException {
 
         String startT = "05/10/17 15:00:00";
         String endT = "05/10/17 18:00:00";
         Lesson lesson = new Lesson(
                 "TEST1",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -35,7 +35,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST2",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -45,7 +45,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST3",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -55,7 +55,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST4",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -65,7 +65,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST5",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -75,7 +75,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST6",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -85,7 +85,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST7",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -95,7 +95,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST8",
                 10000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -105,7 +105,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST9",
                 12000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -115,7 +115,7 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST10",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
@@ -125,7 +125,27 @@ public class ExampleUnitTest {
         lesson = new Lesson(
                 "TEST11",
                 13000, 11111,
-                mUserPresenter.getStudent().getLicenseNumber(), 101021,
+                222, 101021,
+                283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
+                , startT, endT);
+        lesson.save();
+
+        startT = "31/12/17 20:00:00";
+        endT = "01/01/18 02:00:00";
+        lesson = new Lesson(
+                "TEST12",
+                13000, 11111,
+                222, 101021,
+                283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
+                , startT, endT);
+        lesson.save();
+
+        startT = "02/01/18 06:00:00";
+        endT = "02/01/18 10:00:00";
+        lesson = new Lesson(
+                "TEST13",
+                13000, 11111,
+                222, 101021,
                 283111, Utils.getTimeDiffernce(startT, endT,"dd/MM/yy HH:mm:ss")
                 , startT, endT);
         lesson.save();
