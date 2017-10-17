@@ -9,10 +9,10 @@
     <dimen name="layout_padding">4dp</dimen>
     <dimen name="header_layout_padding">8dp</dimen>
     <dimen name="login_instructions">16sp</dimen>
-    <dimen name="user_detail_padding">24dp</dimen>
+    <dimen name="user_detail_padding">8dp</dimen>
     <dimen name="divider_height">65dp</dimen>
     <dimen name="divider_padding">4dp</dimen>
-    <dimen name="profile_form_dimen">24dp</dimen>
+    <dimen name="profile_form_dimen">16dp</dimen>
 
     <!-- Animation -->
     <dimen name="morph_button">200dp</dimen>

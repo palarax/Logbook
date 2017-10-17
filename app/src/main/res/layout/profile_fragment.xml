@@ -17,7 +17,6 @@
         android:layout_below="@+id/fragment_header"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/profile_form_dimen"
-        android:background="@drawable/profile_form_border"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="@dimen/user_detail_padding">

@@ -110,10 +110,9 @@ public class Utils {
         }
 
         //Check that selected data is older than 16 years ago
-        Date drivingAge = currentDate;
-        drivingAge.setYear(currentDate.getYear() - legalDrivingAge);
+        currentDate.setYear(currentDate.getYear() - legalDrivingAge);
 
-        return !DateUtils.isToday(formattedDate.getTime()) && formattedDate.before(drivingAge);
+        return !DateUtils.isToday(formattedDate.getTime()) && formattedDate.before(currentDate);
     }
 
     /**
@@ -182,14 +181,10 @@ public class Utils {
             address[1] = addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
             Log.e("UtilsError","ERROR: "+e.getMessage());
-        } catch (IndexOutOfBoundsException e){
-            Log.e("UtilsError","ERROR: "+e.getMessage());
         }
         return address;
     }
 
-
-    //TODO: https://stackoverflow.com/questions/11567212/how-to-set-background-to-a-random-color-at-button-press-in-android
     /**
      * Get random color
      * @return color integer
